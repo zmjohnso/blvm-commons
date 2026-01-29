@@ -32,24 +32,44 @@ pub async fn handle_review_event(
         .and_then(|s| s.as_str())
         .unwrap_or("unknown");
 
+    let review_comment = payload
+        .get("review")
+        .and_then(|r| r.get("body"))
+        .and_then(|b| b.as_str());
+
     info!(
         "Review {} by {} for PR #{} in {}",
         state, reviewer, pr_number, repo_name
     );
 
-    // Update review status in database
+    // Store full review record with comment
     match database
-        .update_review_status(repo_name, pr_number as i32, reviewer, state)
+        .store_review(repo_name, pr_number as i32, reviewer, state, review_comment)
         .await
     {
         Ok(_) => {
-            info!("Review status updated for PR #{}", pr_number);
+            info!("Review stored for PR #{} by {}", pr_number, reviewer);
+
+            // Log governance event
+            let _ = database
+                .log_governance_event(
+                    "review_submitted",
+                    Some(repo_name),
+                    Some(pr_number as i32),
+                    Some(reviewer),
+                    &serde_json::json!({
+                        "state": state,
+                        "has_comment": review_comment.is_some()
+                    }),
+                )
+                .await;
+
             Ok(axum::response::Json(
-                serde_json::json!({"status": "updated"}),
+                serde_json::json!({"status": "review_stored"}),
             ))
         }
         Err(e) => {
-            warn!("Failed to update review status: {}", e);
+            warn!("Failed to store review: {}", e);
             Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR)
         }
     }

@@ -299,13 +299,148 @@ impl Database {
 
     pub async fn update_review_status(
         &self,
-        _repo_name: &str,
-        _pr_number: i32,
-        _reviewer: &str,
-        _state: &str,
+        repo_name: &str,
+        pr_number: i32,
+        reviewer: &str,
+        state: &str,
     ) -> Result<(), GovernanceError> {
-        // This would update review status in the database
-        // Implementation depends on specific review tracking requirements
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                sqlx::query!(
+                    r#"
+                    INSERT INTO reviews (repo_name, pr_number, reviewer, state, submitted_at, updated_at)
+                    VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                    ON CONFLICT(repo_name, pr_number, reviewer) DO UPDATE SET
+                        state = EXCLUDED.state,
+                        updated_at = CURRENT_TIMESTAMP
+                    "#,
+                    repo_name,
+                    pr_number,
+                    reviewer,
+                    state
+                )
+                .execute(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+            }
+            DatabaseBackend::Postgres(pool) => {
+                sqlx::query!(
+                    r#"
+                    INSERT INTO reviews (repo_name, pr_number, reviewer, state, submitted_at, updated_at)
+                    VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                    ON CONFLICT(repo_name, pr_number, reviewer) DO UPDATE SET
+                        state = EXCLUDED.state,
+                        updated_at = CURRENT_TIMESTAMP
+                    "#,
+                    repo_name,
+                    pr_number,
+                    reviewer,
+                    state
+                )
+                .execute(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+            }
+        }
+        Ok(())
+    }
+
+    /// Check if maintainer has reviewed PR
+    pub async fn has_maintainer_reviewed(
+        &self,
+        repo_name: &str,
+        pr_number: i32,
+        maintainer: &str,
+    ) -> Result<bool, GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                let exists: Option<i64> = sqlx::query_scalar!(
+                    r#"
+                    SELECT COUNT(*) as count
+                    FROM reviews
+                    WHERE repo_name = ? AND pr_number = ? AND reviewer = ? 
+                    AND state IN ('approved', 'changes_requested', 'commented')
+                    "#,
+                    repo_name,
+                    pr_number,
+                    maintainer
+                )
+                .fetch_one(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                Ok(exists.unwrap_or(0) > 0)
+            }
+            DatabaseBackend::Postgres(pool) => {
+                let exists: Option<i64> = sqlx::query_scalar!(
+                    r#"
+                    SELECT COUNT(*) as count
+                    FROM reviews
+                    WHERE repo_name = $1 AND pr_number = $2 AND reviewer = $3 
+                    AND state IN ('approved', 'changes_requested', 'commented')
+                    "#,
+                    repo_name,
+                    pr_number,
+                    maintainer
+                )
+                .fetch_one(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+                Ok(exists.unwrap_or(0) > 0)
+            }
+        }
+    }
+
+    /// Store review with comment
+    pub async fn store_review(
+        &self,
+        repo_name: &str,
+        pr_number: i32,
+        reviewer: &str,
+        state: &str,
+        review_comment: Option<&str>,
+    ) -> Result<(), GovernanceError> {
+        match &self.backend {
+            DatabaseBackend::Sqlite(pool) => {
+                sqlx::query!(
+                    r#"
+                    INSERT INTO reviews (repo_name, pr_number, reviewer, state, review_comment, submitted_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                    ON CONFLICT(repo_name, pr_number, reviewer) DO UPDATE SET
+                        state = EXCLUDED.state,
+                        review_comment = EXCLUDED.review_comment,
+                        updated_at = CURRENT_TIMESTAMP
+                    "#,
+                    repo_name,
+                    pr_number,
+                    reviewer,
+                    state,
+                    review_comment
+                )
+                .execute(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+            }
+            DatabaseBackend::Postgres(pool) => {
+                sqlx::query!(
+                    r#"
+                    INSERT INTO reviews (repo_name, pr_number, reviewer, state, review_comment, submitted_at, updated_at)
+                    VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                    ON CONFLICT(repo_name, pr_number, reviewer) DO UPDATE SET
+                        state = EXCLUDED.state,
+                        review_comment = EXCLUDED.review_comment,
+                        updated_at = CURRENT_TIMESTAMP
+                    "#,
+                    repo_name,
+                    pr_number,
+                    reviewer,
+                    state,
+                    review_comment
+                )
+                .execute(pool)
+                .await
+                .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+            }
+        }
         Ok(())
     }
 

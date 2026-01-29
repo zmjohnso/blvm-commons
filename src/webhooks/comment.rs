@@ -106,6 +106,19 @@ pub async fn handle_comment_event(
                 Ok(true) => {
                     info!("Valid signature from {} for PR #{}", commenter, pr_number);
 
+                    // Check if maintainer has reviewed this PR (transparency only, not blocking)
+                    let has_reviewed = database
+                        .has_maintainer_reviewed(repo_name, pr_number as i32, commenter)
+                        .await
+                        .unwrap_or(false);
+
+                    if !has_reviewed {
+                        warn!(
+                            "Maintainer {} signed PR #{} without GitHub review (transparency only, not blocking)",
+                            commenter, pr_number
+                        );
+                    }
+
                     // Store the verified signature with reasoning
                     match database
                         .add_signature(repo_name, pr_number as i32, commenter, signature, reasoning)
@@ -113,6 +126,24 @@ pub async fn handle_comment_event(
                     {
                         Ok(_) => {
                             info!("Verified signature added for PR #{}", pr_number);
+
+                            // Log whether signature has review link
+                            let _ = database
+                                .log_governance_event(
+                                    "signature_collected",
+                                    Some(repo_name),
+                                    Some(pr_number as i32),
+                                    Some(commenter),
+                                    &serde_json::json!({
+                                        "signature": signature,
+                                        "message": message,
+                                        "verified": true,
+                                        "maintainer_layer": maintainer.layer,
+                                        "reasoning": reasoning,
+                                        "has_review": has_reviewed
+                                    }),
+                                )
+                                .await;
 
                             // Log governance event
                             let _ = database
@@ -174,11 +205,131 @@ pub async fn handle_comment_event(
                 serde_json::json!({"status": "empty_signature"}),
             ))
         }
+    // Check for challenge command
+    else if body.starts_with("/governance-challenge") {
+        return handle_challenge_command(database, repo_name, pr_number, commenter, body).await;
     } else {
         info!("Non-governance comment, ignoring");
         Ok(axum::response::Json(
             serde_json::json!({"status": "ignored"}),
         ))
+    }
+}
+
+/// Handle challenge command: /governance-challenge <target_type> <target_id> <reason> <signature>
+async fn handle_challenge_command(
+    database: &Database,
+    repo_name: &str,
+    pr_number: u64,
+    commenter: &str,
+    body: &str,
+) -> Result<axum::response::Json<serde_json::Value>, axum::http::StatusCode> {
+    use crate::governance::challenge::{ChallengeManager, ChallengeTarget};
+    use tracing::{info, warn};
+
+    // Parse command: /governance-challenge <target_type> <target_id> "reason" <signature>
+    let remainder = body
+        .strip_prefix("/governance-challenge")
+        .unwrap_or("")
+        .trim();
+
+    // Parse target_type and target_id (first two words)
+    let parts: Vec<&str> = remainder.split_whitespace().collect();
+    if parts.len() < 4 {
+        warn!("Invalid challenge format. Expected: /governance-challenge <target_type> <target_id> \"reason\" <signature>");
+        return Ok(axum::response::Json(
+            serde_json::json!({"status": "error", "error": "Invalid format. Use: /governance-challenge <target_type> <target_id> \"reason\" <signature>"}),
+        ));
+    }
+
+    let target_type_str = parts[0];
+    let target_id = parts[1].to_string();
+
+    // Parse reason (quoted string)
+    let reason_start = remainder.find('"');
+    let reason_end = if let Some(start) = reason_start {
+        remainder[start + 1..].find('"').map(|end| start + 1 + end)
+    } else {
+        None
+    };
+
+    let reason = if let (Some(start), Some(end)) = (reason_start, reason_end) {
+        &remainder[start + 1..end]
+    } else {
+        return Ok(axum::response::Json(
+            serde_json::json!({"status": "error", "error": "Reason must be in quotes"}),
+        ));
+    };
+
+    // Parse signature (after reason)
+    let signature = &remainder[reason_end.unwrap() + 1..].trim();
+    if signature.is_empty() {
+        return Ok(axum::response::Json(
+            serde_json::json!({"status": "error", "error": "Signature is required"}),
+        ));
+    }
+
+    // Parse target type
+    let target_type = match ChallengeTarget::from_str(target_type_str) {
+        Ok(t) => t,
+        Err(e) => {
+            warn!("Invalid challenge target type: {}", target_type_str);
+            return Ok(axum::response::Json(
+                serde_json::json!({"status": "error", "error": format!("Invalid target type: {}", e)}),
+            ));
+        }
+    };
+
+    // Get database pool
+    let pool = database
+        .get_sqlite_pool()
+        .ok_or_else(|| axum::http::StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    let challenge_manager = ChallengeManager::new(pool.clone());
+
+    // Create challenge
+    match challenge_manager
+        .create_challenge(
+            target_type,
+            target_id,
+            commenter.to_string(),
+            reason.to_string(),
+            signature.to_string(),
+        )
+        .await
+    {
+        Ok(challenge_id) => {
+            info!(
+                "Challenge {} created by {} for {} {}",
+                challenge_id, commenter, target_type_str, target_id
+            );
+
+            // Log governance event
+            let _ = database
+                .log_governance_event(
+                    "challenge_created",
+                    Some(repo_name),
+                    Some(pr_number as i32),
+                    Some(commenter),
+                    &serde_json::json!({
+                        "challenge_id": challenge_id,
+                        "target_type": target_type_str,
+                        "target_id": target_id,
+                        "reason": reason
+                    }),
+                )
+                .await;
+
+            Ok(axum::response::Json(serde_json::json!({
+                "status": "challenge_created",
+                "challenge_id": challenge_id,
+                "message": format!("Challenge {} created. Response required within 30 days.", challenge_id)
+            })))
+        }
+        Err(e) => {
+            warn!("Failed to create challenge: {}", e);
+            Err(axum::http::StatusCode::INTERNAL_SERVER_ERROR)
+        }
     }
 }
 

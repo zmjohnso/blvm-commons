@@ -12,6 +12,7 @@ pub mod governance;
 pub mod governance_review;
 pub mod node_registry;
 pub mod nostr;
+pub mod reporting;
 pub mod resilience;
 pub mod services;
 pub mod validation;
