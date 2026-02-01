@@ -1,3 +1,1 @@
-# Commit Message
-
-Remove temporary documentation files from repository root. Keep only essential documentation.
+Documentation cleanup: Fix broken references and remove duplicate status docs
