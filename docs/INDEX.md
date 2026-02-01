@@ -64,8 +64,6 @@
 
 **Implementation Summaries**:
 - [IMPLEMENTATION_SUMMARY.md](../IMPLEMENTATION_SUMMARY.md) - Implementation summary
-- [INTEGRATION_SUMMARY.md](../INTEGRATION_SUMMARY.md) - Integration summary
-- [FINAL_INTEGRATION_STATUS.md](../FINAL_INTEGRATION_STATUS.md) - Final integration status
 - [INTEGRATION_FIXES_COMPLETE.md](../INTEGRATION_FIXES_COMPLETE.md) - Integration fixes completion
 
 **Feature Implementation**:
@@ -101,15 +99,10 @@
 ### Issues & Blockers
 
 **Critical Issues**:
-- [TECHNICAL_BLOCKERS.md](../TECHNICAL_BLOCKERS.md) - Technical blockers (all resolved)
-- [IMPORTANT_PLACEHOLDERS_AND_TODOS.md](../IMPORTANT_PLACEHOLDERS_AND_TODOS.md) - Placeholders and TODOs
-- [MISSING_FEATURES_ANALYSIS.md](../MISSING_FEATURES_ANALYSIS.md) - Missing features analysis
 - [GAP_ANALYSIS.md](../GAP_ANALYSIS.md) - Gap analysis
 
 **Integration Issues**:
-- [INTEGRATION_ISSUES.md](../INTEGRATION_ISSUES.md) - Integration issues
-- [INTEGRATION_FIX_PLAN.md](../INTEGRATION_FIX_PLAN.md) - Integration fix plan
-- [MISSING_RPC_METHODS.md](../MISSING_RPC_METHODS.md) - Missing RPC methods
+- [MISSING_RPC_METHODS.md](../MISSING_RPC_METHODS.md) - Missing RPC methods (vs Bitcoin Core)
 
 ---
 
@@ -225,9 +218,6 @@
 - Feature docs → Component docs
 
 **Issues**:
-- Blockers → [TECHNICAL_BLOCKERS.md](../TECHNICAL_BLOCKERS.md)
-- TODOs → [IMPORTANT_PLACEHOLDERS_AND_TODOS.md](../IMPORTANT_PLACEHOLDERS_AND_TODOS.md)
-- Integration issues → [INTEGRATION_ISSUES.md](../INTEGRATION_ISSUES.md)
 
 ---
 
