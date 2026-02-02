@@ -34,22 +34,20 @@ Bitcoin Commons implements a 5-tier constitutional governance system:
    - New RPC methods, P2P changes, wallet features
    - Must include technical specification
 
-3. **Tier 3: Consensus-Adjacent** (5-of-5, 90 days + economic node veto)
+3. **Tier 3: Consensus-Adjacent** (5-of-5, 90 days)
    - Changes affecting consensus validation code
-   - Economic nodes can veto (30%+ hashpower or 40%+ economic activity)
 
-4. **Tier 4: Emergency Actions** (4-of-5, 24-hour notification)
+4. **Tier 4: Emergency Actions** (4-of-5, 0 days)
    - Critical security patches, network-threatening bugs
-   - Real-time economic node oversight, post-mortem required
+   - Post-mortem required
 
-5. **Tier 5: Governance Changes** (Special process, 180 days)
+5. **Tier 5: Governance Changes** (5-of-5, 180 days)
    - Changes to governance rules themselves
-   - Requires economic node signaling (50%+ hashpower, 60%+ economic activity)
 
 ### Core Components
 
-- `bllvm-commons/` - GitHub App for governance enforcement
-- `bllvm-sdk/` - Cryptographic primitives and CLI tools
+- `blvm-commons/` - Governance enforcement system
+- `blvm-sdk/` - Cryptographic primitives and CLI tools
 - `governance/` - Governance configuration and documentation
 
 ## Quick Start
@@ -63,16 +61,15 @@ Bitcoin Commons implements a 5-tier constitutional governance system:
 
 ```bash
 # Clone repositories (BTCDecoded is the GitHub organization)
-git clone https://github.com/btcdecoded/bllvm-commons.git
-cd bllvm-commons
+git clone https://github.com/BTCDecoded/blvm-commons.git
+cd blvm-commons
 
-# Set up bllvm-commons
-cd bllvm-commons
+# Set up blvm-commons
 cargo build
 cargo test
 
-# Set up developer-sdk
-cd ../developer-sdk
+# Set up blvm-sdk
+cd ../blvm-sdk
 cargo build
 cargo test
 ```
@@ -95,12 +92,12 @@ cargo test --test e2e_test
 ### Core Documentation
 - [Governance Process](governance/GOVERNANCE.md) - How governance works
 - [System Design](governance/DESIGN.md) - Architecture and design decisions
-- [Developer Guide](bllvm-sdk/README.md) - SDK usage and examples
+- [Developer Guide](blvm-sdk/README.md) - SDK usage and examples
 
 ### Development Guides
 - [Maintainer Guide](governance/MAINTAINER_GUIDE.md) - For maintainers
 - [Economic Node Guide](governance/ECONOMIC_NODE_GUIDE.md) - For economic nodes
-- [Deployment Guide](bllvm-commons/DEPLOYMENT.md) - Deployment instructions
+- [Deployment Guide](blvm-commons/DEPLOYMENT.md) - Deployment instructions
 
 ## Implementation Status
 
