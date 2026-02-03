@@ -23,3 +23,7 @@ CREATE INDEX idx_challenges_created ON challenges(created_at);
 CREATE INDEX idx_challenges_challenger ON challenges(challenger);
 
 
+
+
+
+
