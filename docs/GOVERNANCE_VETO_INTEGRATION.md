@@ -1,8 +1,14 @@
 # Governance Veto Integration
 
-## Status: ✅ Fully Integrated
+> **⚠️ DEPRECATED**: This document describes the economic node veto system which has been **removed** from Bitcoin Commons.
+>
+> **Current Governance Model**: Bitcoin Commons now uses **maintainer-only multisig governance**. Economic nodes and veto systems are no longer part of the governance model.
+>
+> This document is kept for historical reference only.
 
-The new contribution-based voting system is now fully integrated with the existing economic node veto system.
+## Status: ❌ Removed
+
+The economic node veto system has been removed from Bitcoin Commons. Governance is now maintainer-only multisig.
 
 ## Integration Points
 

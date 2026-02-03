@@ -169,7 +169,7 @@ Two innovations work together:
 
 **Bitcoin Commons (Cryptographic Coordination)** provides a 5-tier constitutional coordination model, cryptographic enforcement (secp256k1 multisig), economic node veto (aligns with Bitcoin's incentives), coordination fork capability (user sovereignty), and complete transparency (public audit trails). Its value: enables coordination without conflict. Learn about the framework at [thebitcoincommons.org](https://thebitcoincommons.org).
 
-![BLLVM Stack Architecture](images/stack.png)
+![BLLVM Stack Architecture](https://thebitcoincommons.org/assets/images/stack.png)
 *BLLVM 5-tier architecture: Orange Paper (mathematical foundation) → Consensus Proof → Protocol Engine → Reference Node → Developer SDK.*
 
 ### How Bitcoin Commons Prevents Crises
