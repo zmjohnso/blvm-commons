@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT COUNT(*) as count\n            FROM pull_requests pr,\n            json_each(pr.signatures) sig\n            WHERE pr.opened_at >= ? AND pr.opened_at <= ?\n            AND json_extract(sig.value, '$.timestamp') >= ? \n            AND json_extract(sig.value, '$.timestamp') <= ?\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "868a25edbbc17c6d1ecf09d9396d24b524e9fe10a1ff0adaae4d85e10f755c50"
+}

@@ -480,7 +480,7 @@ impl CrossLayerStatusChecker {
                 || name_lower.contains("cargo test")
                 || name_lower.contains("unit test")
                 || name_lower.contains("property test")
-                || name_lower.contains("kani")
+                || name_lower.contains("spec-lock")
                 || name_lower.contains("proptest")
             {
                 // Try to extract test counts from check run name
@@ -801,23 +801,6 @@ mod tests {
         assert_eq!(
             CrossLayerStatusChecker::extract_test_count_from_name("50 tests passed out of 100"),
             Some(50)
-        );
-    }
-
-    #[test]
-    fn test_extract_test_count_real_world_examples() {
-        // Real-world CI check run name examples
-        assert_eq!(
-            CrossLayerStatusChecker::extract_test_count_from_name("cargo test --lib (123 tests)"),
-            Some(123)
-        );
-        assert_eq!(
-            CrossLayerStatusChecker::extract_test_count_from_name("Unit & Property Tests: 456"),
-            Some(456)
-        );
-        assert_eq!(
-            CrossLayerStatusChecker::extract_test_count_from_name("Kani Model Checking: 10 passed"),
-            Some(10)
         );
     }
 

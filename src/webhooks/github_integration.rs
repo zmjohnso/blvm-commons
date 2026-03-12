@@ -255,7 +255,6 @@ impl GitHubIntegration {
         Ok((signatures_met, status))
     }
 
-
     /// Post review period status check
     async fn post_review_period_status(
         &self,

@@ -5,7 +5,7 @@ set -e
 COMPONENT="${1:-}"
 if [ -z "$COMPONENT" ]; then
     echo "Usage: ./config.sh [component] [--edit]"
-    echo "Components: bllvm, experimental, commons"
+    echo "Components: blvm, experimental, commons"
     exit 1
 fi
 shift
@@ -19,18 +19,18 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$COMPONENT" in
-    bllvm|experimental)
-        CONFIG_FILE="/etc/bllvm/bllvm.toml"
-        INSTALL_DIR="/opt/bllvm"
-        if [ "$COMPONENT" = "bllvm" ]; then
-            BINARY_NAME="bllvm"
+    blvm|experimental)
+        CONFIG_FILE="/etc/blvm/blvm.toml"
+        INSTALL_DIR="/opt/blvm"
+        if [ "$COMPONENT" = "blvm" ]; then
+            BINARY_NAME="blvm"
         else
-            BINARY_NAME="bllvm-experimental"
+            BINARY_NAME="blvm-experimental"
         fi
         BINARY_PATH="$INSTALL_DIR/$BINARY_NAME"
         ;;
     commons)
-        CONFIG_FILE="/etc/bllvm-commons/app.toml"
+        CONFIG_FILE="/etc/blvm-commons/app.toml"
         BINARY_PATH=""
         ;;
     *)
@@ -49,7 +49,7 @@ if [ "$EDIT" = true ]; then
     fi
     sudo "$EDITOR" "$CONFIG_FILE"
 else
-    # Use bllvm config show if available, otherwise fall back to cat
+    # Use blvm config show if available, otherwise fall back to cat
     if [ -n "$BINARY_PATH" ] && [ -x "$BINARY_PATH" ]; then
         if "$BINARY_PATH" config show 2>/dev/null; then
             # Success, output already shown

@@ -1,7 +1,7 @@
 //! Version Pinning and References
 //!
-//! This module provides cryptographic version pinning where Consensus Proof must reference
-//! specific Orange Paper versions. It ensures version references are cryptographically verified
+//! This module provides cryptographic version pinning where blvm-consensus must reference
+//! specific blvm-spec versions. It ensures version references are cryptographically verified
 //! and prevents outdated version references.
 
 use crate::error::GovernanceError;
@@ -24,11 +24,11 @@ pub struct VersionReference {
 /// Types of version references
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum VersionReferenceType {
-    /// @orange-paper-version: v1.2.3
+    /// @blvm-spec-version: v1.2.3
     Version,
-    /// @orange-paper-commit: abc123def456
+    /// @blvm-spec-commit: abc123def456
     Commit,
-    /// @orange-paper-hash: sha256:fedcba...
+    /// @blvm-spec-hash: sha256:fedcba...
     ContentHash,
     /// Combined reference with multiple components
     Combined,
@@ -102,7 +102,7 @@ pub struct VersionPinningConfig {
 impl Default for VersionPinningConfig {
     fn default() -> Self {
         Self {
-            required_reference_format: "orange-paper@v{VERSION}".to_string(),
+            required_reference_format: "blvm-spec@v{VERSION}".to_string(),
             minimum_signatures: 6,
             allow_outdated_versions: false,
             max_version_age_days: 30,
@@ -175,8 +175,8 @@ impl VersionPinningValidator {
     ) -> Option<VersionReference> {
         let trimmed = line.trim();
 
-        // Pattern: @orange-paper-version: v1.2.3
-        if let Some(captures) = regex::Regex::new(r"@orange-paper-version:\s*(v?\d+\.\d+\.\d+)")
+        // Pattern: @blvm-spec-version: v1.2.3
+        if let Some(captures) = regex::Regex::new(r"@blvm-spec-version:\s*(v?\d+\.\d+\.\d+)")
             .unwrap()
             .captures(trimmed)
         {
@@ -191,8 +191,8 @@ impl VersionPinningValidator {
             });
         }
 
-        // Pattern: @orange-paper-commit: abc123def456 (accept 7-40 hex chars for short/long commit SHAs)
-        if let Some(captures) = regex::Regex::new(r"@orange-paper-commit:\s*([a-f0-9]{7,40})")
+        // Pattern: @blvm-spec-commit: abc123def456 (accept 7-40 hex chars for short/long commit SHAs)
+        if let Some(captures) = regex::Regex::new(r"@blvm-spec-commit:\s*([a-f0-9]{7,40})")
             .unwrap()
             .captures(trimmed)
         {
@@ -207,8 +207,8 @@ impl VersionPinningValidator {
             });
         }
 
-        // Pattern: @orange-paper-hash: sha256:fedcba... (accept any length hex string)
-        if let Some(captures) = regex::Regex::new(r"@orange-paper-hash:\s*(sha256:[a-f0-9]+)")
+        // Pattern: @blvm-spec-hash: sha256:fedcba... (accept any length hex string)
+        if let Some(captures) = regex::Regex::new(r"@blvm-spec-hash:\s*(sha256:[a-f0-9]+)")
             .unwrap()
             .captures(trimmed)
         {
@@ -225,11 +225,11 @@ impl VersionPinningValidator {
 
         // Pattern: Combined reference (only if no specific pattern matched)
         // This should be checked last, after all specific patterns
-        if trimmed.contains("@orange-paper") && trimmed.contains(":") {
+        if trimmed.contains("@blvm-spec") && trimmed.contains(":") {
             // Check if it's not already matched by a specific pattern
-            if !trimmed.contains("@orange-paper-version")
-                && !trimmed.contains("@orange-paper-commit")
-                && !trimmed.contains("@orange-paper-hash")
+            if !trimmed.contains("@blvm-spec-version")
+                && !trimmed.contains("@blvm-spec-commit")
+                && !trimmed.contains("@blvm-spec-hash")
             {
                 return Some(VersionReference {
                     file_path: file_path.to_string(),
@@ -484,7 +484,7 @@ impl VersionPinningValidator {
         content_hash: &str,
     ) -> String {
         format!(
-            "// @orange-paper-version: {}\n// @orange-paper-commit: {}\n// @orange-paper-hash: {}",
+            "// @blvm-spec-version: {}\n// @blvm-spec-commit: {}\n// @blvm-spec-hash: {}",
             version, commit_sha, content_hash
         )
     }
@@ -518,9 +518,9 @@ mod tests {
     fn test_parse_version_references() {
         let validator = VersionPinningValidator::default();
         let content = r#"
-// @orange-paper-version: v1.2.3
-// @orange-paper-commit: abc123def456789
-// @orange-paper-hash: sha256:fedcba123456
+// @blvm-spec-version: v1.2.3
+// @blvm-spec-commit: abc123def456789
+// @blvm-spec-hash: sha256:fedcba123456
 "#;
 
         let references = validator
@@ -550,9 +550,9 @@ mod tests {
         let validator = VersionPinningValidator::default();
         let format = validator.generate_reference_format("v1.2.3", "abc123", "sha256:def456");
 
-        assert!(format.contains("@orange-paper-version: v1.2.3"));
-        assert!(format.contains("@orange-paper-commit: abc123"));
-        assert!(format.contains("@orange-paper-hash: sha256:def456"));
+        assert!(format.contains("@blvm-spec-version: v1.2.3"));
+        assert!(format.contains("@blvm-spec-commit: abc123"));
+        assert!(format.contains("@blvm-spec-hash: sha256:def456"));
     }
 
     #[test]
@@ -560,7 +560,7 @@ mod tests {
         let validator = VersionPinningValidator::default();
 
         let manifest = VersionManifest {
-            repository: "orange-paper".to_string(),
+            repository: "blvm-spec".to_string(),
             created_at: chrono::Utc::now(),
             versions: vec![VersionManifestEntry {
                 version: "v1.2.3".to_string(),

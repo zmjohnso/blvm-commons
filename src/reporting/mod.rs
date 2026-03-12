@@ -8,7 +8,5 @@ pub mod governance_metrics;
 
 pub use governance_metrics::{
     ChallengeStatistics, GovernanceReport, MaintainerActivity, MaintainerMergeCount,
-    MergeDistribution, MetricsReporter, PRStatistics, ReviewStatistics, ReviewTypeCount,
-    TierCount,
+    MergeDistribution, MetricsReporter, PRStatistics, ReviewStatistics, ReviewTypeCount, TierCount,
 };
-

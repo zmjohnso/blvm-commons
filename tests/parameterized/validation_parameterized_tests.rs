@@ -41,7 +41,7 @@ fn test_version_parsing_edge_cases() {
     ];
     
     for (version, should_parse) in test_cases {
-        let content = format!("// @orange-paper-version: {}", version);
+        let content = format!("// @blvm-spec-version: {}", version);
         let result = validator.parse_version_references("test.rs", &content);
         
         if should_parse {

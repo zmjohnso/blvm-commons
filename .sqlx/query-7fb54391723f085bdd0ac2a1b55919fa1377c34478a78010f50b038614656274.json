@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                SELECT COUNT(*) as count\n                FROM pull_requests pr,\n                json_each(pr.signatures) sig\n                WHERE json_extract(sig.value, '$.signer') = ?\n                AND json_extract(sig.value, '$.timestamp') >= ? \n                AND json_extract(sig.value, '$.timestamp') <= ?\n                ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "7fb54391723f085bdd0ac2a1b55919fa1377c34478a78010f50b038614656274"
+}

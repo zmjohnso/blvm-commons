@@ -114,9 +114,9 @@ When `stem_phase_relay` returns `None`, the transaction enters **fluff phase** a
 
 **Proof**: The algorithm returns `Option<Peer>` where `Some(peer)` indicates single-peer relay and `None` indicates transition to fluff. The fluff phase is the only mechanism for broadcast.
 
-## Implementation Invariants (Kani-Verified)
+## Implementation Invariants (Spec-Lock Verified)
 
-The following invariants are enforced via Kani model checking:
+The following invariants are enforced via spec-lock verification:
 
 1. **No Premature Broadcast**: `∀ tx, phase: phase == Stem ⟹ broadcast_count(tx) == 0`
 2. **Bounded Stem Length**: `∀ tx: stem_hops(tx) ≤ max_stem_hops`

@@ -64,11 +64,11 @@ A Rust-based GitHub App that enforces cryptographic governance across the BTCDec
 ```
 ┌─────────────────────────────────────────┐
 │   GitHub Organization (5 repos)         │
-│   - orange-paper                        │
-│   - consensus-proof                     │
-│   - protocol-engine                     │
-│   - reference-node                      │
-│   - developer-sdk                       │
+│   - blvm-spec                           │
+│   - blvm-consensus                      │
+│   - blvm-protocol                       │
+│   - blvm-node                           │
+│   - blvm-sdk                             │
 └─────────────────────────────────────────┘
             ↓ webhooks
 ┌─────────────────────────────────────────┐
@@ -284,11 +284,11 @@ governance/
 ├── README.md                    # Documentation
 ├── GOVERNANCE.md                # How governance works
 ├── repos/
-│   ├── orange-paper.yml
-│   ├── consensus-proof.yml
-│   ├── protocol-engine.yml
-│   ├── reference-node.yml
-│   └── developer-sdk.yml
+│   ├── blvm-spec.yml
+│   ├── blvm-consensus.yml
+│   ├── blvm-protocol.yml
+│   ├── blvm-node.yml
+│   └── blvm-sdk.yml
 ├── maintainers/
 │   ├── layer-1-2.yml           # 7 maintainers (constitutional)
 │   ├── layer-3.yml             # 5 maintainers (implementation)
@@ -302,17 +302,17 @@ governance/
 
 **Example configuration:**
 ```yaml
-# repos/orange-paper.yml
+# repos/blvm-spec.yml
 layer: 1
 governance_level: constitutional
 signature_threshold: 6-of-7
 review_period_days: 180
 synchronized_with:
-  - consensus-proof
+  - blvm-consensus
 
 cross_layer_rules:
   - if_changed: consensus-rules/**
-    then_require_update: consensus-proof/proofs/**
+    then_require_update: blvm-consensus/proofs/**
     validation: equivalence_proof_exists
     error_message: "Consensus rule changes require corresponding proof updates"
 ```
@@ -337,19 +337,19 @@ maintainers:
 # cross-layer-rules.yml
 rules:
   - name: consensus_proof_sync
-    source_repo: orange-paper
+    source_repo: blvm-spec
     source_pattern: consensus-rules/**
-    target_repo: consensus-proof
+    target_repo: blvm-consensus
     target_pattern: proofs/**
     validation: corresponding_file_exists
     bidirectional: true
   
   - name: protocol_engine_equivalence
-    source_repo: protocol-engine
+    source_repo: blvm-protocol
     source_pattern: consensus/**
-    target_repo: orange-paper
+    target_repo: blvm-spec
     validation: references_latest_version
-    required_reference_format: "orange-paper@v{VERSION}"
+    required_reference_format: "blvm-spec@v{VERSION}"
 ```
 
 **This repo's own governance:**
@@ -373,7 +373,7 @@ public_comment_period_days: 30
 
 **Each project repo contains `.governance.yml`:**
 ```yaml
-# orange-paper/.governance.yml
+# blvm-spec/.governance.yml
 governance_source: https://github.com/btcdecoded/governance
 layer: 1
 
@@ -408,7 +408,7 @@ Governance App receives webhook:
   Required: 4-of-5 | Current: 0/4
   
   ❌ Governance: Equivalence Proof Missing
-  Must prove equivalence to orange-paper@v2.1.0
+  Must prove equivalence to blvm-spec@v2.1.0
 
 GitHub merge button: DISABLED
 ```
@@ -440,7 +440,7 @@ Signatures: 4-of-5 ✓
 
 Review period: 90/90 days ✓
 Equivalence proof: Validated ✓
-Dependencies: orange-paper@v2.1.0 referenced ✓
+Dependencies: blvm-spec@v2.1.0 referenced ✓
 
 GitHub merge button: ENABLED
 ```
@@ -460,13 +460,13 @@ Posts comment:
   ⚠️ Cross-Layer Dependency Required
   
   Changes to consensus-rules/** require corresponding
-  changes in consensus-proof repo.
+  changes in blvm-consensus repo.
   
-  Please open PR in consensus-proof and link here.
+  Please open PR in blvm-consensus and link here.
 
 Status check: ❌ BLOCKED
 
-Developer opens PR in consensus-proof
+Developer opens PR in blvm-consensus
 
 Governance App:
   - Links the two PRs
@@ -521,7 +521,7 @@ Day 90: Emergency mode auto-expires
 **Changing governance rules themselves:**
 
 ```
-PR opened in governance repo changing protocol-engine.yml:
+PR opened in governance repo changing blvm-protocol.yml:
   - signature_threshold: 4-of-5 → 3-of-5
 
 Governance App detects:

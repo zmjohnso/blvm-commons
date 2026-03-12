@@ -22,7 +22,6 @@ impl ContributionTracker {
     // Merge mining removed - it's now a module with its own revenue model
     // Merge mining revenue goes to module developer, not governance
 
-
     /// Record a zap contribution (called from zap tracker)
     pub async fn record_zap_contribution(
         &self,

@@ -18,7 +18,7 @@
 
 ```bash
 # Edit BLLVM config
-sudo nano /etc/bllvm/bllvm.toml
+sudo nano /etc/blvm/blvm.toml
 ```
 
 **Change ports:**
@@ -34,7 +34,7 @@ listen_address = "0.0.0.0:8335"  # Different RPC port (Bitcoin Core uses 8332)
 **Restart BLLVM:**
 
 ```bash
-sudo systemctl restart bllvm
+sudo systemctl restart blvm
 ```
 
 ### Option 2: Configure Bitcoin Core to Use Different Ports
@@ -80,7 +80,7 @@ port=8335         # Different from BLLVM's 8333
 ### BLLVM (Modified)
 - RPC: `localhost:8335` (or 8334)
 - P2P: `0.0.0.0:8334` (or 8335)
-- Data: `/var/lib/bllvm`
+- Data: `/var/lib/blvm`
 
 **Note:** Make sure P2P ports don't conflict. If Bitcoin Core uses 8333, BLLVM should use 8334 (or vice versa).
 
@@ -120,14 +120,14 @@ sudo netstat -tlnp | grep -E "8332|8333"
 
 ```bash
 # Install BLLVM (will use default ports 8332/8333)
-sudo ./bllvm.sh install bllvm --public-ip 192.168.2.101
+sudo ./blvm.sh install blvm --public-ip 192.168.2.101
 
 # Edit config to use different ports
-sudo nano /etc/bllvm/bllvm.toml
+sudo nano /etc/blvm/blvm.toml
 # Change ports as shown above
 
 # Restart
-sudo systemctl restart bllvm
+sudo systemctl restart blvm
 ```
 
 **Option B: Modify installer to support custom ports (future enhancement)**

@@ -27,7 +27,6 @@ impl ContributionAggregator {
         }
     }
 
-
     /// Aggregate cumulative zap contributions (all-time) - for reporting only
     /// NOTE: Zaps do NOT affect governance (maintainer-only multisig)
     /// Returns total BTC zapped (cumulative) for transparency/reporting

@@ -18,7 +18,7 @@ Contains the Bitcoin Commons governance and implementation ecosystem, managed by
 For a detailed overview of the project directory structure, see [DIRECTORY_STRUCTURE.md](./DIRECTORY_STRUCTURE.md).
 
 
-**📚 Documentation**: See [Documentation Index](./docs/INDEX.md) for complete navigation of all documentation.
+**📚 Documentation**: See [Documentation Index](./docs/README.md) for complete navigation of all documentation.
 
 ## 🏗️ Architecture Overview
 

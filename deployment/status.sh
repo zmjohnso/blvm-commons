@@ -5,20 +5,20 @@ set -e
 echo "=== Bitcoin Commons Status ==="
 echo ""
 
-for component in bllvm experimental commons; do
+for component in blvm experimental commons; do
     case "$component" in
-        bllvm|experimental)
-            SERVICE_NAME="bllvm"
-            INSTALL_DIR="/opt/bllvm"
-            if [ "$component" = "bllvm" ]; then
-                BINARY_NAME="bllvm"
+        blvm|experimental)
+            SERVICE_NAME="blvm"
+            INSTALL_DIR="/opt/blvm"
+            if [ "$component" = "blvm" ]; then
+                BINARY_NAME="blvm"
             else
-                BINARY_NAME="bllvm-experimental"
+                BINARY_NAME="blvm-experimental"
             fi
             BINARY_PATH="$INSTALL_DIR/$BINARY_NAME"
             ;;
         commons)
-            SERVICE_NAME="bllvm-commons"
+            SERVICE_NAME="blvm-commons"
             BINARY_PATH=""
             ;;
     esac
@@ -50,5 +50,5 @@ for component in bllvm experimental commons; do
 done
 
 echo ""
-echo "Use 'systemctl status bllvm' or 'systemctl status bllvm-commons' for details"
+echo "Use 'systemctl status blvm' or 'systemctl status blvm-commons' for details"
 

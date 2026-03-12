@@ -137,7 +137,6 @@ impl StatusCheckGenerator {
 
         status
     }
-
 }
 
 #[cfg(test)]
@@ -295,8 +294,5 @@ mod tests {
 
         assert!(status.contains("🚨"), "Should have emergency emoji");
         assert!(status.contains("Tier 4"), "Should show tier number");
-    }
-
-        assert!(status.contains("20.0%"), "Should show mining veto percent");
     }
 }

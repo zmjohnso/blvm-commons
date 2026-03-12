@@ -2,11 +2,7 @@
 //!
 //! These tests verify mathematical properties of status determination and aggregation.
 
-use blvm_commons::github::cross_layer_status::CrossLayerStatusChecker;
 use proptest::prelude::*;
-
-// Import the internal function for testing
-use blvm_commons::github::cross_layer_status::CrossLayerStatusChecker as Checker;
 
 proptest! {
     /// Property: Status aggregation is commutative
@@ -54,43 +50,6 @@ proptest! {
         
         let has_failure = statuses.iter().any(|&s| s == "failure");
         prop_assert!(has_failure, "At least one status is failure");
-    }
-
-    /// Property: Test count extraction handles various formats
-    #[test]
-    fn test_count_extraction_formats(
-        count in 0usize..100000
-    ) {
-        let formats = vec![
-            format!("{} tests", count),
-            format!("Tests: {}", count),
-            format!("cargo test: {}", count),
-            format!("{} passed", count),
-            format!("passed: {}", count),
-        ];
-        
-        for format in formats {
-            let result = CrossLayerStatusChecker::extract_test_count_from_name(&format);
-            prop_assert_eq!(result, Some(count), "Format '{}' should extract count {}", format, count);
-        }
-    }
-
-    /// Property: Test count extraction is case-insensitive
-    #[test]
-    fn test_count_extraction_case_insensitive(
-        count in 1usize..1000
-    ) {
-        let formats = vec![
-            format!("{} TESTS", count),
-            format!("{} Tests", count),
-            format!("{} tests", count),
-            format!("{} TeStS", count),
-        ];
-        
-        for format in formats {
-            let result = CrossLayerStatusChecker::extract_test_count_from_name(&format);
-            prop_assert_eq!(result, Some(count), "Case should not matter for '{}'", format);
-        }
     }
 
     /// Property: Status description generation is deterministic

@@ -33,10 +33,10 @@ EOF
         -d "$json" | jq -r '"✅ Issue #\(.number): \(.title) - \(.html_url)"'
 }
 
-# bllvm-consensus issues (continuing from #4)
-echo "Creating bllvm-consensus issues..."
+# blvm-consensus issues (continuing from #4)
+echo "Creating blvm-consensus issues..."
 
-create_issue "bllvm-consensus" \
+create_issue "blvm-consensus" \
     "Improve error messages" \
     "## Description
 
@@ -87,33 +87,32 @@ Clear error messages help developers understand what went wrong and how to fix i
 5. Submit PR with improvements" \
     '["good-first-issue", "type:enhancement", "area:consensus", "priority:low"]'
 
-create_issue "bllvm-consensus" \
-    "Implement missing Kani proofs" \
+create_issue "blvm-consensus" \
+    "Implement missing spec-lock verification" \
     "## Description
 
-Add formal verification proofs for uncovered consensus rules.
+Add formal verification for uncovered consensus rules using blvm-spec-lock.
 
 ## Context
 
-We have 194+ Kani proofs, but there are still consensus rules that could benefit from formal verification. Adding more proofs increases confidence in correctness.
+blvm-spec-lock provides formal verification linking code to Orange Paper specifications. There may be consensus rules that could benefit from additional \`#[spec_locked]\` annotations and verification.
 
 ## Acceptance Criteria
 
-- [ ] Identify consensus rules without Kani proofs
-- [ ] Implement Kani proofs for identified rules
-- [ ] Verify proofs pass
-- [ ] Document the proofs
+- [ ] Identify consensus rules without spec-lock verification
+- [ ] Add \`#[spec_locked]\` annotations for identified rules
+- [ ] Verify: \`cargo spec-lock verify --crate-path .\`
+- [ ] Document the verified functions
 
 ## Technical Details
 
-- **Files to modify**: \`src/**/*.rs\` (add \`#[cfg(kani)]\` blocks)
-- **Dependencies**: Kani (see docs for setup)
-- **References**: \`docs/FORMAL_VERIFICATION_PLAN.md\`
+- **Files to modify**: \`src/**/*.rs\` (add \`#[spec_locked(\"section\")]\` attributes)
+- **Dependencies**: blvm-spec-lock (see blvm-consensus docs)
+- **References**: \`docs/VERIFICATION.md\`
 
 ## Skills Required
 
 - Formal verification
-- Kani model checker
 - Rust
 - Bitcoin consensus rules
 
@@ -132,15 +131,15 @@ We have 194+ Kani proofs, but there are still consensus rules that could benefit
 
 ## Getting Started
 
-1. Review \`docs/FORMAL_VERIFICATION_PLAN.md\`
-2. Identify consensus rules needing proofs
-3. Study existing Kani proofs for patterns
-4. Implement new proofs
-5. Run: \`cargo kani --features verify\`
-6. Submit PR with new proofs" \
+1. Review \`docs/VERIFICATION.md\`
+2. Identify consensus rules needing verification
+3. Study existing \`#[spec_locked]\` functions for patterns
+4. Add annotations and contracts
+5. Run: \`cargo spec-lock verify --crate-path .\`
+6. Submit PR with new verification" \
     '["intermediate", "type:feature", "area:consensus", "priority:high"]'
 
-create_issue "bllvm-consensus" \
+create_issue "blvm-consensus" \
     "Add fuzzing targets" \
     "## Description
 
@@ -191,7 +190,7 @@ Fuzzing helps discover bugs by testing with random inputs. We have some fuzzing 
 5. Submit PR with new fuzzing targets" \
     '["intermediate", "type:testing", "area:consensus", "priority:medium"]'
 
-create_issue "bllvm-consensus" \
+create_issue "blvm-consensus" \
     "Performance optimization" \
     "## Description
 
@@ -213,7 +212,7 @@ Performance is important for consensus validation, especially in hot paths. Ther
 
 - **Files to modify**: \`src/**/*.rs\`
 - **Dependencies**: Benchmarking tools
-- **References**: See \`bllvm-consensus/LOW_HANGING_FRUIT_OPTIMIZATIONS.md\`
+- **References**: See \`blvm-consensus/LOW_HANGING_FRUIT_OPTIMIZATIONS.md\`
 
 ## Skills Required
 
@@ -244,7 +243,7 @@ Performance is important for consensus validation, especially in hot paths. Ther
 6. Submit PR with optimizations" \
     '["intermediate", "type:enhancement", "area:consensus", "priority:medium"]'
 
-create_issue "bllvm-consensus" \
+create_issue "blvm-consensus" \
     "Implement UTXO commitment verification" \
     "## Description
 
@@ -295,7 +294,7 @@ UTXO commitments allow efficient verification of UTXO set state. The verificatio
 5. Submit PR with implementation" \
     '["advanced", "type:feature", "area:consensus", "priority:high"]'
 
-create_issue "bllvm-consensus" \
+create_issue "blvm-consensus" \
     "Add consensus rule tests from Bitcoin Core" \
     "## Description
 
@@ -348,6 +347,6 @@ Bitcoin Core has extensive test vectors that validate consensus rules. Porting t
     '["advanced", "type:testing", "area:consensus", "priority:high"]'
 
 echo ""
-echo "✅ Completed bllvm-consensus issues (9 total)"
+echo "✅ Completed blvm-consensus issues (9 total)"
 echo ""
 

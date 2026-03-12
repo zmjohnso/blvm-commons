@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT COUNT(*) as count\n            FROM pull_requests\n            WHERE opened_at >= ? AND opened_at <= ?\n            AND governance_status != 'merged'\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "4cbb6e80ae85bcb27933bbf5833acb14b3dbb94cfe19f1a3bea6647bc2a70d06"
+}

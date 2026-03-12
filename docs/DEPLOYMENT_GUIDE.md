@@ -8,7 +8,7 @@
 
 ## 🎯 What You Need to Deploy
 
-1. **Governance App (bllvm-commons)** - 1 instance
+1. **Governance App (blvm-commons)** - 1 instance
 2. **Nostr Bot Keys** - 4 nsec keys (gov, dev, research, network)
 3. **Archival Node** - 1 instance (full blockchain history)
 4. **UTXO Commitment Nodes** - 2-3 instances (experimental features)
@@ -101,7 +101,7 @@ version: '3.8'
 services:
   governance-app:
     image: ghcr.io/btcdecoded/governance-app:latest
-    container_name: bllvm-commons
+    container_name: blvm-commons
     ports:
       - "8080:8080"
     environment:
@@ -183,8 +183,8 @@ curl http://localhost:8080/health
 ### Create Node Config
 
 ```bash
-mkdir -p ~/bllvm-nodes/archival
-cd ~/bllvm-nodes/archival
+mkdir -p ~/blvm-nodes/archival
+cd ~/blvm-nodes/archival
 ```
 
 ### Create config.toml
@@ -217,8 +217,8 @@ production = true
 ```yaml
 # Add to docker-compose.yml
   archival-node:
-    image: ghcr.io/btcdecoded/bllvm:latest
-    container_name: bllvm-archival
+    image: ghcr.io/btcdecoded/blvm:latest
+    container_name: blvm-archival
     ports:
       - "8332:8332"  # RPC
       - "8333:8333"  # P2P
@@ -226,7 +226,7 @@ production = true
       - RUST_LOG=info
     volumes:
       - ./archival-data:/app/data
-    command: ["bllvm", "--config", "/app/config.toml"]
+    command: ["blvm", "--config", "/app/config.toml"]
     restart: unless-stopped
 ```
 
@@ -234,20 +234,20 @@ production = true
 
 ```bash
 # Download binary from release
-wget https://github.com/BTCDecoded/bllvm/releases/latest/download/bllvm-linux-x86_64.tar.gz
-tar -xzf bllvm-linux-x86_64.tar.gz
+wget https://github.com/BTCDecoded/blvm/releases/latest/download/blvm-linux-x86_64.tar.gz
+tar -xzf blvm-linux-x86_64.tar.gz
 
 # Create systemd service
-sudo tee /etc/systemd/system/bllvm-archival.service << EOF
+sudo tee /etc/systemd/system/blvm-archival.service << EOF
 [Unit]
-Description=BLLVM Archival Node
+Description=BLVM Archival Node
 After=network.target
 
 [Service]
 Type=simple
 User=bitcoin
-WorkingDirectory=/opt/bllvm
-ExecStart=/opt/bllvm/bllvm --config /etc/bllvm/archival.toml
+WorkingDirectory=/opt/blvm
+ExecStart=/opt/blvm/blvm --config /etc/blvm/archival.toml
 Restart=always
 RestartSec=10
 
@@ -255,8 +255,8 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-sudo systemctl enable bllvm-archival
-sudo systemctl start bllvm-archival
+sudo systemctl enable blvm-archival
+sudo systemctl start blvm-archival
 ```
 
 ---
@@ -268,8 +268,8 @@ sudo systemctl start bllvm-archival
 ### Node 1: UTXO Commitment Node
 
 ```bash
-mkdir -p ~/bllvm-nodes/utxo-commitment-1
-cd ~/bllvm-nodes/utxo-commitment-1
+mkdir -p ~/blvm-nodes/utxo-commitment-1
+cd ~/blvm-nodes/utxo-commitment-1
 ```
 
 ### Create config.toml
@@ -304,8 +304,8 @@ dandelion = true
 ```yaml
 # Add to docker-compose.yml
   utxo-commitment-node-1:
-    image: ghcr.io/btcdecoded/bllvm-experimental:latest
-    container_name: bllvm-utxo-1
+    image: ghcr.io/btcdecoded/blvm-experimental:latest
+    container_name: blvm-utxo-1
     ports:
       - "8335:8335"  # RPC
       - "8334:8334"  # P2P
@@ -313,12 +313,12 @@ dandelion = true
       - RUST_LOG=info
     volumes:
       - ./utxo-1-data:/app/data
-    command: ["bllvm", "--config", "/app/config.toml"]
+    command: ["blvm", "--config", "/app/config.toml"]
     restart: unless-stopped
 
   utxo-commitment-node-2:
-    image: ghcr.io/btcdecoded/bllvm-experimental:latest
-    container_name: bllvm-utxo-2
+    image: ghcr.io/btcdecoded/blvm-experimental:latest
+    container_name: blvm-utxo-2
     ports:
       - "8336:8336"  # RPC
       - "8337:8337"  # P2P
@@ -326,12 +326,12 @@ dandelion = true
       - RUST_LOG=info
     volumes:
       - ./utxo-2-data:/app/data
-    command: ["bllvm", "--config", "/app/config.toml"]
+    command: ["blvm", "--config", "/app/config.toml"]
     restart: unless-stopped
 
   utxo-commitment-node-3:
-    image: ghcr.io/btcdecoded/bllvm-experimental:latest
-    container_name: bllvm-utxo-3
+    image: ghcr.io/btcdecoded/blvm-experimental:latest
+    container_name: blvm-utxo-3
     ports:
       - "8338:8338"  # RPC
       - "8339:8339"  # P2P
@@ -339,11 +339,11 @@ dandelion = true
       - RUST_LOG=info
     volumes:
       - ./utxo-3-data:/app/data
-    command: ["bllvm", "--config", "/app/config.toml"]
+    command: ["blvm", "--config", "/app/config.toml"]
     restart: unless-stopped
 ```
 
-**Note:** Use `bllvm-experimental` image (has UTXO commitments enabled)
+**Note:** Use `blvm-experimental` image (has UTXO commitments enabled)
 
 ---
 
@@ -406,7 +406,7 @@ services:
   # Governance App
   governance-app:
     image: ghcr.io/btcdecoded/governance-app:latest
-    container_name: bllvm-commons
+    container_name: blvm-commons
     ports:
       - "8080:8080"
     environment:
@@ -421,8 +421,8 @@ services:
 
   # Archival Node (Base Build)
   archival-node:
-    image: ghcr.io/btcdecoded/bllvm:latest
-    container_name: bllvm-archival
+    image: ghcr.io/btcdecoded/blvm:latest
+    container_name: blvm-archival
     ports:
       - "8332:8332"  # RPC
       - "8333:8333"  # P2P
@@ -433,8 +433,8 @@ services:
 
   # UTXO Commitment Nodes (Experimental Build)
   utxo-node-1:
-    image: ghcr.io/btcdecoded/bllvm-experimental:latest
-    container_name: bllvm-utxo-1
+    image: ghcr.io/btcdecoded/blvm-experimental:latest
+    container_name: blvm-utxo-1
     ports:
       - "8335:8335"  # RPC
       - "8334:8334"  # P2P
@@ -444,8 +444,8 @@ services:
     restart: unless-stopped
 
   utxo-node-2:
-    image: ghcr.io/btcdecoded/bllvm-experimental:latest
-    container_name: bllvm-utxo-2
+    image: ghcr.io/btcdecoded/blvm-experimental:latest
+    container_name: blvm-utxo-2
     ports:
       - "8336:8336"  # RPC
       - "8337:8337"  # P2P
@@ -455,8 +455,8 @@ services:
     restart: unless-stopped
 
   utxo-node-3:
-    image: ghcr.io/btcdecoded/bllvm-experimental:latest
-    container_name: bllvm-utxo-3
+    image: ghcr.io/btcdecoded/blvm-experimental:latest
+    container_name: blvm-utxo-3
     ports:
       - "8338:8338"  # RPC
       - "8339:8339"  # P2P

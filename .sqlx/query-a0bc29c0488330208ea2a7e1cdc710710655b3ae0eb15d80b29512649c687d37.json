@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            INSERT INTO reviews (repo_name, pr_number, reviewer, state, review_comment, submitted_at, updated_at)\n            VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)\n            ON CONFLICT(repo_name, pr_number, reviewer) DO UPDATE SET\n                state = EXCLUDED.state,\n                review_comment = EXCLUDED.review_comment,\n                updated_at = CURRENT_TIMESTAMP\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "a0bc29c0488330208ea2a7e1cdc710710655b3ae0eb15d80b29512649c687d37"
+}

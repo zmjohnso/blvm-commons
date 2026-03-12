@@ -89,16 +89,10 @@ blvm-protocol = { path = "../blvm-protocol" }
 blvm-consensus = { path = "../blvm-consensus" }
 blvm-node = { path = "../blvm-node" }
 
-[dependencies.kani-verifier]
-version = "=0.41.0"
-optional = true
-
 [features]
 default = []
 # Enable OpenTimestamps support
 opentimestamps = ["dep:opentimestamps"]
-# Enable formal verification tools
-verify = ["kani-verifier"]
 # Enable PostgreSQL support
 postgres = []
 

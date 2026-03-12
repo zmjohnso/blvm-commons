@@ -5,23 +5,23 @@ set -e
 COMPONENT="${1:-}"
 if [ -z "$COMPONENT" ]; then
     echo "Usage: ./health.sh [component]"
-    echo "Components: bllvm, experimental, commons"
+    echo "Components: blvm, experimental, commons"
     exit 1
 fi
 
 case "$COMPONENT" in
-    bllvm|experimental)
-        SERVICE_NAME="bllvm"
-        INSTALL_DIR="/opt/bllvm"
-        if [ "$COMPONENT" = "bllvm" ]; then
-            BINARY_NAME="bllvm"
+    blvm|experimental)
+        SERVICE_NAME="blvm"
+        INSTALL_DIR="/opt/blvm"
+        if [ "$COMPONENT" = "blvm" ]; then
+            BINARY_NAME="blvm"
         else
-            BINARY_NAME="bllvm-experimental"
+            BINARY_NAME="blvm-experimental"
         fi
         BINARY_PATH="$INSTALL_DIR/$BINARY_NAME"
         ;;
     commons)
-        SERVICE_NAME="bllvm-commons"
+        SERVICE_NAME="blvm-commons"
         echo "⚠️  Commons doesn't have RPC, checking service status only"
         if systemctl is-active --quiet "$SERVICE_NAME"; then
             echo "✅ Service is running"
@@ -48,7 +48,7 @@ if ! systemctl is-active --quiet "$SERVICE_NAME"; then
     exit 1
 fi
 
-# Use bllvm binary health command
+# Use blvm binary health command
 if [ ! -f "$BINARY_PATH" ]; then
     echo "❌ Binary not found: $BINARY_PATH"
     exit 1

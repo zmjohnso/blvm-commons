@@ -7,7 +7,7 @@ Complete guide for deploying and managing Bitcoin Commons infrastructure.
 ## Table of Contents
 
 1. [Quick Start](#quick-start)
-2. [Unified CLI (`bllvm.sh`)](#unified-cli-bllvmsh)
+2. [Unified CLI (`blvm.sh`)](#unified-cli-blvmsh)
 3. [Component Installation](#component-installation)
 4. [Management Commands](#management-commands)
 5. [Configuration](#configuration)
@@ -24,36 +24,36 @@ Complete guide for deploying and managing Bitcoin Commons infrastructure.
 ```bash
 # Clone/download deployment scripts
 cd deployment
-chmod +x bllvm.sh
+chmod +x blvm.sh
 
 # Install BLLVM node (base build)
-sudo ./bllvm.sh install bllvm --public-ip YOUR_IP
+sudo ./blvm.sh install blvm --public-ip YOUR_IP
 
 # Check status
-./bllvm.sh status
+./blvm.sh status
 
 # View logs
-./bllvm.sh logs bllvm --follow
+./blvm.sh logs blvm --follow
 ```
 
 ### Multi-Component Setup
 
 ```bash
 # Install base node
-sudo ./bllvm.sh install bllvm --public-ip 1.2.3.4
+sudo ./blvm.sh install blvm --public-ip 1.2.3.4
 
 # Install experimental node (same machine, different binary)
-sudo ./bllvm.sh install experimental --public-ip 1.2.3.4
+sudo ./blvm.sh install experimental --public-ip 1.2.3.4
 
 # Install governance app
-sudo ./bllvm.sh install commons --github-app-id 123456
+sudo ./blvm.sh install commons --github-app-id 123456
 ```
 
 ---
 
-## Unified CLI (`bllvm.sh`)
+## Unified CLI (`blvm.sh`)
 
-The `bllvm.sh` script is the single entry point for all deployment operations.
+The `blvm.sh` script is the single entry point for all deployment operations.
 
 ### Commands
 
@@ -71,14 +71,14 @@ The `bllvm.sh` script is the single entry point for all deployment operations.
 
 ### Components
 
-- **`bllvm`** - Base BLLVM node (production build, full blockchain)
+- **`blvm`** - Base BLLVM node (production build, full blockchain)
 - **`experimental`** - Experimental node (UTXO commitments, dandelion, CTV, etc.)
-- **`commons`** - Governance app (bllvm-commons)
+- **`commons`** - Governance app (blvm-commons)
 
 ### Usage Pattern
 
 ```bash
-./bllvm.sh [command] [component] [options]
+./blvm.sh [command] [component] [options]
 ```
 
 ---
@@ -92,7 +92,7 @@ The `bllvm.sh` script is the single entry point for all deployment operations.
 **Installation:**
 
 ```bash
-sudo ./bllvm.sh install bllvm --public-ip 1.2.3.4
+sudo ./blvm.sh install blvm --public-ip 1.2.3.4
 ```
 
 **Options:**
@@ -101,10 +101,10 @@ sudo ./bllvm.sh install bllvm --public-ip 1.2.3.4
 - `--version VERSION` - Specific version (default: latest)
 
 **What Gets Installed:**
-- Binary: `/opt/bllvm/bllvm`
-- Config: `/etc/bllvm/bllvm.toml`
-- Data: `/var/lib/bllvm`
-- Service: `bllvm.service` (systemd)
+- Binary: `/opt/blvm/blvm`
+- Config: `/etc/blvm/blvm.toml`
+- Data: `/var/lib/blvm`
+- Service: `blvm.service` (systemd)
 
 **Default Ports:**
 - RPC: `8332`
@@ -119,13 +119,13 @@ sudo ./bllvm.sh install bllvm --public-ip 1.2.3.4
 **Installation (Pre-built):**
 
 ```bash
-sudo ./bllvm.sh install experimental --public-ip 1.2.3.4
+sudo ./blvm.sh install experimental --public-ip 1.2.3.4
 ```
 
 **Installation (Custom Features):**
 
 ```bash
-sudo ./bllvm.sh install experimental \
+sudo ./blvm.sh install experimental \
   --public-ip 1.2.3.4 \
   --features "utxo-commitments,dandelion,ctv,stratum-v2"
 ```
@@ -133,19 +133,19 @@ sudo ./bllvm.sh install experimental \
 **Installation (Build from Source):**
 
 ```bash
-sudo ./bllvm.sh install experimental \
+sudo ./blvm.sh install experimental \
   --public-ip 1.2.3.4 \
   --build-from-source \
-  --source-dir /path/to/bllvm \
+  --source-dir /path/to/blvm \
   --features "utxo-commitments,dandelion,ctv"
 ```
 
 **Installation (Custom Binary):**
 
 ```bash
-sudo ./bllvm.sh install experimental \
+sudo ./blvm.sh install experimental \
   --public-ip 1.2.3.4 \
-  --custom-binary /path/to/custom-bllvm
+  --custom-binary /path/to/custom-blvm
 ```
 
 **Options:**
@@ -158,23 +158,23 @@ sudo ./bllvm.sh install experimental \
 - `--version VERSION` - Specific version
 
 **What Gets Installed:**
-- Binary: `/opt/bllvm/bllvm-experimental`
-- Config: `/etc/bllvm/bllvm.toml` (same as base node)
-- Data: `/var/lib/bllvm` (can share with base node)
-- Service: `bllvm.service` (uses experimental binary)
+- Binary: `/opt/blvm/blvm-experimental`
+- Config: `/etc/blvm/blvm.toml` (same as base node)
+- Data: `/var/lib/blvm` (can share with base node)
+- Service: `blvm.service` (uses experimental binary)
 
 **Note:** Experimental and base nodes can run on the same machine but use the same service name. Only one can be active at a time unless you configure different ports.
 
 ---
 
-### 3. Governance App (bllvm-commons)
+### 3. Governance App (blvm-commons)
 
 **Purpose:** GitHub App for cryptographic governance enforcement.
 
 **Installation:**
 
 ```bash
-sudo ./bllvm.sh install commons \
+sudo ./blvm.sh install commons \
   --github-app-id 123456 \
   --github-webhook-secret your-secret
 ```
@@ -185,17 +185,17 @@ sudo ./bllvm.sh install commons \
 - `--version VERSION` - Specific version
 
 **What Gets Installed:**
-- Binary: `/opt/bllvm-commons/bllvm-commons`
-- Config: `/etc/bllvm-commons/app.toml`
-- Data: `/var/lib/bllvm-commons`
-- Service: `bllvm-commons.service` (systemd)
+- Binary: `/opt/blvm-commons/blvm-commons`
+- Config: `/etc/blvm-commons/app.toml`
+- Data: `/var/lib/blvm-commons`
+- Service: `blvm-commons.service` (systemd)
 
 **Configuration:**
 
 After installation, configure Nostr bots and other settings:
 
 ```bash
-sudo ./bllvm.sh config commons --edit
+sudo ./blvm.sh config commons --edit
 ```
 
 **Nostr Configuration:**
@@ -235,14 +235,14 @@ lightning_address = "dev@your-ln-address.com"
 **View all components:**
 
 ```bash
-./bllvm.sh status
+./blvm.sh status
 ```
 
 **Output:**
 ```
 === Bitcoin Commons Status ===
 
-bllvm: ✅ Running
+blvm: ✅ Running
   Chain: mainnet
   Blocks: 850000
   Peers: 12
@@ -251,7 +251,7 @@ experimental: ❌ Stopped
 
 commons: ✅ Running
 
-Use 'systemctl status bllvm' or 'systemctl status bllvm-commons' for details
+Use 'systemctl status blvm' or 'systemctl status blvm-commons' for details
 ```
 
 ---
@@ -261,7 +261,7 @@ Use 'systemctl status bllvm' or 'systemctl status bllvm-commons' for details
 **Check node health:**
 
 ```bash
-./bllvm.sh health bllvm
+./blvm.sh health blvm
 ```
 
 **Output:**
@@ -269,7 +269,7 @@ Use 'systemctl status bllvm' or 'systemctl status bllvm-commons' for details
 ✅ Node is healthy
 ```
 
-**Note:** Uses `bllvm health` command internally (no manual RPC calls needed).
+**Note:** Uses `blvm health` command internally (no manual RPC calls needed).
 
 ---
 
@@ -278,22 +278,22 @@ Use 'systemctl status bllvm' or 'systemctl status bllvm-commons' for details
 **Detailed component information:**
 
 ```bash
-./bllvm.sh info bllvm
+./blvm.sh info blvm
 ```
 
 **Output:**
 ```
-=== bllvm Info ===
+=== blvm Info ===
 
 Status: ✅ Running
-Binary: /opt/bllvm/bllvm
+Binary: /opt/blvm/blvm
 Type: ELF 64-bit LSB executable
 Version: BLLVM 0.1.0
-Config: /etc/bllvm/bllvm.toml
+Config: /etc/blvm/blvm.toml
 RPC Port: 8332
 P2P Port: 8333
-Data: /var/lib/bllvm (250G)
-Service: bllvm
+Data: /var/lib/blvm (250G)
+Service: blvm
 Enabled: Yes
 
 === Node Status ===
@@ -311,13 +311,13 @@ Peers: 12
 
 ```bash
 # Last 50 lines
-./bllvm.sh logs bllvm
+./blvm.sh logs blvm
 
 # Follow logs
-./bllvm.sh logs bllvm --follow
+./blvm.sh logs blvm --follow
 
 # Last 100 lines
-./bllvm.sh logs bllvm -n 100
+./blvm.sh logs blvm -n 100
 ```
 
 ---
@@ -327,12 +327,12 @@ Peers: 12
 **Restart a service:**
 
 ```bash
-sudo ./bllvm.sh restart bllvm
+sudo ./blvm.sh restart blvm
 ```
 
 **Output:**
 ```
-✅ Restarted: bllvm
+✅ Restarted: blvm
 ```
 
 ---
@@ -342,16 +342,16 @@ sudo ./bllvm.sh restart bllvm
 **View config:**
 
 ```bash
-./bllvm.sh config bllvm
+./blvm.sh config blvm
 ```
 
 **Edit config:**
 
 ```bash
-sudo ./bllvm.sh config bllvm --edit
+sudo ./blvm.sh config blvm --edit
 ```
 
-**Note:** Uses `bllvm config show` internally for node components.
+**Note:** Uses `blvm config show` internally for node components.
 
 ---
 
@@ -361,10 +361,10 @@ sudo ./bllvm.sh config bllvm --edit
 
 ```bash
 # Update to latest
-sudo ./bllvm.sh update bllvm
+sudo ./blvm.sh update blvm
 
 # Update to specific version
-sudo ./bllvm.sh update experimental --version v1.0.0
+sudo ./blvm.sh update experimental --version v1.0.0
 ```
 
 **What happens:**
@@ -381,30 +381,30 @@ sudo ./bllvm.sh update experimental --version v1.0.0
 **Remove a component:**
 
 ```bash
-sudo ./bllvm.sh uninstall bllvm
+sudo ./blvm.sh uninstall blvm
 ```
 
 **What gets removed:**
 - Systemd service
-- Binary (`/opt/bllvm/bllvm`)
-- Config (`/etc/bllvm/bllvm.toml`)
-- Data directory (`/var/lib/bllvm`) - **WARNING: This deletes blockchain data!**
+- Binary (`/opt/blvm/blvm`)
+- Config (`/etc/blvm/blvm.toml`)
+- Data directory (`/var/lib/blvm`) - **WARNING: This deletes blockchain data!**
 
 **To keep data:**
 
 ```bash
 # Uninstall but keep data
-sudo ./bllvm.sh uninstall bllvm
-# Data remains at /var/lib/bllvm
+sudo ./blvm.sh uninstall blvm
+# Data remains at /var/lib/blvm
 ```
 
 ---
 
 ## Configuration
 
-### Node Configuration (`bllvm.toml`)
+### Node Configuration (`blvm.toml`)
 
-**Location:** `/etc/bllvm/bllvm.toml`
+**Location:** `/etc/blvm/blvm.toml`
 
 **Key Settings:**
 
@@ -420,26 +420,26 @@ user = "btc"
 password = "your-secure-password"
 
 [storage]
-data_dir = "/var/lib/bllvm"
+data_dir = "/var/lib/blvm"
 ```
 
 **View config:**
 
 ```bash
-./bllvm.sh config bllvm
+./blvm.sh config blvm
 ```
 
 **Edit config:**
 
 ```bash
-sudo ./bllvm.sh config bllvm --edit
+sudo ./blvm.sh config blvm --edit
 ```
 
 ---
 
 ### Governance App Configuration (`app.toml`)
 
-**Location:** `/etc/bllvm-commons/app.toml`
+**Location:** `/etc/blvm-commons/app.toml`
 
 **Key Settings:**
 
@@ -454,7 +454,7 @@ governance_config = "commons_mainnet"
 relays = ["wss://relay.damus.io", "wss://nos.lol"]
 
 [database]
-path = "/var/lib/bllvm-commons/db.sqlite"
+path = "/var/lib/blvm-commons/db.sqlite"
 ```
 
 ---
@@ -473,7 +473,7 @@ path = "/var/lib/bllvm-commons/db.sqlite"
 - Experimental node (UTXO commitments)
 
 **Machine 4 (Optional - Any):**
-- Governance app (bllvm-commons)
+- Governance app (blvm-commons)
 
 ---
 
@@ -483,36 +483,36 @@ path = "/var/lib/bllvm-commons/db.sqlite"
 
 ```bash
 cd deployment
-chmod +x bllvm.sh
-sudo ./bllvm.sh install bllvm --public-ip MACHINE1_IP
-./bllvm.sh status
+chmod +x blvm.sh
+sudo ./blvm.sh install blvm --public-ip MACHINE1_IP
+./blvm.sh status
 ```
 
 **2. On Machine 2 (Ubuntu - Linode):**
 
 ```bash
 cd deployment
-chmod +x bllvm.sh
-sudo ./bllvm.sh install experimental --public-ip MACHINE2_IP
-./bllvm.sh status
+chmod +x blvm.sh
+sudo ./blvm.sh install experimental --public-ip MACHINE2_IP
+./blvm.sh status
 ```
 
 **3. On Machine 3 (Ubuntu - Innovation Hub):**
 
 ```bash
 cd deployment
-chmod +x bllvm.sh
-sudo ./bllvm.sh install experimental --public-ip MACHINE3_IP
-./bllvm.sh status
+chmod +x blvm.sh
+sudo ./blvm.sh install experimental --public-ip MACHINE3_IP
+./blvm.sh status
 ```
 
 **4. On Machine 4 (Governance App):**
 
 ```bash
 cd deployment
-chmod +x bllvm.sh
-sudo ./bllvm.sh install commons --github-app-id 123456
-./bllvm.sh status
+chmod +x blvm.sh
+sudo ./blvm.sh install commons --github-app-id 123456
+./blvm.sh status
 ```
 
 ---
@@ -523,8 +523,8 @@ sudo ./bllvm.sh install commons --github-app-id 123456
 
 ```bash
 # On each machine
-./bllvm.sh health bllvm  # or experimental
-./bllvm.sh info bllvm
+./blvm.sh health blvm  # or experimental
+./blvm.sh info blvm
 ```
 
 **From a central location:**
@@ -539,46 +539,46 @@ curl -u btc:password http://MACHINE1_IP:8332 \
 
 ## Using Binary Commands Directly
 
-The `bllvm` binary includes native subcommands that can be used directly:
+The `blvm` binary includes native subcommands that can be used directly:
 
 ### Available Commands
 
 ```bash
 # Version
-/opt/bllvm/bllvm version
+/opt/blvm/blvm version
 
 # Status
-/opt/bllvm/bllvm status
+/opt/blvm/blvm status
 
 # Health
-/opt/bllvm/bllvm health
+/opt/blvm/blvm health
 
 # Chain info
-/opt/bllvm/bllvm chain
+/opt/blvm/blvm chain
 
 # Peers
-/opt/bllvm/bllvm peers
+/opt/blvm/blvm peers
 
 # Network info
-/opt/bllvm/bllvm network
+/opt/blvm/blvm network
 
 # Sync status
-/opt/bllvm/bllvm sync
+/opt/blvm/blvm sync
 
 # Config
-/opt/bllvm/bllvm config show
-/opt/bllvm/bllvm config validate
-/opt/bllvm/bllvm config path
+/opt/blvm/blvm config show
+/opt/blvm/blvm config validate
+/opt/blvm/blvm config path
 
 # RPC (generic)
-/opt/bllvm/bllvm rpc getblockchaininfo
-/opt/bllvm/bllvm rpc getpeerinfo '[]'
+/opt/blvm/blvm rpc getblockchaininfo
+/opt/blvm/blvm rpc getpeerinfo '[]'
 ```
 
 ### With Custom RPC Address
 
 ```bash
-/opt/bllvm/bllvm --rpc-addr 127.0.0.1:8332 status
+/opt/blvm/blvm --rpc-addr 127.0.0.1:8332 status
 ```
 
 ### Integration
@@ -594,23 +594,23 @@ The deployment scripts (`health.sh`, `info.sh`, `config.sh`, `status.sh`) use th
 **Check logs:**
 
 ```bash
-./bllvm.sh logs bllvm
-journalctl -u bllvm -n 100
+./blvm.sh logs blvm
+journalctl -u blvm -n 100
 ```
 
 **Check config:**
 
 ```bash
-./bllvm.sh config bllvm
-/opt/bllvm/bllvm config validate
+./blvm.sh config blvm
+/opt/blvm/blvm config validate
 ```
 
 **Check permissions:**
 
 ```bash
-ls -la /opt/bllvm/bllvm
-ls -la /var/lib/bllvm
-ls -la /etc/bllvm/bllvm.toml
+ls -la /opt/blvm/blvm
+ls -la /var/lib/blvm
+ls -la /etc/blvm/blvm.toml
 ```
 
 ---
@@ -620,14 +620,14 @@ ls -la /etc/bllvm/bllvm.toml
 **Check if service is running:**
 
 ```bash
-./bllvm.sh status
-systemctl status bllvm
+./blvm.sh status
+systemctl status blvm
 ```
 
 **Test health:**
 
 ```bash
-./bllvm.sh health bllvm
+./blvm.sh health blvm
 ```
 
 **Check firewall:**
@@ -640,7 +640,7 @@ sudo firewall-cmd --list-all
 **Check RPC address in config:**
 
 ```bash
-./bllvm.sh config bllvm | grep rpc_listen_address
+./blvm.sh config blvm | grep rpc_listen_address
 ```
 
 ---
@@ -650,21 +650,21 @@ sudo firewall-cmd --list-all
 **Check binary exists:**
 
 ```bash
-ls -la /opt/bllvm/bllvm
-file /opt/bllvm/bllvm
+ls -la /opt/blvm/blvm
+file /opt/blvm/blvm
 ```
 
 **Check binary permissions:**
 
 ```bash
-chmod +x /opt/bllvm/bllvm
+chmod +x /opt/blvm/blvm
 ```
 
 **Test binary directly:**
 
 ```bash
-/opt/bllvm/bllvm version
-/opt/bllvm/bllvm --help
+/opt/blvm/blvm version
+/opt/blvm/blvm --help
 ```
 
 **Note:** Scripts fall back gracefully if binary commands fail.
@@ -676,14 +676,14 @@ chmod +x /opt/bllvm/bllvm
 **Check feature flags:**
 
 ```bash
-/opt/bllvm/bllvm-experimental version
+/opt/blvm/blvm-experimental version
 ```
 
 **Rebuild with different features:**
 
 ```bash
-sudo ./bllvm.sh uninstall experimental
-sudo ./bllvm.sh install experimental \
+sudo ./blvm.sh uninstall experimental
+sudo ./blvm.sh install experimental \
   --build-from-source \
   --features "utxo-commitments,dandelion"
 ```
@@ -695,19 +695,19 @@ sudo ./bllvm.sh install experimental \
 **Check Nostr configuration:**
 
 ```bash
-./bllvm.sh config commons | grep -A 20 nostr
+./blvm.sh config commons | grep -A 20 nostr
 ```
 
 **Check GitHub App credentials:**
 
 ```bash
-./bllvm.sh config commons | grep -A 10 github
+./blvm.sh config commons | grep -A 10 github
 ```
 
 **View logs:**
 
 ```bash
-./bllvm.sh logs commons --follow
+./blvm.sh logs commons --follow
 ```
 
 ---
@@ -742,22 +742,22 @@ sudo ./bllvm.sh install experimental \
 
 1. **Regular health checks:**
    ```bash
-   ./bllvm.sh health bllvm
+   ./blvm.sh health blvm
    ```
 
 2. **Monitor logs:**
    ```bash
-   ./bllvm.sh logs bllvm --follow
+   ./blvm.sh logs blvm --follow
    ```
 
 3. **Check disk space:**
    ```bash
-   df -h /var/lib/bllvm
+   df -h /var/lib/blvm
    ```
 
 4. **Monitor sync status:**
    ```bash
-   ./bllvm.sh info bllvm | grep Sync
+   ./blvm.sh info blvm | grep Sync
    ```
 
 ---
@@ -768,23 +768,23 @@ sudo ./bllvm.sh install experimental \
 
 2. **Backup data before updates:**
    ```bash
-   sudo systemctl stop bllvm
-   sudo cp -r /var/lib/bllvm /var/lib/bllvm.backup
-   sudo ./bllvm.sh update bllvm
+   sudo systemctl stop blvm
+   sudo cp -r /var/lib/blvm /var/lib/blvm.backup
+   sudo ./blvm.sh update blvm
    ```
 
 3. **Verify after update:**
    ```bash
-   ./bllvm.sh health bllvm
-   ./bllvm.sh info bllvm
+   ./blvm.sh health blvm
+   ./blvm.sh info blvm
    ```
 
 ---
 
 ## Summary
 
-- **Single Entry Point:** `bllvm.sh` for all operations
-- **Three Components:** `bllvm`, `experimental`, `commons`
+- **Single Entry Point:** `blvm.sh` for all operations
+- **Three Components:** `blvm`, `experimental`, `commons`
 - **Native Commands:** Binary subcommands integrated into scripts
 - **Multi-Machine:** Deploy across separate machines easily
 - **Production Ready:** Full Bitcoin node with governance
@@ -793,13 +793,13 @@ sudo ./bllvm.sh install experimental \
 
 ```bash
 # Install
-sudo ./bllvm.sh install [bllvm|experimental|commons] [options]
+sudo ./blvm.sh install [blvm|experimental|commons] [options]
 
 # Manage
-./bllvm.sh [status|health|info|logs|config|restart] [component]
+./blvm.sh [status|health|info|logs|config|restart] [component]
 
 # Update/Remove
-sudo ./bllvm.sh [update|uninstall] [component]
+sudo ./blvm.sh [update|uninstall] [component]
 ```
 
 ---

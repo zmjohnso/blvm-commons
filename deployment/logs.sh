@@ -5,7 +5,7 @@ set -e
 COMPONENT="${1:-}"
 if [ -z "$COMPONENT" ]; then
     echo "Usage: ./logs.sh [component] [options]"
-    echo "Components: bllvm, experimental, commons"
+    echo "Components: blvm, experimental, commons"
     exit 1
 fi
 shift
@@ -22,11 +22,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$COMPONENT" in
-    bllvm|experimental)
-        SERVICE_NAME="bllvm"
+    blvm|experimental)
+        SERVICE_NAME="blvm"
         ;;
     commons)
-        SERVICE_NAME="bllvm-commons"
+        SERVICE_NAME="blvm-commons"
         ;;
     *)
         echo "❌ Unknown component: $COMPONENT"

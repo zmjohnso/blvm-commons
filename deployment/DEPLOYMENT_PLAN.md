@@ -87,10 +87,10 @@ ssh start9@192.168.2.101
 cd /home/user/src/BTCDecoded/deployment
 
 # Verify scripts are executable
-chmod +x bllvm.sh install*.sh *.sh
+chmod +x blvm.sh install*.sh *.sh
 
 # Create deployment package (optional, for transfer)
-tar -czf deployment-scripts.tar.gz *.sh bllvm.sh
+tar -czf deployment-scripts.tar.gz *.sh blvm.sh
 ```
 
 #### 1.2 Prepare Configuration Values
@@ -131,7 +131,7 @@ chmod 600 deployment-config.env
 
 ```bash
 # Transfer scripts to Linode
-scp -r bllvm.sh install*.sh *.sh jswift@mybitcoinfuture:/tmp/bllvm-deployment/
+scp -r blvm.sh install*.sh *.sh jswift@mybitcoinfuture:/tmp/blvm-deployment/
 
 # Or transfer tarball
 scp deployment-scripts.tar.gz jswift@mybitcoinfuture:/tmp/
@@ -143,10 +143,10 @@ scp deployment-scripts.tar.gz jswift@mybitcoinfuture:/tmp/
 # Extract if using tarball
 cd /tmp
 tar -xzf deployment-scripts.tar.gz
-cd bllvm-deployment
+cd blvm-deployment
 
 # Make scripts executable
-chmod +x bllvm.sh install*.sh *.sh
+chmod +x blvm.sh install*.sh *.sh
 ```
 
 ---
@@ -161,17 +161,17 @@ PUBLIC_IP=$(curl -s ifconfig.me || curl -s icanhazip.com)
 echo "Public IP: $PUBLIC_IP"
 
 # Install experimental node
-sudo ./bllvm.sh install experimental --public-ip "$PUBLIC_IP"
+sudo ./blvm.sh install experimental --public-ip "$PUBLIC_IP"
 
 # Verify installation
-./bllvm.sh status
-./bllvm.sh health experimental
+./blvm.sh status
+./blvm.sh health experimental
 ```
 
 **Expected Output:**
-- Binary: `/opt/bllvm/bllvm-experimental`
-- Config: `/etc/bllvm/bllvm.toml`
-- Service: `bllvm.service` (running)
+- Binary: `/opt/blvm/blvm-experimental`
+- Config: `/etc/blvm/blvm.toml`
+- Service: `blvm.service` (running)
 - RPC: `localhost:8332`
 - P2P: `$PUBLIC_IP:8333`
 
@@ -179,16 +179,16 @@ sudo ./bllvm.sh install experimental --public-ip "$PUBLIC_IP"
 
 ```bash
 # Check service
-systemctl status bllvm
+systemctl status blvm
 
 # Check logs
-./bllvm.sh logs experimental --follow
+./blvm.sh logs experimental --follow
 
 # Get node info
-./bllvm.sh info experimental
+./blvm.sh info experimental
 
 # Test RPC
-/opt/bllvm/bllvm-experimental health
+/opt/blvm/blvm-experimental health
 ```
 
 ---
@@ -199,32 +199,32 @@ systemctl status bllvm
 
 ```bash
 # Install governance app
-sudo ./bllvm.sh install commons \
+sudo ./blvm.sh install commons \
   --github-app-id "$GITHUB_APP_ID" \
   --github-webhook-secret "$GITHUB_WEBHOOK_SECRET"
 
 # Verify installation
-./bllvm.sh status
-systemctl status bllvm-commons
+./blvm.sh status
+systemctl status blvm-commons
 ```
 
 **Expected Output:**
-- Binary: `/opt/bllvm-commons/bllvm-commons`
-- Config: `/etc/bllvm-commons/app.toml`
-- Service: `bllvm-commons.service` (running)
+- Binary: `/opt/blvm-commons/blvm-commons`
+- Config: `/etc/blvm-commons/app.toml`
+- Service: `blvm-commons.service` (running)
 - Port: `8080` (default)
 
 **Configure Nostr Bots:**
 
 ```bash
 # Edit config
-sudo ./bllvm.sh config commons --edit
+sudo ./blvm.sh config commons --edit
 
 # Or manually edit
-sudo nano /etc/bllvm-commons/app.toml
+sudo nano /etc/blvm-commons/app.toml
 ```
 
-**Update Nostr configuration in `/etc/bllvm-commons/app.toml`:**
+**Update Nostr configuration in `/etc/blvm-commons/app.toml`:**
 
 ```toml
 [nostr]
@@ -257,8 +257,8 @@ profile_name = "⚙️ @BTCCommons_Dev"
 **Restart governance app:**
 
 ```bash
-sudo ./bllvm.sh restart commons
-./bllvm.sh logs commons --follow
+sudo ./blvm.sh restart commons
+./blvm.sh logs commons --follow
 ```
 
 ---
@@ -402,14 +402,14 @@ ssh start9@192.168.2.101
 
 ```bash
 # Transfer scripts
-scp -r bllvm.sh install-bllvm-node.sh start9@192.168.2.101:/tmp/bllvm-deployment/
+scp -r blvm.sh install-blvm-node.sh start9@192.168.2.101:/tmp/blvm-deployment/
 ```
 
 **On Start9:**
 
 ```bash
-cd /tmp/bllvm-deployment
-chmod +x bllvm.sh install-bllvm-node.sh
+cd /tmp/blvm-deployment
+chmod +x blvm.sh install-blvm-node.sh
 ```
 
 ---
@@ -497,18 +497,18 @@ PUBLIC_IP=$(curl -s ifconfig.me 2>/dev/null || echo "192.168.2.101")
 echo "Using IP: $PUBLIC_IP"
 
 # Install archival node
-sudo ./bllvm.sh install bllvm --public-ip "$PUBLIC_IP"
+sudo ./blvm.sh install blvm --public-ip "$PUBLIC_IP"
 
 # Verify installation
-./bllvm.sh status
-./bllvm.sh health bllvm
+./blvm.sh status
+./blvm.sh health blvm
 ```
 
 **⚠️ If Bitcoin Core is running, configure BLLVM to use different ports:**
 
 ```bash
 # Edit BLLVM config
-sudo nano /etc/bllvm/bllvm.toml
+sudo nano /etc/blvm/blvm.toml
 
 # Change ports to avoid conflict with Bitcoin Core:
 # [network]
@@ -518,7 +518,7 @@ sudo nano /etc/bllvm/bllvm.toml
 # listen_address = "0.0.0.0:8335"  # Instead of 8332
 
 # Restart BLLVM
-sudo systemctl restart bllvm
+sudo systemctl restart blvm
 
 # Verify both are running on different ports
 sudo netstat -tlnp | grep -E "8332|8333|8334|8335"
@@ -529,9 +529,9 @@ sudo netstat -tlnp | grep -E "8332|8333|8334|8335"
 - BLLVM: RPC on 8335, P2P on 8334 (if modified to avoid conflict)
 
 **Expected Output:**
-- Binary: `/opt/bllvm/bllvm`
-- Config: `/etc/bllvm/bllvm.toml`
-- Service: `bllvm.service` (running)
+- Binary: `/opt/blvm/blvm`
+- Config: `/etc/blvm/blvm.toml`
+- Service: `blvm.service` (running)
 - RPC: `localhost:8335` (or 8332 if Bitcoin Core not running)
 - P2P: `192.168.2.101:8334` (or 8333 if Bitcoin Core not running)
 
@@ -539,16 +539,16 @@ sudo netstat -tlnp | grep -E "8332|8333|8334|8335"
 
 ```bash
 # Check service
-systemctl status bllvm
+systemctl status blvm
 
 # Check logs
-./bllvm.sh logs bllvm --follow
+./blvm.sh logs blvm --follow
 
 # Get node info
-./bllvm.sh info bllvm
+./blvm.sh info blvm
 
 # Test RPC
-/opt/bllvm/bllvm health
+/opt/blvm/blvm health
 ```
 
 ---
@@ -575,12 +575,12 @@ systemctl status bllvm
 
 ```bash
 # Check experimental node
-./bllvm.sh status
-./bllvm.sh health experimental
-/opt/bllvm/bllvm-experimental status
+./blvm.sh status
+./blvm.sh health experimental
+/opt/blvm/blvm-experimental status
 
 # Check governance app
-systemctl status bllvm-commons
+systemctl status blvm-commons
 curl http://localhost:8080/health  # If health endpoint exists
 ```
 
@@ -588,9 +588,9 @@ curl http://localhost:8080/health  # If health endpoint exists
 
 ```bash
 # Check archival node
-./bllvm.sh status
-./bllvm.sh health bllvm
-/opt/bllvm/bllvm status
+./blvm.sh status
+./blvm.sh health blvm
+/opt/blvm/blvm status
 ```
 
 ---
@@ -613,7 +613,7 @@ curl -u btc:PASSWORD http://LINODE_IP:8332 \
 
 ```bash
 # On each server
-grep rpc_password /etc/bllvm/bllvm.toml
+grep rpc_password /etc/blvm/blvm.toml
 ```
 
 ---
@@ -624,10 +624,10 @@ grep rpc_password /etc/bllvm/bllvm.toml
 
 ```bash
 # On Linode
-/opt/bllvm/bllvm-experimental peers
+/opt/blvm/blvm-experimental peers
 
 # On Start9
-/opt/bllvm/bllvm peers
+/opt/blvm/blvm peers
 ```
 
 **Expected:**
@@ -643,10 +643,10 @@ grep rpc_password /etc/bllvm/bllvm.toml
 
 ```bash
 # Watch sync progress
-watch -n 5 '/opt/bllvm/bllvm sync'
+watch -n 5 '/opt/blvm/blvm sync'
 
 # Or check status
-/opt/bllvm/bllvm status | grep -i sync
+/opt/blvm/blvm status | grep -i sync
 ```
 
 **Expected Timeline:**
@@ -665,10 +665,10 @@ watch -n 5 '/opt/bllvm/bllvm sync'
 ```bash
 # On Linode
 # Add to crontab for regular health checks
-(crontab -l 2>/dev/null; echo "*/5 * * * * /opt/bllvm/bllvm-experimental health > /dev/null 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "*/5 * * * * /opt/blvm/blvm-experimental health > /dev/null 2>&1") | crontab -
 
 # On Start9
-(crontab -l 2>/dev/null; echo "*/5 * * * * /opt/bllvm/bllvm health > /dev/null 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "*/5 * * * * /opt/blvm/blvm health > /dev/null 2>&1") | crontab -
 ```
 
 ---
@@ -679,13 +679,13 @@ watch -n 5 '/opt/bllvm/bllvm sync'
 
 ```bash
 # On Linode
-sudo tar -czf /root/bllvm-configs-backup-$(date +%Y%m%d).tar.gz \
-  /etc/bllvm/bllvm.toml \
-  /etc/bllvm-commons/app.toml
+sudo tar -czf /root/blvm-configs-backup-$(date +%Y%m%d).tar.gz \
+  /etc/blvm/blvm.toml \
+  /etc/blvm-commons/app.toml
 
 # On Start9
-sudo tar -czf /root/bllvm-config-backup-$(date +%Y%m%d).tar.gz \
-  /etc/bllvm/bllvm.toml
+sudo tar -czf /root/blvm-config-backup-$(date +%Y%m%d).tar.gz \
+  /etc/blvm/blvm.toml
 ```
 
 ---
@@ -709,8 +709,8 @@ Start9 (LAN):
 - RPC: 192.168.2.101:8332
 
 RPC Passwords:
-- Linode: [stored in /etc/bllvm/bllvm.toml]
-- Start9: [stored in /etc/bllvm/bllvm.toml]
+- Linode: [stored in /etc/blvm/blvm.toml]
+- Start9: [stored in /etc/blvm/blvm.toml]
 
 GitHub App ID: $GITHUB_APP_ID
 EOF
@@ -747,16 +747,16 @@ EOF
 **Solution:**
 ```bash
 # Check logs
-./bllvm.sh logs bllvm --follow
+./blvm.sh logs blvm --follow
 
 # Check network connectivity
-/opt/bllvm/bllvm peers
+/opt/blvm/blvm peers
 
 # Check disk space
-df -h /var/lib/bllvm
+df -h /var/lib/blvm
 
 # Restart node
-sudo ./bllvm.sh restart bllvm
+sudo ./blvm.sh restart blvm
 ```
 
 ---
@@ -766,16 +766,16 @@ sudo ./bllvm.sh restart bllvm
 **Solution:**
 ```bash
 # Check logs
-./bllvm.sh logs commons --follow
+./blvm.sh logs commons --follow
 
 # Verify config
-sudo ./bllvm.sh config commons
+sudo ./blvm.sh config commons
 
 # Check GitHub App credentials
-grep -A 5 github /etc/bllvm-commons/app.toml
+grep -A 5 github /etc/blvm-commons/app.toml
 
 # Restart
-sudo ./bllvm.sh restart commons
+sudo ./blvm.sh restart commons
 ```
 
 ---
@@ -785,13 +785,13 @@ sudo ./bllvm.sh restart commons
 **Solution:**
 ```bash
 # Check if service is running
-systemctl status bllvm
+systemctl status blvm
 
 # Check RPC port
 netstat -tlnp | grep 8332
 
 # Test locally
-/opt/bllvm/bllvm health
+/opt/blvm/blvm health
 
 # Check firewall
 sudo ufw status
@@ -859,15 +859,15 @@ listen_address = "192.168.2.101:8332"  # LAN only
 
 ```bash
 # Check status
-./bllvm.sh status
+./blvm.sh status
 
 # Update (when new version available)
-sudo ./bllvm.sh update bllvm
-sudo ./bllvm.sh update experimental
-sudo ./bllvm.sh update commons
+sudo ./blvm.sh update blvm
+sudo ./blvm.sh update experimental
+sudo ./blvm.sh update commons
 
 # Check disk space
-df -h /var/lib/bllvm
+df -h /var/lib/blvm
 ```
 
 ---
@@ -881,15 +881,15 @@ df -h /var/lib/bllvm
 ssh jswift@mybitcoinfuture
 
 # Status
-./bllvm.sh status
+./blvm.sh status
 
 # Logs
-./bllvm.sh logs experimental --follow
-./bllvm.sh logs commons --follow
+./blvm.sh logs experimental --follow
+./blvm.sh logs commons --follow
 
 # Restart
-sudo ./bllvm.sh restart experimental
-sudo ./bllvm.sh restart commons
+sudo ./blvm.sh restart experimental
+sudo ./blvm.sh restart commons
 ```
 
 ### Start9 Commands
@@ -900,13 +900,13 @@ sudo ./bllvm.sh restart commons
 # Via SSH: ssh start9@192.168.2.101
 
 # Status
-./bllvm.sh status
+./blvm.sh status
 
 # Logs
-./bllvm.sh logs bllvm --follow
+./blvm.sh logs blvm --follow
 
 # Restart
-sudo ./bllvm.sh restart bllvm
+sudo ./blvm.sh restart blvm
 ```
 
 ---

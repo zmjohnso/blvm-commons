@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT github_username\n            FROM maintainers\n            WHERE active = true\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "github_username",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "edb1c202f06921fb5e2eb1712d7766597be8e1e720403e1feb8d2397ac4fd796"
+}

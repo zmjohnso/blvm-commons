@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                SELECT COUNT(*) as count\n                FROM governance_events\n                WHERE event_type = 'merge_approved'\n                AND maintainer = ?\n                AND timestamp >= ? AND timestamp <= ?\n                ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "025e4d28d80190e0039fb10484838d202def45c191f00d112e2ca1be61d79d57"
+}

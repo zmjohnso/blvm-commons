@@ -4,8 +4,8 @@
 //! and maintainer actions. Enables spontaneous discovery of problems without
 //! prescriptive enforcement.
 
-use crate::error::GovernanceError;
 use crate::crypto::signatures::SignatureManager;
+use crate::error::GovernanceError;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::SqlitePool;
@@ -14,7 +14,7 @@ use sqlx::SqlitePool;
 pub struct Challenge {
     pub id: String,
     pub target_type: ChallengeTarget,
-    pub target_id: String, // PR number or decision ID
+    pub target_id: String,  // PR number or decision ID
     pub challenger: String, // GitHub username
     pub reason: String,
     pub signature: String, // Cryptographic signature
@@ -116,10 +116,10 @@ impl ChallengeManager {
         // Get challenger's public key (if they're a maintainer)
         // Note: Challenges can be from anyone, but we verify signature if maintainer
         let signature_manager = SignatureManager::new();
-        
+
         // Try to get maintainer public key, but don't require it
         // (challenges can come from non-maintainers too)
-        let signature_valid = if let Ok(Some(maintainer)) = 
+        let signature_valid = if let Ok(Some(maintainer)) =
             sqlx::query_as::<_, crate::database::models::Maintainer>(
                 "SELECT id, github_username, public_key, layer, active, last_updated FROM maintainers WHERE github_username = ? AND active = true"
             )
@@ -146,6 +146,8 @@ impl ChallengeManager {
         let timestamp = Utc::now().timestamp();
         let random_suffix = rand::random::<u32>();
         let challenge_id = format!("challenge-{}-{:08x}", timestamp, random_suffix);
+        let target_type_str = target_type.to_string();
+        let now = Utc::now();
 
         sqlx::query!(
             r#"
@@ -155,13 +157,13 @@ impl ChallengeManager {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             "#,
             challenge_id,
-            target_type.to_string(),
+            target_type_str,
             target_id,
             challenger,
             reason,
             signature,
             "pending",
-            Utc::now()
+            now
         )
         .execute(&self.pool)
         .await?;
@@ -176,6 +178,7 @@ impl ChallengeManager {
         resolution: String,
         resolver: String,
     ) -> Result<(), GovernanceError> {
+        let now = Utc::now();
         sqlx::query!(
             r#"
             UPDATE challenges
@@ -185,7 +188,7 @@ impl ChallengeManager {
             "resolved",
             resolution,
             resolver,
-            Utc::now(),
+            now,
             challenge_id
         )
         .execute(&self.pool)
@@ -201,6 +204,7 @@ impl ChallengeManager {
         reason: String,
         resolver: String,
     ) -> Result<(), GovernanceError> {
+        let now = Utc::now();
         sqlx::query!(
             r#"
             UPDATE challenges
@@ -210,7 +214,7 @@ impl ChallengeManager {
             "rejected",
             reason,
             resolver,
-            Utc::now(),
+            now,
             challenge_id
         )
         .execute(&self.pool)
@@ -225,6 +229,7 @@ impl ChallengeManager {
         target_type: &ChallengeTarget,
         target_id: &str,
     ) -> Result<Vec<Challenge>, GovernanceError> {
+        let target_type_str = target_type.to_string();
         let rows = sqlx::query!(
             r#"
             SELECT 
@@ -234,7 +239,7 @@ impl ChallengeManager {
             WHERE target_type = ? AND target_id = ?
             ORDER BY created_at DESC
             "#,
-            target_type.to_string(),
+            target_type_str,
             target_id
         )
         .fetch_all(&self.pool)
@@ -243,7 +248,7 @@ impl ChallengeManager {
         let challenges = rows
             .into_iter()
             .map(|row| Challenge {
-                id: row.id,
+                id: row.id.unwrap_or_default(),
                 target_type: ChallengeTarget::from_str(&row.target_type)
                     .unwrap_or(ChallengeTarget::PullRequest),
                 target_id: row.target_id,
@@ -251,25 +256,8 @@ impl ChallengeManager {
                 reason: row.reason,
                 signature: row.signature,
                 status: ChallengeStatus::from_str(&row.status),
-                created_at: {
-                    // SQLite stores timestamps as strings, try to parse
-                    if let Ok(dt) = DateTime::parse_from_rfc3339(&row.created_at) {
-                        dt.with_timezone(&Utc)
-                    } else if let Ok(dt) = chrono::NaiveDateTime::parse_from_str(&row.created_at, "%Y-%m-%d %H:%M:%S") {
-                        dt.and_utc()
-                    } else {
-                        Utc::now() // Fallback
-                    }
-                },
-                resolved_at: row.resolved_at.map(|s| {
-                    if let Ok(dt) = DateTime::parse_from_rfc3339(&s) {
-                        dt.with_timezone(&Utc)
-                    } else if let Ok(dt) = chrono::NaiveDateTime::parse_from_str(&s, "%Y-%m-%d %H:%M:%S") {
-                        dt.and_utc()
-                    } else {
-                        Utc::now() // Fallback
-                    }
-                }),
+                created_at: row.created_at.and_utc(),
+                resolved_at: row.resolved_at.map(|dt| dt.and_utc()),
                 resolution: row.resolution,
                 resolver: row.resolver,
             })
@@ -281,7 +269,7 @@ impl ChallengeManager {
     /// Get pending challenges that need response (30-day deadline)
     pub async fn get_pending_challenges(&self) -> Result<Vec<Challenge>, GovernanceError> {
         let thirty_days_ago = Utc::now() - chrono::Duration::days(30);
-        
+        let cutoff_str = thirty_days_ago.to_rfc3339();
         let rows = sqlx::query!(
             r#"
             SELECT 
@@ -292,7 +280,7 @@ impl ChallengeManager {
             AND created_at < ?
             ORDER BY created_at ASC
             "#,
-            thirty_days_ago.to_rfc3339()
+            cutoff_str
         )
         .fetch_all(&self.pool)
         .await?;
@@ -300,7 +288,7 @@ impl ChallengeManager {
         let challenges = rows
             .into_iter()
             .map(|row| Challenge {
-                id: row.id,
+                id: row.id.unwrap_or_default(),
                 target_type: ChallengeTarget::from_str(&row.target_type)
                     .unwrap_or(ChallengeTarget::PullRequest),
                 target_id: row.target_id,
@@ -308,25 +296,8 @@ impl ChallengeManager {
                 reason: row.reason,
                 signature: row.signature,
                 status: ChallengeStatus::from_str(&row.status),
-                created_at: {
-                    // SQLite stores timestamps as strings, try to parse
-                    if let Ok(dt) = DateTime::parse_from_rfc3339(&row.created_at) {
-                        dt.with_timezone(&Utc)
-                    } else if let Ok(dt) = chrono::NaiveDateTime::parse_from_str(&row.created_at, "%Y-%m-%d %H:%M:%S") {
-                        dt.and_utc()
-                    } else {
-                        Utc::now() // Fallback
-                    }
-                },
-                resolved_at: row.resolved_at.map(|s| {
-                    if let Ok(dt) = DateTime::parse_from_rfc3339(&s) {
-                        dt.with_timezone(&Utc)
-                    } else if let Ok(dt) = chrono::NaiveDateTime::parse_from_str(&s, "%Y-%m-%d %H:%M:%S") {
-                        dt.and_utc()
-                    } else {
-                        Utc::now() // Fallback
-                    }
-                }),
+                created_at: row.created_at.and_utc(),
+                resolved_at: row.resolved_at.map(|dt| dt.and_utc()),
                 resolution: row.resolution,
                 resolver: row.resolver,
             })
@@ -342,23 +313,28 @@ impl ChallengeManager {
         pr_number: i32,
     ) -> Result<bool, GovernanceError> {
         // Check if PR has signatures without reviews
-        let signatures_without_review = sqlx::query_scalar!(
+        // Signatures are stored as JSON in pull_requests.signatures
+        let (signatures_without_review,): (i64,) = sqlx::query_as(
             r#"
-            SELECT COUNT(*) as count
-            FROM signatures s
-            LEFT JOIN reviews r ON s.repo_name = r.repo_name 
-                AND s.pr_number = r.pr_number 
-                AND s.signer = r.reviewer
-            WHERE s.repo_name = ? AND s.pr_number = ?
-            AND r.id IS NULL
+            SELECT COUNT(*) FROM (
+                SELECT 1
+                FROM pull_requests pr
+                CROSS JOIN json_each(pr.signatures) sig
+                LEFT JOIN reviews r ON r.repo_name = pr.repo_name 
+                    AND r.pr_number = pr.pr_number 
+                    AND r.reviewer = json_extract(sig.value, '$.signer')
+                WHERE pr.repo_name = ? AND pr.pr_number = ?
+                AND r.id IS NULL
+            )
             "#,
-            repo_name,
-            pr_number
         )
+        .bind(repo_name)
+        .bind(pr_number)
         .fetch_one(&self.pool)
-        .await?;
+        .await
+        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
 
-        Ok(signatures_without_review.unwrap_or(0) > 0)
+        Ok(signatures_without_review > 0)
     }
 }
 
@@ -395,4 +371,3 @@ mod tests {
         ));
     }
 }
-

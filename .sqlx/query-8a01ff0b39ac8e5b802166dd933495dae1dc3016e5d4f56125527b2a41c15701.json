@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT COUNT(DISTINCT pr.repo_name || '-' || pr.pr_number || '-' || json_extract(sig.value, '$.signer')) as count\n            FROM pull_requests pr,\n            json_each(pr.signatures) sig,\n            reviews r\n            WHERE pr.opened_at >= ? AND pr.opened_at <= ?\n            AND r.repo_name = pr.repo_name\n            AND r.pr_number = pr.pr_number\n            AND r.reviewer = json_extract(sig.value, '$.signer')\n            AND r.submitted_at <= json_extract(sig.value, '$.timestamp')\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "8a01ff0b39ac8e5b802166dd933495dae1dc3016e5d4f56125527b2a41c15701"
+}

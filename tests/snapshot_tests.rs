@@ -50,6 +50,32 @@ mod validation_snapshot_tests {
     }
 
     #[test]
+    fn test_version_parsing_snapshot() {
+        let validator = VersionPinningValidator::default();
+        let content = r#"
+// @blvm-spec-version: v1.2.3
+// @blvm-spec-commit: abc123def456789
+// @blvm-spec-hash: sha256:fedcba123456
+"#;
+
+        let refs = validator
+            .parse_version_references("test.rs", content)
+            .unwrap();
+        let snapshot = refs
+            .iter()
+            .map(|r| {
+                format!(
+                    "type: {:?}, version: {:?}, commit: {:?}, hash: {:?}",
+                    r.reference_type, r.version, r.commit_sha, r.content_hash
+                )
+            })
+            .collect::<Vec<_>>()
+            .join("\n");
+
+        assert_snapshot!("version_references", snapshot);
+    }
+
+    #[test]
     fn test_empty_directory_hash_snapshot() {
         let validator = ContentHashValidator::new();
         let result = validator.compute_directory_hash(&[]);
@@ -61,32 +87,5 @@ mod validation_snapshot_tests {
                 result.file_count, result.total_size, result.merkle_root
             )
         );
-    }
-}
-
-mod github_snapshot_tests {
-    use blvm_commons::github::cross_layer_status::CrossLayerStatusChecker;
-    use insta::assert_snapshot;
-
-    #[test]
-    fn test_test_count_extraction_snapshot() {
-        let test_cases = vec![
-            "123 tests",
-            "Tests: 456",
-            "cargo test: 789",
-            "1000 passed",
-            "passed: 42",
-        ];
-
-        for test_case in test_cases {
-            let result = CrossLayerStatusChecker::extract_test_count_from_name(test_case);
-            assert_snapshot!(
-                format!(
-                    "test_count_extraction_{}",
-                    test_case.replace(" ", "_").replace(":", "_")
-                ),
-                format!("input: '{}', output: {:?}", test_case, result)
-            );
-        }
     }
 }

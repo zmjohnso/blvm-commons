@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n                SELECT COUNT(*) as count\n                FROM challenges\n                WHERE challenger = ?\n                AND created_at >= ? AND created_at <= ?\n                ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "6c88cd348f65609b0922fff23c9888f9f0fd577d5b02ff8b6abcf1792f2b2141"
+}

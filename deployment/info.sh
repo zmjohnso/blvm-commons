@@ -5,29 +5,29 @@ set -e
 COMPONENT="${1:-}"
 if [ -z "$COMPONENT" ]; then
     echo "Usage: ./info.sh [component]"
-    echo "Components: bllvm, experimental, commons"
+    echo "Components: blvm, experimental, commons"
     exit 1
 fi
 
 case "$COMPONENT" in
-    bllvm|experimental)
-        SERVICE_NAME="bllvm"
-        INSTALL_DIR="/opt/bllvm"
-        DATA_DIR="/var/lib/bllvm"
-        CONFIG_FILE="/etc/bllvm/bllvm.toml"
-        if [ "$COMPONENT" = "bllvm" ]; then
-            BINARY_NAME="bllvm"
+    blvm|experimental)
+        SERVICE_NAME="blvm"
+        INSTALL_DIR="/opt/blvm"
+        DATA_DIR="/var/lib/blvm"
+        CONFIG_FILE="/etc/blvm/blvm.toml"
+        if [ "$COMPONENT" = "blvm" ]; then
+            BINARY_NAME="blvm"
         else
-            BINARY_NAME="bllvm-experimental"
+            BINARY_NAME="blvm-experimental"
         fi
         BINARY_PATH="$INSTALL_DIR/$BINARY_NAME"
         ;;
     commons)
-        SERVICE_NAME="bllvm-commons"
-        INSTALL_DIR="/opt/bllvm-commons"
-        DATA_DIR="/var/lib/bllvm-commons"
-        CONFIG_FILE="/etc/bllvm-commons/app.toml"
-        BINARY_NAME="bllvm-commons"
+        SERVICE_NAME="blvm-commons"
+        INSTALL_DIR="/opt/blvm-commons"
+        DATA_DIR="/var/lib/blvm-commons"
+        CONFIG_FILE="/etc/blvm-commons/app.toml"
+        BINARY_NAME="blvm-commons"
         BINARY_PATH="$INSTALL_DIR/$BINARY_NAME"
         ;;
     *)
@@ -59,7 +59,7 @@ if [ -f "$BINARY_PATH" ]; then
         echo "Type: $(file "$BINARY_PATH" | cut -d':' -f2 | xargs)"
     fi
     if [ -x "$BINARY_PATH" ]; then
-        # Use bllvm version command if available
+        # Use blvm version command if available
         if [ "$COMPONENT" != "commons" ]; then
             VERSION=$("$BINARY_PATH" version 2>/dev/null || "$BINARY_PATH" --version 2>/dev/null || echo "unknown")
         else
@@ -102,7 +102,7 @@ else
     echo "Enabled: No"
 fi
 
-# Node-specific info using bllvm commands (if node is running)
+# Node-specific info using blvm commands (if node is running)
 if [ "$COMPONENT" != "commons" ] && [ -x "$BINARY_PATH" ] && systemctl is-active --quiet "$SERVICE_NAME" 2>/dev/null; then
     echo ""
     echo "=== Node Status ==="

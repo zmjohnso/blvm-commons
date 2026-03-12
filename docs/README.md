@@ -1,86 +1,89 @@
 # Bitcoin Commons Documentation
 
-Welcome to the Bitcoin Commons documentation. This directory contains organized documentation for the entire system.
+Reference documentation for the Bitcoin Commons ecosystem.
 
-## Quick Navigation
+## Quick Start
 
-- **[Documentation Index](./INDEX.md)** - Complete navigation of all documentation
-- **[Organization Guide](./ORGANIZATION.md)** - How documentation is organized
+- **[GETTING_STARTED.md](GETTING_STARTED.md)** - Getting started
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Development guide
+- **[TROUBLESHOOTING.md](TROUBLESHOOTING.md)** - Troubleshooting
 
-## Main Documentation
+## Reference
 
-### Getting Started
-- **[Main README](../README.md)** - Project overview and getting started
-- **[System Status](../SYSTEM_STATUS.md)** - Current system status
-- **[System Review](../SYSTEM_REVIEW_EXCLUDING_GOVERNANCE.md)** - Complete system review
+- **[API_REFERENCE.md](API_REFERENCE.md)** - API reference
+- **[CONFIGURATION.md](CONFIGURATION.md)** - Configuration
+- **[CONFIG_INTEGRATION.md](CONFIG_INTEGRATION.md)** - Config integration
+- **[NAMING_CONVENTIONS.md](NAMING_CONVENTIONS.md)** - Naming conventions
+- **[COMMIT_MESSAGE.md](COMMIT_MESSAGE.md)** - Commit message guidelines
 
-### Current Work
-- **[Phase 2+ Completion Plan](../PHASE2_PLUS_COMPLETION_PLAN.md)** - Current implementation plan
-- **[Next Priorities](../NEXT_PRIORITIES.md)** - High priority items
-- **[Validated Status Report](../VALIDATED_STATUS_REPORT.md)** - Validation results
+## Architecture & Specs
 
-### Architecture & Design
-- **[System Overview](../SYSTEM_OVERVIEW.md)** - System architecture
-- **[Design Document](../DESIGN.md)** - System design
-- **[Directory Structure](../DIRECTORY_STRUCTURE.md)** - Project structure
+- **[governance-app-spec.md](governance-app-spec.md)** - Governance app specification
+- **[DANDELION_K_ANONYMITY_SPEC.md](DANDELION_K_ANONYMITY_SPEC.md)** - Dandelion++ k-anonymity
+- **[BIP152_COMPACT_BLOCKS.md](BIP152_COMPACT_BLOCKS.md)** - Compact blocks
+- **[BIP330_ERLAY.md](BIP330_ERLAY.md)** - Erlay
+- **[COMPARISON_BITCOIN_CORE.md](COMPARISON_BITCOIN_CORE.md)** - Bitcoin Core comparison
 
-### Component Documentation
-- **[bllvm-consensus](../bllvm-consensus/README.md)** - Consensus layer
-- **[bllvm-protocol](../bllvm-protocol/README.md)** - Protocol layer
-- **[bllvm-node](../bllvm-node/README.md)** - Node implementation
-- **[bllvm-sdk](../bllvm-sdk/README.md)** - Developer SDK
-- **[bllvm-spec](../bllvm-spec/README.md)** - Orange Paper specification
+## Operations
 
-### Governance
-- **[Governance System](../governance/README.md)** - Governance overview
-- **[Governance Process](../governance/GOVERNANCE.md)** - How governance works
-- **[Phase Activation](../governance/activation/PHASE_ACTIVATION.md)** - Activation timeline
+- **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Deployment
+- **[MAINNET_QUICK_REFERENCE.md](MAINNET_QUICK_REFERENCE.md)** - Mainnet quick reference
+- **[HIGH_AVAILABILITY_GUIDE.md](HIGH_AVAILABILITY_GUIDE.md)** - High availability
+- **[INCREMENTAL_PRUNING_GUIDE.md](INCREMENTAL_PRUNING_GUIDE.md)** - Incremental pruning
+- **[ECONOMIC_NODE_CLI.md](ECONOMIC_NODE_CLI.md)** - Economic node CLI
+- **[MERGE_MINING_AND_FEE_FORWARDING.md](MERGE_MINING_AND_FEE_FORWARDING.md)** - Merge mining
+- **[MONETIZATION_USER_GUIDE.md](MONETIZATION_USER_GUIDE.md)** - Monetization
 
-## Documentation Categories
+## Governance
 
-All documentation is organized by category in the [Documentation Index](./INDEX.md):
+- **[GOVERNANCE_FORK_GUIDE.md](GOVERNANCE_FORK_GUIDE.md)** - Governance fork
+- **[MAINTAINER_SIGNING.md](MAINTAINER_SIGNING.md)** - Maintainer signing
+- **[MAINTAINER_KEY_MANAGEMENT.md](MAINTAINER_KEY_MANAGEMENT.md)** - Key management
+- **[KEY_ROTATION.md](KEY_ROTATION.md)** - Key rotation
 
-- **Status & Progress** - Current status and progress reports
-- **Planning & Roadmaps** - Plans and implementation roadmaps
-- **Implementation Details** - Implementation summaries and validation
-- **Technical Documentation** - Architecture and technical details
-- **Security & Compliance** - Security documentation
-- **Governance** - Governance system documentation
-- **Archive** - Historical and completed work
+## Security
 
-## Contributing to Documentation
+- **[SERVER_AUTHORIZATION.md](SERVER_AUTHORIZATION.md)** - Server authorization
+- **[AUDIT_LOG_SYSTEM.md](AUDIT_LOG_SYSTEM.md)** - Audit logging
+- **[CROSS_LAYER_VALIDATION.md](CROSS_LAYER_VALIDATION.md)** - Cross-layer validation
+- **[VERIFICATION.md](VERIFICATION.md)** - Verification
+- **[security/CRITICAL_SECURITY_CONTROLS.md](security/CRITICAL_SECURITY_CONTROLS.md)** - Security controls
 
-When adding or updating documentation:
+## Production
 
-1. **Choose the right location** - Use the index to find where similar docs are
-2. **Update the index** - Add your document to [docs/INDEX.md](./INDEX.md)
-3. **Add cross-references** - Link to related documents
-4. **Follow naming conventions** - Use descriptive, consistent names
+- **[production/SECURITY_GUIDE.md](production/SECURITY_GUIDE.md)** - Security guide
+- **[production/DEPLOYMENT_GUIDE.md](production/DEPLOYMENT_GUIDE.md)** - Production deployment
+- **[production/MONITORING_GUIDE.md](production/MONITORING_GUIDE.md)** - Monitoring
+- **[production/MAINTENANCE_GUIDE.md](production/MAINTENANCE_GUIDE.md)** - Maintenance
+- **[production/INCIDENT_RESPONSE.md](production/INCIDENT_RESPONSE.md)** - Incident response
+- **[production/BACKUP_RECOVERY.md](production/BACKUP_RECOVERY.md)** - Backup and recovery
+- **[production/KEY_CEREMONY.md](production/KEY_CEREMONY.md)** - Key ceremony
+- **[production/PRODUCTION_READINESS_CHECKLIST.md](production/PRODUCTION_READINESS_CHECKLIST.md)** - Readiness checklist
 
-See [Organization Guide](./ORGANIZATION.md) for detailed guidelines.
+## UTXO Commitments
 
-## Finding Documentation
+- **[UTXO_COMMITMENTS_INTEGRATION_GUIDE.md](UTXO_COMMITMENTS_INTEGRATION_GUIDE.md)** - Integration guide
+- **[UTXO_COMMITMENTS_TRANSPORT_COMPATIBILITY.md](UTXO_COMMITMENTS_TRANSPORT_COMPATIBILITY.md)** - Transport compatibility
+- **[UTXO_COMMITMENTS_PEER_DISCOVERY.md](UTXO_COMMITMENTS_PEER_DISCOVERY.md)** - Peer discovery
+- **[UTXO_COMMITMENTS_IROH_INTEGRATION.md](UTXO_COMMITMENTS_IROH_INTEGRATION.md)** - Iroh integration
+- **[WEIGHT_CAPS_RATIONALE.md](WEIGHT_CAPS_RATIONALE.md)** - Weight caps rationale
 
-### By Topic
+## Integration
 
-**System Status**: [SYSTEM_STATUS.md](../SYSTEM_STATUS.md)  
-**Current Plan**: [PHASE2_PLUS_COMPLETION_PLAN.md](../PHASE2_PLUS_COMPLETION_PLAN.md)  
-**What's Done**: [VALIDATED_STATUS_REPORT.md](../VALIDATED_STATUS_REPORT.md)  
-**What's Next**: [NEXT_PRIORITIES.md](../NEXT_PRIORITIES.md)
+- **[OTS_INTEGRATION.md](OTS_INTEGRATION.md)** - OpenTimestamps integration
+- **[NOSTR_INTEGRATION.md](NOSTR_INTEGRATION.md)** - Nostr integration
 
-### By Component
+## Testing
 
-**Consensus**: [bllvm-consensus/README.md](../bllvm-consensus/README.md)  
-**Protocol**: [bllvm-protocol/README.md](../bllvm-protocol/README.md)  
-**Node**: [bllvm-node/README.md](../bllvm-node/README.md)  
-**SDK**: [bllvm-sdk/README.md](../bllvm-sdk/README.md)
+- **[testing/README.md](testing/README.md)** - Testing overview
+- **[testing/TESTING_STRATEGY.md](testing/TESTING_STRATEGY.md)** - Testing strategy
+- **[testing/TESTING_SETUP.md](testing/TESTING_SETUP.md)** - Testing setup
+- **[testing/PROOF_OF_WORK_TESTING.md](testing/PROOF_OF_WORK_TESTING.md)** - Proof-of-work testing
+- **[FUZZING_AND_BENCHMARKING.md](FUZZING_AND_BENCHMARKING.md)** - Fuzzing and benchmarking
 
-### By Phase
+## Build & Deployment
 
-**Phase 1**: [PHASE1_COMPLETE.md](../PHASE1_COMPLETE.md)  
-**Phase 2**: [PHASE2_COMPLETE.md](../PHASE2_COMPLETE.md)  
-**Phase 3**: [PHASE3_PROGRESS.md](../PHASE3_PROGRESS.md)
-
----
-
-**For complete navigation, see [Documentation Index](./INDEX.md)**
+- **[build/README.md](build/README.md)** - Build documentation
+- **[deployment/README.md](deployment/README.md)** - Deployment overview
+- **[deployment/DEPLOYMENT.md](deployment/DEPLOYMENT.md)** - Deployment
+- **[deployment/DEPLOYMENT_REQUIREMENTS.md](deployment/DEPLOYMENT_REQUIREMENTS.md)** - Deployment requirements

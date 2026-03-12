@@ -3,8 +3,7 @@
 //! Tests for contribution tracking, weight calculation, and voting aggregation.
 
 use blvm_commons::governance::{
-    ContributionAggregator, ContributionTracker, VoteAggregator,
-    WeightCalculator,
+    ContributionAggregator, ContributionTracker, VoteAggregator, WeightCalculator,
 };
 use blvm_commons::nostr::{ZapTracker, ZapVotingProcessor};
 use chrono::{DateTime, Utc};
@@ -308,7 +307,13 @@ async fn test_weight_calculator_update_weights() {
     // Add more contributors to make capping work correctly (need enough to avoid convergence to 0)
     for i in 2..10 {
         tracker
-            .record_merge_mining_contribution(&format!("contributor{}", i), "rsk", 1.0, 0.01, timestamp)
+            .record_merge_mining_contribution(
+                &format!("contributor{}", i),
+                "rsk",
+                1.0,
+                0.01,
+                timestamp,
+            )
             .await
             .unwrap();
     }
@@ -333,10 +338,19 @@ async fn test_weight_calculator_update_weights() {
     // For now, just verify that a weight was calculated (non-zero)
     let actual_weight = weight.unwrap();
     // Weight should be positive (even if very small due to capping)
-    assert!(actual_weight > 0.0, "Weight should be greater than 0, got {}", actual_weight);
+    assert!(
+        actual_weight > 0.0,
+        "Weight should be greater than 0, got {}",
+        actual_weight
+    );
     // Weight should not exceed base weight
     let base_weight = (0.10_f64).sqrt();
-    assert!(actual_weight <= base_weight + 0.01, "Weight should not exceed base weight significantly, got {} (base: {})", actual_weight, base_weight);
+    assert!(
+        actual_weight <= base_weight + 0.01,
+        "Weight should not exceed base weight significantly, got {} (base: {})",
+        actual_weight,
+        base_weight
+    );
 }
 
 #[tokio::test]
@@ -435,7 +449,13 @@ async fn test_integration_full_flow() {
     // Add more contributors to make capping work correctly (need enough to avoid convergence to 0)
     for i in 2..10 {
         tracker
-            .record_merge_mining_contribution(&format!("contributor{}", i), "rsk", 1.0, 0.01, timestamp)
+            .record_merge_mining_contribution(
+                &format!("contributor{}", i),
+                "rsk",
+                1.0,
+                0.01,
+                timestamp,
+            )
             .await
             .unwrap();
     }
@@ -463,7 +483,16 @@ async fn test_integration_full_flow() {
     // For now, just verify that a weight was calculated (non-zero)
     let base_weight = (0.10_f64).sqrt();
     // Weight should be positive (even if very small due to capping)
-    assert!(aggregates.participation_weight > 0.0, "Weight should be greater than 0, got {}", aggregates.participation_weight);
+    assert!(
+        aggregates.participation_weight > 0.0,
+        "Weight should be greater than 0, got {}",
+        aggregates.participation_weight
+    );
     // Weight should not exceed base weight
-    assert!(aggregates.participation_weight <= base_weight + 0.01, "Weight should not exceed base weight significantly, got {} (base: {})", aggregates.participation_weight, base_weight);
+    assert!(
+        aggregates.participation_weight <= base_weight + 0.01,
+        "Weight should not exceed base weight significantly, got {} (base: {})",
+        aggregates.participation_weight,
+        base_weight
+    );
 }

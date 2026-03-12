@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            UPDATE challenges\n            SET status = ?, resolution = ?, resolver = ?, resolved_at = ?\n            WHERE id = ?\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 5
+    },
+    "nullable": []
+  },
+  "hash": "9bef8c44cf3d7ec2fbe2f7e9493db6dc6f87319628b45388c3158b79db072c4f"
+}

@@ -102,12 +102,12 @@ pub async fn check_verification_status<C: GitHubVerificationClient>(
     match status.conclusion.as_deref() {
         Some("success") => {
             // Verification passed - check specific tools
-            let kani_passed = check_tool_status(client, pr, "Kani Model Checking").await?;
-            let proptest_passed = check_tool_status(client, pr, "Unit & Property Tests").await?;
+            let tests_passed = check_tool_status(client, pr, "Unit & Property Tests").await?;
+            let clippy_passed = check_tool_status(client, pr, "Clippy Linting").await?;
 
-            if kani_passed && proptest_passed {
+            if tests_passed && clippy_passed {
                 Ok(ValidationResult::Valid {
-                    message: "Formal verification passed (Kani + Proptest)".to_string(),
+                    message: "Formal verification passed (tests + clippy)".to_string(),
                 })
             } else {
                 Ok(ValidationResult::Invalid {
@@ -188,8 +188,8 @@ fn load_governance_config() -> Result<GovernanceConfig> {
             required: true,
             tools: vec![
                 VerificationTool {
-                    name: "Kani".to_string(),
-                    command: "cargo kani --features verify".to_string(),
+                    name: "Spec-Lock".to_string(),
+                    command: "cargo spec-lock verify --crate-path .".to_string(),
                     required: true,
                 },
                 VerificationTool {
@@ -385,13 +385,13 @@ mod tests {
             },
             vec![
                 CheckRun {
-                    name: "Kani Model Checking".to_string(),
+                    name: "Unit & Property Tests".to_string(),
                     conclusion: Some("success".to_string()),
                     status: "completed".to_string(),
                     html_url: None,
                 },
                 CheckRun {
-                    name: "Unit & Property Tests".to_string(),
+                    name: "Clippy Linting".to_string(),
                     conclusion: Some("success".to_string()),
                     status: "completed".to_string(),
                     html_url: None,
@@ -562,7 +562,7 @@ mod tests {
     fn test_get_verification_tools() {
         let tools = get_verification_tools("blvm-consensus").unwrap();
         assert_eq!(tools.len(), 2);
-        assert_eq!(tools[0].name, "Kani");
+        assert_eq!(tools[0].name, "Spec-Lock");
         assert_eq!(tools[1].name, "Proptest");
 
         let tools = get_verification_tools("other-repo").unwrap();

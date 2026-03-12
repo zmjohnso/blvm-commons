@@ -238,18 +238,33 @@ async fn test_end_to_end_governance_flow() {
     // All weights are capped at 0.02325
     let uncapped_total = 0.1 + (0.05_f64).sqrt() + (0.02_f64).sqrt();
     let expected_cap = uncapped_total * 0.05;
-    
+
     assert!(weight1.is_some());
     let w1 = weight1.unwrap();
-    assert!((w1 - expected_cap).abs() < 0.001, "weight1: expected ~{:.4}, got {}", expected_cap, w1);
+    assert!(
+        (w1 - expected_cap).abs() < 0.001,
+        "weight1: expected ~{:.4}, got {}",
+        expected_cap,
+        w1
+    );
 
     assert!(weight2.is_some());
     let w2 = weight2.unwrap();
-    assert!((w2 - expected_cap).abs() < 0.001, "weight2: expected ~{:.4}, got {}", expected_cap, w2);
+    assert!(
+        (w2 - expected_cap).abs() < 0.001,
+        "weight2: expected ~{:.4}, got {}",
+        expected_cap,
+        w2
+    );
 
     assert!(weight3.is_some());
     let w3 = weight3.unwrap();
-    assert!((w3 - expected_cap).abs() < 0.001, "weight3: expected ~{:.4}, got {}", expected_cap, w3);
+    assert!(
+        (w3 - expected_cap).abs() < 0.001,
+        "weight3: expected ~{:.4}, got {}",
+        expected_cap,
+        w3
+    );
 
     // Step 5: Get aggregates
     let agg1 = aggregator
@@ -328,8 +343,19 @@ async fn test_weight_cap_enforcement() {
     let expected_whale_cap = uncapped_total * 0.05;
     // Whale weight should be capped (less than base weight and <= expected cap)
     // The actual capped weight may vary slightly due to floating point precision
-    assert!(whale_weight < whale_base, "Whale weight should be less than base weight: {} < {}", whale_weight, whale_base);
-    assert!(whale_weight <= expected_whale_cap + 0.2, "whale_weight: {}, expected_cap: {:.4}, total_weight: {}", whale_weight, expected_whale_cap, total_weight);
+    assert!(
+        whale_weight < whale_base,
+        "Whale weight should be less than base weight: {} < {}",
+        whale_weight,
+        whale_base
+    );
+    assert!(
+        whale_weight <= expected_whale_cap + 0.2,
+        "whale_weight: {}, expected_cap: {:.4}, total_weight: {}",
+        whale_weight,
+        expected_whale_cap,
+        total_weight
+    );
 }
 
 #[tokio::test]

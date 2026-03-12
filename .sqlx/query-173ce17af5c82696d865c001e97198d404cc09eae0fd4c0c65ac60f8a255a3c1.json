@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT COUNT(*) as count\n            FROM pull_requests pr\n            LEFT JOIN reviews r ON pr.repo_name = r.repo_name AND pr.pr_number = r.pr_number\n            WHERE pr.opened_at >= ? AND pr.opened_at <= ?\n            AND r.id IS NULL\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "173ce17af5c82696d865c001e97198d404cc09eae0fd4c0c65ac60f8a255a3c1"
+}

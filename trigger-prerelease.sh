@@ -8,7 +8,7 @@ set -euo pipefail
 
 # Configuration
 ORG="BTCDecoded"
-REPO="bllvm"
+REPO="blvm"
 WORKFLOW_FILE="prerelease.yml"
 TOKEN="${GITHUB_TOKEN:-}"
 VERSION_TAG="${1:-v0.2.0-prerelease}"
@@ -166,7 +166,7 @@ while true; do
                 "https://api.github.com/repos/${ORG}/${REPO}/releases/tags/${VERSION_TAG}" || echo "{}")
             
             if echo "$RELEASE_INFO" | jq -e '.id' > /dev/null 2>&1; then
-                ASSETS=$(echo "$RELEASE_INFO" | jq -r '.assets[]?.name' | grep -E "(bllvm|experimental)" || true)
+                ASSETS=$(echo "$RELEASE_INFO" | jq -r '.assets[]?.name' | grep -E "(blvm|experimental)" || true)
                 if [ -n "$ASSETS" ]; then
                     echo -e "${GREEN}✅ Release found with artifacts:${NC}"
                     echo "$ASSETS" | while read asset; do

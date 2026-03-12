@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT COUNT(*) as count\n            FROM challenges\n            WHERE created_at >= ? AND created_at <= ?\n            AND status IN ('pending', 'under_review')\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "9a03b69fe96660cae8ad2ff6fd6e4733f97f9a6655d9ee2976c327b4862b1d0a"
+}

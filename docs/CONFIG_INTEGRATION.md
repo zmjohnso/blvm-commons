@@ -2,7 +2,7 @@
 
 ## Overview
 
-The BTCDecoded governance system integrates with configuration files from the governance repository to ensure that the bllvm-commons behavior matches the documented governance rules. This document explains how the app loads and uses these configuration files.
+The BTCDecoded governance system integrates with configuration files from the governance repository to ensure that the blvm-commons behavior matches the documented governance rules. This document explains how the app loads and uses these configuration files.
 
 ## Configuration File Structure
 
@@ -23,11 +23,11 @@ governance/
 │   │   ├── layer-4.yml
 │   │   └── emergency.yml
 │   └── repos/                        # Repository-specific configurations
-│       ├── orange-paper.yml
-│       ├── consensus-proof.yml
-│       ├── protocol-engine.yml
-│       ├── reference-node.yml
-│       └── developer-sdk.yml
+│       ├── blvm-spec.yml
+│       ├── blvm-consensus.yml
+│       ├── blvm-protocol.yml
+│       ├── blvm-node.yml
+│       └── blvm-sdk.yml
 ```
 
 ### Configuration Loading
@@ -130,7 +130,7 @@ layers:
   layer1:
     name: "Orange Paper"
     description: "Constitutional layer - fundamental Bitcoin principles"
-    repositories: ["orange-paper"]
+    repositories: ["blvm-spec"]
     signatures:
       required: 6
       total: 7
@@ -141,7 +141,7 @@ layers:
   layer2:
     name: "Consensus Proof"
     description: "Mathematical proofs and consensus validation"
-    repositories: ["consensus-proof"]
+    repositories: ["blvm-consensus"]
     signatures:
       required: 6
       total: 7
@@ -152,7 +152,7 @@ layers:
   layer3:
     name: "Protocol Engine"
     description: "Bitcoin protocol implementation"
-    repositories: ["protocol-engine"]
+    repositories: ["blvm-protocol"]
     signatures:
       required: 4
       total: 5
@@ -163,7 +163,7 @@ layers:
   layer4:
     name: "Reference Node"
     description: "Complete Bitcoin node implementation"
-    repositories: ["reference-node"]
+    repositories: ["blvm-node"]
     signatures:
       required: 3
       total: 5
@@ -174,7 +174,7 @@ layers:
   layer5:
     name: "Developer SDK"
     description: "Developer tools and libraries"
-    repositories: ["developer-sdk"]
+    repositories: ["blvm-sdk"]
     signatures:
       required: 2
       total: 3
@@ -582,26 +582,26 @@ impl AppConfig {
 
 ```bash
 # Validate configuration
-bllvm-commons config validate --config-path governance/config
+blvm-commons config validate --config-path governance/config
 
 # Test configuration loading
-bllvm-commons config test --config-path governance/config
+blvm-commons config test --config-path governance/config
 
 # Show configuration
-bllvm-commons config show --config-path governance/config
+blvm-commons config show --config-path governance/config
 ```
 
 ### Log Analysis
 
 ```bash
 # Check configuration loading logs
-sudo journalctl -u bllvm-commons | grep "config.*load"
+sudo journalctl -u blvm-commons | grep "config.*load"
 
 # Check configuration validation
-sudo journalctl -u bllvm-commons | grep "config.*validate"
+sudo journalctl -u blvm-commons | grep "config.*validate"
 
 # Check configuration errors
-sudo journalctl -u bllvm-commons | grep "config.*error"
+sudo journalctl -u blvm-commons | grep "config.*error"
 ```
 
 ## Best Practices

@@ -255,24 +255,21 @@ impl StatusPublisher {
     /// Calculate next OTS anchor date (first day of next month)
     fn calculate_next_ots_anchor(&self) -> DateTime<Utc> {
         let now = Utc::now();
-        let next_month = if now.month() == 12 {
-            now.with_month(1)
+        let date = now.date_naive();
+        let next_month_date = if date.month() == 12 {
+            date.with_year(date.year() + 1)
                 .unwrap()
-                .with_year(now.year() + 1)
+                .with_month(1)
                 .unwrap()
         } else {
-            now.with_month(now.month() + 1).unwrap()
+            date.with_month(date.month() + 1).unwrap()
         };
-
-        next_month
+        next_month_date
             .with_day(1)
             .unwrap()
-            .with_hour(0)
+            .and_hms_opt(0, 0, 0)
             .unwrap()
-            .with_minute(0)
-            .unwrap()
-            .with_second(0)
-            .unwrap()
+            .and_utc()
     }
 
     /// Create Nostr event from governance status

@@ -1,13 +1,13 @@
 #!/bin/bash
 # Download workflow logs from GitHub Actions using the GitHub API
-# Focuses on: bllvm-consensus, bllvm-protocol, bllvm-node, bllvm-sdk
+# Focuses on: blvm-consensus, blvm-protocol, blvm-node, blvm-sdk
 
 set -euo pipefail
 
 # Configuration
 ORG="${GITHUB_ORG:-BTCDecoded}"
 TOKEN="${GITHUB_TOKEN:-${GH_TOKEN:-}}"
-REPOS=("bllvm-spec" "bllvm-consensus" "bllvm-protocol" "bllvm-node" "bllvm-sdk")
+REPOS=("blvm-spec" "blvm-consensus" "blvm-protocol" "blvm-node" "blvm-sdk")
 OUTPUT_DIR="${OUTPUT_DIR:-./workflow-logs}"
 MAX_RUNS="${MAX_RUNS:-5}"  # Number of recent runs to download per workflow
 
@@ -196,12 +196,7 @@ filter_relevant_workflows() {
     local repo="$1"
     
     case "$repo" in
-        "bllvm-consensus"|"consensus-proof")
-            # Look for verification workflows
-            process_repo_workflows "$repo"
-            ;;
-        "bllvm-protocol"|"protocol-engine"|"bllvm-node"|"reference-node"|"bllvm-sdk"|"developer-sdk")
-            # Look for build workflows
+        "blvm-consensus"|"blvm-protocol"|"blvm-node"|"blvm-sdk")
             process_repo_workflows "$repo"
             ;;
         "commons")

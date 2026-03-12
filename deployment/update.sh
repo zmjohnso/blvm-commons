@@ -7,7 +7,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 COMPONENT="${1:-}"
 if [ -z "$COMPONENT" ]; then
     echo "Usage: ./update.sh [component] [options]"
-    echo "Components: bllvm, experimental, commons"
+    echo "Components: blvm, experimental, commons"
     exit 1
 fi
 shift
@@ -23,31 +23,31 @@ done
 if [ "$EUID" -ne 0 ]; then echo "Run as root"; exit 1; fi
 
 case "$COMPONENT" in
-    bllvm)
-        SERVICE_NAME="bllvm"
-        INSTALL_DIR="/opt/bllvm"
-        BINARY_NAME="bllvm"
-        BINARY_URL="https://github.com/BTCDecoded/bllvm/releases/latest/download/bllvm-linux-x86_64.tar.gz"
+    blvm)
+        SERVICE_NAME="blvm"
+        INSTALL_DIR="/opt/blvm"
+        BINARY_NAME="blvm"
+        BINARY_URL="https://github.com/BTCDecoded/blvm/releases/latest/download/blvm-linux-x86_64.tar.gz"
         if [ "$VERSION" != "latest" ]; then
-            BINARY_URL="https://github.com/BTCDecoded/bllvm/releases/download/${VERSION}/bllvm-linux-x86_64.tar.gz"
+            BINARY_URL="https://github.com/BTCDecoded/blvm/releases/download/${VERSION}/blvm-linux-x86_64.tar.gz"
         fi
         ;;
     experimental)
-        SERVICE_NAME="bllvm"
-        INSTALL_DIR="/opt/bllvm"
-        BINARY_NAME="bllvm-experimental"
-        BINARY_URL="https://github.com/BTCDecoded/bllvm/releases/latest/download/bllvm-experimental-linux-x86_64.tar.gz"
+        SERVICE_NAME="blvm"
+        INSTALL_DIR="/opt/blvm"
+        BINARY_NAME="blvm-experimental"
+        BINARY_URL="https://github.com/BTCDecoded/blvm/releases/latest/download/blvm-experimental-linux-x86_64.tar.gz"
         if [ "$VERSION" != "latest" ]; then
-            BINARY_URL="https://github.com/BTCDecoded/bllvm/releases/download/${VERSION}/bllvm-experimental-linux-x86_64.tar.gz"
+            BINARY_URL="https://github.com/BTCDecoded/blvm/releases/download/${VERSION}/blvm-experimental-linux-x86_64.tar.gz"
         fi
         ;;
     commons)
-        SERVICE_NAME="bllvm-commons"
-        INSTALL_DIR="/opt/bllvm-commons"
-        BINARY_NAME="bllvm-commons"
-        BINARY_URL="https://github.com/BTCDecoded/bllvm-commons/releases/latest/download/bllvm-commons-linux-x86_64.tar.gz"
+        SERVICE_NAME="blvm-commons"
+        INSTALL_DIR="/opt/blvm-commons"
+        BINARY_NAME="blvm-commons"
+        BINARY_URL="https://github.com/BTCDecoded/blvm-commons/releases/latest/download/blvm-commons-linux-x86_64.tar.gz"
         if [ "$VERSION" != "latest" ]; then
-            BINARY_URL="https://github.com/BTCDecoded/bllvm-commons/releases/download/${VERSION}/bllvm-commons-linux-x86_64.tar.gz"
+            BINARY_URL="https://github.com/BTCDecoded/blvm-commons/releases/download/${VERSION}/blvm-commons-linux-x86_64.tar.gz"
         fi
         ;;
     *)

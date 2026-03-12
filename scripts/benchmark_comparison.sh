@@ -25,8 +25,8 @@ BITCOIN_CLI_BIN="${BITCOIN_CLI_BIN:-$BITCOIN_CORE_DIR/src/bitcoin-cli}"
 BITCOIN_DATA_DIR="${BITCOIN_DATA_DIR:-/tmp/bitcoin-benchmark-data}"
 
 # BTCDecoded paths
-BLLVM_CONSENSUS_DIR="$PROJECT_ROOT/bllvm-consensus"
-BLLVM_NODE_DIR="$PROJECT_ROOT/bllvm-node"
+BLVM_CONSENSUS_DIR="$PROJECT_ROOT/blvm-consensus"
+BLVM_NODE_DIR="$PROJECT_ROOT/blvm-node"
 
 # Create results directory
 mkdir -p "$RESULTS_DIR"
@@ -51,8 +51,8 @@ if [ ! -f "$BITCOIN_CLI_BIN" ]; then
 fi
 
 # Check BTCDecoded
-if [ ! -d "$BLLVM_CONSENSUS_DIR" ]; then
-    echo -e "${RED}ERROR: bllvm-consensus directory not found${NC}"
+if [ ! -d "$BLVM_CONSENSUS_DIR" ]; then
+    echo -e "${RED}ERROR: blvm-consensus directory not found${NC}"
     exit 1
 fi
 
@@ -78,9 +78,9 @@ run_btdcoded_benchmarks() {
     local bench_results_dir="$RESULTS_DIR/btdcoded_${TIMESTAMP}"
     mkdir -p "$bench_results_dir"
     
-    # Run bllvm-consensus benchmarks
-    echo -e "${YELLOW}  → Running bllvm-consensus benchmarks...${NC}"
-    cd "$BLLVM_CONSENSUS_DIR"
+    # Run blvm-consensus benchmarks
+    echo -e "${YELLOW}  → Running blvm-consensus benchmarks...${NC}"
+    cd "$BLVM_CONSENSUS_DIR"
     
     # Run with production features for optimized performance
     cargo bench --features production -- \
@@ -91,10 +91,10 @@ run_btdcoded_benchmarks() {
         return 1
     }
     
-    # Run bllvm-node benchmarks if available
-    if [ -d "$BLLVM_NODE_DIR" ]; then
-        echo -e "${YELLOW}  → Running bllvm-node benchmarks...${NC}"
-        cd "$BLLVM_NODE_DIR"
+    # Run blvm-node benchmarks if available
+    if [ -d "$BLVM_NODE_DIR" ]; then
+        echo -e "${YELLOW}  → Running blvm-node benchmarks...${NC}"
+        cd "$BLVM_NODE_DIR"
         cargo bench -- \
             --output-format json \
             --save-baseline laptop-baseline \

@@ -7,14 +7,14 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 repos=(
-    "consensus-proof"
-    "developer-sdk"
-    "protocol-engine"
-    "reference-node"
+    "blvm-consensus"
+    "blvm-sdk"
+    "blvm-protocol"
+    "blvm-node"
     "governance"
     "governance-app"
     ".github"
-    "the-orange-paper"
+    "blvm-spec"
     "website"
 )
 

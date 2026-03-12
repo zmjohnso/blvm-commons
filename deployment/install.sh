@@ -24,13 +24,13 @@ ${GREEN}Usage:${NC}
   ./install.sh [component] [options]
 
 ${GREEN}Components:${NC}
-  bllvm               Install BLLVM node (base build, full blockchain)
+  blvm                Install BLVM node (base build, full blockchain)
   experimental        Install experimental node (UTXO commitments, custom features)
-  commons             Install governance app (bllvm-commons)
+  commons             Install governance app (blvm-commons)
 
 ${GREEN}Examples:${NC}
-  # Install BLLVM node
-  sudo ./install.sh bllvm --public-ip 1.2.3.4
+  # Install BLVM node
+  sudo ./install.sh blvm --public-ip 1.2.3.4
 
   # Install experimental node with default features
   sudo ./install.sh experimental --public-ip 1.2.3.4
@@ -71,16 +71,16 @@ shift
 
 # Route to appropriate installer
 case "$COMPONENT" in
-    bllvm)
-        echo -e "${BLUE}Installing BLLVM Node (Base Build)${NC}"
-        exec "$SCRIPT_DIR/install-bllvm-node.sh" "$@"
+    blvm)
+        echo -e "${BLUE}Installing BLVM Node (Base Build)${NC}"
+        exec "$SCRIPT_DIR/install-blvm-node.sh" "$@"
         ;;
     experimental)
         echo -e "${BLUE}Installing Experimental Node (UTXO Commitments + Custom Features)${NC}"
         exec "$SCRIPT_DIR/install-experimental-node.sh" "$@"
         ;;
     commons)
-        echo -e "${BLUE}Installing Governance App (bllvm-commons)${NC}"
+        echo -e "${BLUE}Installing Governance App (blvm-commons)${NC}"
         exec "$SCRIPT_DIR/install-governance-app.sh" "$@"
         ;;
     help|--help|-h)

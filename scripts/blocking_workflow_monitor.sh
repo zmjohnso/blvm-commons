@@ -15,7 +15,7 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CHECK_SCRIPT="$SCRIPT_DIR/check_workflows.sh"
 ORG="BTCDecoded"
-REPOS=("bllvm-consensus" "bllvm-protocol" "bllvm-node" "bllvm-sdk" "governance-app" "commons")
+REPOS=("blvm-consensus" "blvm-protocol" "blvm-node" "blvm-sdk" "governance-app" "commons")
 
 # Colors
 RED='\033[0;31m'
@@ -161,7 +161,7 @@ fix_repo_issues() {
     # Check for old crate name in test files
     if find tests -name "*.rs" -exec grep -l "consensus_proof::\|protocol_engine::\|reference_node::" {} \; 2>/dev/null | head -1 | grep -q .; then
         echo -e "${BLUE}   Fixing old crate names in test files...${NC}"
-        find tests -name "*.rs" -exec sed -i 's/consensus_proof::/bllvm_consensus::/g; s/protocol_engine::/bllvm_protocol::/g; s/reference_node::/bllvm_node::/g' {} \;
+        find tests -name "*.rs" -exec sed -i 's/consensus_proof::/blvm_consensus::/g; s/protocol_engine::/blvm_protocol::/g; s/reference_node::/blvm_node::/g' {} \;
         
         if git diff --quiet tests/ 2>/dev/null; then
             echo -e "${GREEN}   ✅ No changes needed${NC}"
@@ -189,23 +189,6 @@ fix_repo_issues() {
                     git commit -m "fix: Add missing ${missing_module} module declaration" 2>/dev/null || true
                     git push origin main 2>/dev/null && echo -e "${GREEN}   ✅ Fixed and pushed${NC}" || echo -e "${YELLOW}   ⚠️  Could not push${NC}"
                 fi
-            fi
-        fi
-    fi
-    
-    # Check workflow files for old repo names
-    if [ -f ".github/workflows/ci.yml" ]; then
-        if grep -q "BTCDecoded/consensus-proof\|BTCDecoded/protocol-engine\|BTCDecoded/reference-node" ".github/workflows/ci.yml" 2>/dev/null; then
-            echo -e "${BLUE}   Fixing old repository names in workflow...${NC}"
-            sed -i 's|BTCDecoded/consensus-proof|BTCDecoded/bllvm-consensus|g; s|BTCDecoded/protocol-engine|BTCDecoded/bllvm-protocol|g; s|BTCDecoded/reference-node|BTCDecoded/bllvm-node|g' .github/workflows/ci.yml
-            sed -i 's|../consensus-proof|../bllvm-consensus|g; s|../protocol-engine|../bllvm-protocol|g; s|../reference-node|../bllvm-node|g' .github/workflows/ci.yml
-            
-            if git diff --quiet .github/workflows/ci.yml 2>/dev/null; then
-                echo -e "${GREEN}   ✅ No changes needed${NC}"
-            else
-                git add .github/workflows/ci.yml 2>/dev/null || true
-                git commit -m "fix: Update workflow to use correct repository names" 2>/dev/null || true
-                git push origin main 2>/dev/null && echo -e "${GREEN}   ✅ Fixed and pushed workflow${NC}" || echo -e "${YELLOW}   ⚠️  Could not push${NC}"
             fi
         fi
     fi

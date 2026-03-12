@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT COUNT(*) as count\n            FROM reviews\n            WHERE submitted_at >= ? AND submitted_at <= ?\n            AND review_comment IS NOT NULL\n            AND review_comment != ''\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "b02b5a21684bf3ec63027b289b50adff699488574591007c86b1101c9a1dd7e1"
+}

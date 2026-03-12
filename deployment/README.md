@@ -10,13 +10,13 @@
 
 ```bash
 cd deployment
-chmod +x bllvm.sh
+chmod +x blvm.sh
 
 # Install BLLVM node
-sudo ./bllvm.sh install bllvm --public-ip YOUR_IP
+sudo ./blvm.sh install blvm --public-ip YOUR_IP
 
 # Check status
-./bllvm.sh status
+./blvm.sh status
 ```
 
 ---
@@ -29,29 +29,29 @@ sudo ./bllvm.sh install bllvm --public-ip YOUR_IP
 
 ```bash
 # Install components
-sudo ./bllvm.sh install [bllvm|experimental|commons] [options]
+sudo ./blvm.sh install [blvm|experimental|commons] [options]
 
 # Management
-./bllvm.sh [status|health|info|logs|config|restart] [component]
+./blvm.sh [status|health|info|logs|config|restart] [component]
 
 # Updates
-sudo ./bllvm.sh [update|uninstall] [component]
+sudo ./blvm.sh [update|uninstall] [component]
 ```
 
 ---
 
 ## 🎯 Components
 
-- **`bllvm`** - Base BLLVM node (production build)
+- **`blvm`** - Base BLLVM node (production build)
 - **`experimental`** - Experimental node (UTXO commitments, custom features)
-- **`commons`** - Governance app (bllvm-commons)
+- **`commons`** - Governance app (blvm-commons)
 
 ---
 
 ## 🔧 Features
 
-- ✅ **Unified CLI** - Single `bllvm.sh` entry point
-- ✅ **Native Commands** - Uses `bllvm` binary subcommands
+- ✅ **Unified CLI** - Single `blvm.sh` entry point
+- ✅ **Native Commands** - Uses `blvm` binary subcommands
 - ✅ **Multi-Machine** - Deploy across separate machines
 - ✅ **Auto-Configuration** - Automatic setup with sensible defaults
 - ✅ **Health Monitoring** - Built-in health checks
@@ -62,22 +62,22 @@ sudo ./bllvm.sh [update|uninstall] [component]
 ## 📋 What Gets Installed
 
 ### BLLVM Node
-- Binary: `/opt/bllvm/bllvm`
-- Config: `/etc/bllvm/bllvm.toml`
-- Data: `/var/lib/bllvm`
-- Service: `bllvm.service`
+- Binary: `/opt/blvm/blvm`
+- Config: `/etc/blvm/blvm.toml`
+- Data: `/var/lib/blvm`
+- Service: `blvm.service`
 
 ### Experimental Node
-- Binary: `/opt/bllvm/bllvm-experimental`
-- Config: `/etc/bllvm/bllvm.toml`
-- Data: `/var/lib/bllvm`
-- Service: `bllvm.service` (uses experimental binary)
+- Binary: `/opt/blvm/blvm-experimental`
+- Config: `/etc/blvm/blvm.toml`
+- Data: `/var/lib/blvm`
+- Service: `blvm.service` (uses experimental binary)
 
 ### Governance App
-- Binary: `/opt/bllvm-commons/bllvm-commons`
-- Config: `/etc/bllvm-commons/app.toml`
-- Data: `/var/lib/bllvm-commons`
-- Service: `bllvm-commons.service`
+- Binary: `/opt/blvm-commons/blvm-commons`
+- Config: `/etc/blvm-commons/app.toml`
+- Data: `/var/lib/blvm-commons`
+- Service: `blvm-commons.service`
 
 ---
 
@@ -96,8 +96,8 @@ docker-compose up -d
 ## 📚 More Information
 
 - **Full Guide:** [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
-- **Binary Commands:** See `bllvm --help` after installation
-- **Configuration:** See component config files in `/etc/bllvm*/`
+- **Binary Commands:** See `blvm --help` after installation
+- **Configuration:** See component config files in `/etc/blvm*/`
 
 ---
 

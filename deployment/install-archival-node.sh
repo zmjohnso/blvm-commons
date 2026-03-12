@@ -10,7 +10,7 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-echo -e "${GREEN}=== BLLVM Archival Node Installation ===${NC}"
+echo -e "${GREEN}=== BLVM Archival Node Installation ===${NC}"
 echo ""
 
 # Detect OS
@@ -32,11 +32,11 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Configuration
-INSTALL_DIR="/opt/bllvm"
-DATA_DIR="/var/lib/bllvm-archival"
-CONFIG_DIR="/etc/bllvm"
-SERVICE_USER="bllvm"
-BINARY_URL="https://github.com/BTCDecoded/bllvm/releases/latest/download/bllvm-linux-x86_64.tar.gz"
+INSTALL_DIR="/opt/blvm"
+DATA_DIR="/var/lib/blvm-archival"
+CONFIG_DIR="/etc/blvm"
+SERVICE_USER="blvm"
+BINARY_URL="https://github.com/BTCDecoded/blvm/releases/latest/download/blvm-linux-x86_64.tar.gz"
 VERSION="latest"
 
 # Parse arguments
@@ -55,7 +55,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --version)
             VERSION="$2"
-            BINARY_URL="https://github.com/BTCDecoded/bllvm/releases/download/${VERSION}/bllvm-linux-x86_64.tar.gz"
+            BINARY_URL="https://github.com/BTCDecoded/blvm/releases/download/${VERSION}/blvm-linux-x86_64.tar.gz"
             shift 2
             ;;
         *)
@@ -104,18 +104,18 @@ chown -R "$SERVICE_USER:$SERVICE_USER" "$CONFIG_DIR"
 
 # Download and install binary
 echo ""
-echo "Downloading BLLVM binary..."
+echo "Downloading BLVM binary..."
 cd /tmp
-wget -q "$BINARY_URL" -O bllvm.tar.gz || {
+wget -q "$BINARY_URL" -O blvm.tar.gz || {
     echo -e "${RED}❌ Failed to download binary${NC}"
     exit 1
 }
 
 echo "Extracting binary..."
-tar -xzf bllvm.tar.gz
-cp bllvm "$INSTALL_DIR/"
-chmod +x "$INSTALL_DIR/bllvm"
-chown root:root "$INSTALL_DIR/bllvm"
+tar -xzf blvm.tar.gz
+cp blvm "$INSTALL_DIR/"
+chmod +x "$INSTALL_DIR/blvm"
+chown root:root "$INSTALL_DIR/blvm"
 
 # Create config file
 echo ""
@@ -147,9 +147,9 @@ chown root:"$SERVICE_USER" "$CONFIG_DIR/archival.toml"
 # Create systemd service
 echo ""
 echo "Creating systemd service..."
-cat > /etc/systemd/system/bllvm-archival.service << EOF
+cat > /etc/systemd/system/blvm-archival.service << EOF
 [Unit]
-Description=BLLVM Archival Node
+Description=BLVM Archival Node
 After=network.target
 
 [Service]
@@ -157,7 +157,7 @@ Type=simple
 User=${SERVICE_USER}
 Group=${SERVICE_USER}
 WorkingDirectory=${DATA_DIR}
-ExecStart=${INSTALL_DIR}/bllvm --config ${CONFIG_DIR}/archival.toml
+ExecStart=${INSTALL_DIR}/blvm --config ${CONFIG_DIR}/archival.toml
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -180,17 +180,17 @@ systemctl daemon-reload
 # Enable and start service
 echo ""
 echo "Starting service..."
-systemctl enable bllvm-archival
-systemctl start bllvm-archival
+systemctl enable blvm-archival
+systemctl start blvm-archival
 
 # Wait a moment for service to start
 sleep 3
 
 # Check status
-if systemctl is-active --quiet bllvm-archival; then
+if systemctl is-active --quiet blvm-archival; then
     echo -e "${GREEN}✅ Service started successfully${NC}"
 else
-    echo -e "${RED}❌ Service failed to start. Check logs: journalctl -u bllvm-archival${NC}"
+    echo -e "${RED}❌ Service failed to start. Check logs: journalctl -u blvm-archival${NC}"
     exit 1
 fi
 
@@ -198,8 +198,8 @@ fi
 echo ""
 echo -e "${GREEN}=== Installation Complete ===${NC}"
 echo ""
-echo "Service: bllvm-archival"
-echo "Status: $(systemctl is-active bllvm-archival)"
+echo "Service: blvm-archival"
+echo "Status: $(systemctl is-active blvm-archival)"
 echo "Config: ${CONFIG_DIR}/archival.toml"
 echo "Data: ${DATA_DIR}"
 echo "RPC: http://localhost:8332"
@@ -212,8 +212,8 @@ echo ""
 echo -e "${YELLOW}⚠️  Save the RPC password!${NC}"
 echo ""
 echo "Useful commands:"
-echo "  sudo systemctl status bllvm-archival"
-echo "  sudo journalctl -u bllvm-archival -f"
-echo "  sudo systemctl restart bllvm-archival"
+echo "  sudo systemctl status blvm-archival"
+echo "  sudo journalctl -u blvm-archival -f"
+echo "  sudo systemctl restart blvm-archival"
 echo ""
 

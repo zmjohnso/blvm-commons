@@ -37,7 +37,8 @@ pub async fn handle_block_notification(
     // Fee forwarding removed - no longer processing blocks
     Json(BlockNotificationResponse {
         success: true,
-        message: "Fee forwarding removed - block notification received but not processed".to_string(),
+        message: "Fee forwarding removed - block notification received but not processed"
+            .to_string(),
         contributions_found: 0,
     })
 }

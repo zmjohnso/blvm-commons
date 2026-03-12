@@ -5,30 +5,30 @@ set -e
 COMPONENT="${1:-}"
 if [ -z "$COMPONENT" ]; then
     echo "Usage: ./uninstall.sh [component]"
-    echo "Components: bllvm, experimental, commons"
+    echo "Components: blvm, experimental, commons"
     exit 1
 fi
 
 if [ "$EUID" -ne 0 ]; then echo "Run as root"; exit 1; fi
 
 case "$COMPONENT" in
-    bllvm)
-        SERVICE_NAME="bllvm"
-        INSTALL_DIR="/opt/bllvm"
-        DATA_DIR="/var/lib/bllvm"
-        CONFIG_DIR="/etc/bllvm"
+    blvm)
+        SERVICE_NAME="blvm"
+        INSTALL_DIR="/opt/blvm"
+        DATA_DIR="/var/lib/blvm"
+        CONFIG_DIR="/etc/blvm"
         ;;
     experimental)
-        SERVICE_NAME="bllvm"
-        INSTALL_DIR="/opt/bllvm"
-        DATA_DIR="/var/lib/bllvm"
-        CONFIG_DIR="/etc/bllvm"
+        SERVICE_NAME="blvm"
+        INSTALL_DIR="/opt/blvm"
+        DATA_DIR="/var/lib/blvm"
+        CONFIG_DIR="/etc/blvm"
         ;;
     commons)
-        SERVICE_NAME="bllvm-commons"
-        INSTALL_DIR="/opt/bllvm-commons"
-        DATA_DIR="/var/lib/bllvm-commons"
-        CONFIG_DIR="/etc/bllvm-commons"
+        SERVICE_NAME="blvm-commons"
+        INSTALL_DIR="/opt/blvm-commons"
+        DATA_DIR="/var/lib/blvm-commons"
+        CONFIG_DIR="/etc/blvm-commons"
         ;;
     *)
         echo "❌ Unknown component: $COMPONENT"

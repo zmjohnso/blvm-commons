@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            INSERT INTO challenges (\n                id, target_type, target_id, challenger, reason, \n                signature, status, created_at\n            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 8
+    },
+    "nullable": []
+  },
+  "hash": "f0c0e7e36885d4a134f3d9f8fb8cf26f380f635d494460e6272fa46a4cfa11e6"
+}

@@ -81,11 +81,11 @@ Controls that validate inputs and enforce security boundaries.
 - ✅ **A-002 SegWit Witness Verification**: **COMPLETE** - Full witness verification implemented
   - Location: `bllvm-consensus/src/segwit.rs`, `bllvm-consensus/src/witness.rs`
   - Status: `validate_segwit_block()`, `validate_segwit_witness_structure()`, witness commitment validation all implemented
-  - Evidence: Verified 2025-01-XX - comprehensive SegWit implementation with tests and Kani proofs
+  - Evidence: Verified 2025-01-XX - comprehensive SegWit implementation with tests and spec-lock verification
 - ✅ **A-003 Taproot Support**: **COMPLETE** - Full P2TR validation implemented
   - Location: `bllvm-consensus/src/taproot.rs`, `bllvm-consensus/src/witness.rs`
   - Status: `validate_taproot_transaction()`, `validate_taproot_script()`, key aggregation, script paths all implemented
-  - Evidence: Verified 2025-01-XX - comprehensive Taproot implementation with tests and Kani proofs
+  - Evidence: Verified 2025-01-XX - comprehensive Taproot implementation with tests and spec-lock verification
 
 **Governance**:
 - **C-003 Tier Classification Logic**: Core logic exists but falls back to tier 2
@@ -378,7 +378,7 @@ cargo test genesis_block_regtest
 |---------|-----------|------------------|----------------|--------------|
 | A-001 | ✅ Hash match | ✅ Network init | ❌ N/A | Manual |
 | B-001 | ✅ Key format | ✅ Signature flow | ❌ N/A | Manual ceremony |
-| B-002 | ✅ Verification | ✅ Emergency activation | ⚠️ Threshold | Kani |
+| B-002 | ✅ Verification | ✅ Emergency activation | ⚠️ Threshold | spec-lock |
 | C-001 | ✅ Query logic | ✅ Database ops | ❌ N/A | Manual |
 | C-002 | ✅ Hash calc | ✅ File verification | ✅ Consensus check | Manual |
 

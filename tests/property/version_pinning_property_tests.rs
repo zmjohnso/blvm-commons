@@ -12,7 +12,7 @@ proptest! {
         version in prop::string::string_regex(r"v\d+\.\d+\.\d+(-[a-zA-Z0-9]+)?(\+[a-zA-Z0-9]+)?").unwrap()
     ) {
         let validator = VersionPinningValidator::default();
-        let content = format!("// @orange-paper-version: {}", version);
+        let content = format!("// @blvm-spec-version: {}", version);
         
         let refs1 = validator.parse_version_references("test.rs", &content);
         let refs2 = validator.parse_version_references("test.rs", &content);
@@ -29,7 +29,7 @@ proptest! {
     ) {
         let validator = VersionPinningValidator::default();
         let version = format!("v{}.{}.{}", major, minor, patch);
-        let content = format!("// @orange-paper-version: {}", version);
+        let content = format!("// @blvm-spec-version: {}", version);
         
         let refs = validator.parse_version_references("test.rs", &content);
         
@@ -77,7 +77,7 @@ proptest! {
     ) {
         let validator = VersionPinningValidator::default();
         let content = format!(
-            "// @orange-paper-version: {}\n// @orange-paper-version: {}",
+            "// @blvm-spec-version: {}\n// @blvm-spec-version: {}",
             version1, version2
         );
         
@@ -97,9 +97,9 @@ proptest! {
         let validator = VersionPinningValidator::default();
         
         let styles = vec![
-            format!("// @orange-paper-version: {}", version),
-            format!("/* @orange-paper-version: {} */", version),
-            format!("# @orange-paper-version: {}", version),
+            format!("// @blvm-spec-version: {}", version),
+            format!("/* @blvm-spec-version: {} */", version),
+            format!("# @blvm-spec-version: {}", version),
         ];
         
         for style in styles {

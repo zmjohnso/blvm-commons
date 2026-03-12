@@ -65,21 +65,8 @@ impl BackupManager {
 
         info!("Creating database backup: {}", backup_path.display());
 
-        // Create backup based on database type
-        if self.database.is_sqlite() {
-            self.backup_sqlite(&backup_path).await?;
-        } else if self.database.is_postgres() {
-            // PostgreSQL backups require pg_dump (external tool)
-            // For now, we'll log a warning and skip
-            warn!("PostgreSQL backups require external pg_dump tool - skipping automated backup");
-            return Err(GovernanceError::ConfigError(
-                "PostgreSQL backups require external pg_dump tool".to_string(),
-            ));
-        } else {
-            return Err(GovernanceError::ConfigError(
-                "Unknown database type for backup".to_string(),
-            ));
-        }
+        // Create backup (SQLite only)
+        self.backup_sqlite(&backup_path).await?;
 
         // Verify backup
         self.verify_backup(&backup_path).await?;

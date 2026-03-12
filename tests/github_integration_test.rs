@@ -14,7 +14,8 @@ mod common;
 #[tokio::test]
 async fn test_github_client_creation() -> Result<(), Box<dyn std::error::Error>> {
     // Test GitHub client creation with mock credentials
-    let client = GitHubClient::new(12345, "/tmp/non_existent_key.pem");
+    let key_path = std::env::temp_dir().join("blvm_github_nonexistent_key.pem");
+    let client = GitHubClient::new(12345, key_path.to_string_lossy().as_ref());
 
     // Should fail with file not found error
     assert!(client.is_err());
@@ -26,7 +27,8 @@ async fn test_github_client_creation() -> Result<(), Box<dyn std::error::Error>>
 #[tokio::test]
 async fn test_status_check_posting() -> Result<(), Box<dyn std::error::Error>> {
     // Create a mock GitHub client (we'll use the simplified version)
-    let client = GitHubClient::new(12345, "/tmp/non_existent_key.pem");
+    let key_path = std::env::temp_dir().join("blvm_github_nonexistent_key.pem");
+    let client = GitHubClient::new(12345, key_path.to_string_lossy().as_ref());
 
     // For now, we'll test the mock implementation
     // In a real scenario, this would test actual GitHub API calls
@@ -132,7 +134,8 @@ async fn test_github_integration_initialization() -> Result<(), Box<dyn std::err
     let db = Database::new_in_memory().await?;
 
     // Create mock GitHub client
-    let github_client = GitHubClient::new(12345, "/tmp/non_existent_key.pem");
+    let key_path = std::env::temp_dir().join("blvm_github_nonexistent_key.pem");
+    let github_client = GitHubClient::new(12345, key_path.to_string_lossy().as_ref());
 
     // This should fail due to invalid key path, but we can test the structure
     assert!(github_client.is_err());

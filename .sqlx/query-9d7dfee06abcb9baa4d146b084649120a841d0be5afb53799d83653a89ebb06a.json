@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT COUNT(*) as count\n            FROM reviews\n            WHERE repo_name = ? AND pr_number = ? AND reviewer = ? \n            AND state IN ('approved', 'changes_requested', 'commented')\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "count",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "9d7dfee06abcb9baa4d146b084649120a841d0be5afb53799d83653a89ebb06a"
+}

@@ -5,18 +5,18 @@ set -e
 COMPONENT="${1:-}"
 if [ -z "$COMPONENT" ]; then
     echo "Usage: ./restart.sh [component]"
-    echo "Components: bllvm, experimental, commons"
+    echo "Components: blvm, experimental, commons"
     exit 1
 fi
 
 if [ "$EUID" -ne 0 ]; then echo "Run as root"; exit 1; fi
 
 case "$COMPONENT" in
-    bllvm|experimental)
-        SERVICE_NAME="bllvm"
+    blvm|experimental)
+        SERVICE_NAME="blvm"
         ;;
     commons)
-        SERVICE_NAME="bllvm-commons"
+        SERVICE_NAME="blvm-commons"
         ;;
     *)
         echo "❌ Unknown component: $COMPONENT"

@@ -49,7 +49,7 @@ proptest! {
         version in prop::string::string_regex(r"v\d+\.\d+\.\d+(-[a-zA-Z0-9]+)?(\+[a-zA-Z0-9]+)?").unwrap()
     ) {
         let validator = VersionPinningValidator::default();
-        let content = format!("// @orange-paper-version: {}", version);
+        let content = format!("// @blvm-spec-version: {}", version);
 
         let refs1 = validator.parse_version_references("test.rs", &content);
         let refs2 = validator.parse_version_references("test.rs", &content);
@@ -70,7 +70,7 @@ proptest! {
     ) {
         let validator = VersionPinningValidator::default();
         let version = format!("v{}.{}.{}", major, minor, patch);
-        let content = format!("// @orange-paper-version: {}", version);
+        let content = format!("// @blvm-spec-version: {}", version);
 
         let refs = validator.parse_version_references("test.rs", &content);
 

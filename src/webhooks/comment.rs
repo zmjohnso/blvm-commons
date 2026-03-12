@@ -205,8 +205,7 @@ pub async fn handle_comment_event(
                 serde_json::json!({"status": "empty_signature"}),
             ))
         }
-    // Check for challenge command
-    else if body.starts_with("/governance-challenge") {
+    } else if body.starts_with("/governance-challenge") {
         return handle_challenge_command(database, repo_name, pr_number, commenter, body).await;
     } else {
         info!("Non-governance comment, ignoring");
@@ -291,7 +290,7 @@ async fn handle_challenge_command(
     match challenge_manager
         .create_challenge(
             target_type,
-            target_id,
+            target_id.clone(),
             commenter.to_string(),
             reason.to_string(),
             signature.to_string(),

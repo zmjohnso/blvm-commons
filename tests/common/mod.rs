@@ -406,7 +406,7 @@ pub mod mock_github {
                 html_url: None,
             },
             CheckRun {
-                name: "Kani Model Checking: 10 passed".to_string(),
+                name: "Spec-Lock Verification: 10 passed".to_string(),
                 conclusion: Some("success".to_string()),
                 status: "completed".to_string(),
                 html_url: None,

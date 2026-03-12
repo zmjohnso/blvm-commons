@@ -10,25 +10,17 @@ ORG="BTCDecoded"
 BRANCH="${BRANCH:-main}"
 LIMIT="${LIMIT:-5}"
 
-# Repository name mapping (workflow names -> actual repo names)
-declare -A REPO_MAP=(
-    ["consensus-proof"]="bllvm-consensus"
-    ["protocol-engine"]="bllvm-protocol"
-    ["reference-node"]="bllvm-node"
-    ["developer-sdk"]="bllvm-sdk"
-)
-
 # Repositories in build order (from versions.toml dependencies)
 # Level 0: No dependencies
 # Level 1: Depends on level 0
 # Level 2: Depends on level 1
 # etc.
 REPOS=(
-    "bllvm-consensus"      # Level 0
-    "bllvm-sdk"            # Level 0
-    "bllvm-protocol"       # Level 1 (depends on bllvm-consensus)
-    "bllvm-node"            # Level 2 (depends on bllvm-protocol, bllvm-consensus)
-    "governance-app"       # Level 1 (depends on bllvm-sdk)
+    "blvm-consensus"      # Level 0
+    "blvm-sdk"            # Level 0
+    "blvm-protocol"       # Level 1 (depends on blvm-consensus)
+    "blvm-node"            # Level 2 (depends on blvm-protocol, blvm-consensus)
+    "governance-app"       # Level 1 (depends on blvm-sdk)
     "commons"
     "governance"
 )
@@ -254,7 +246,7 @@ main() {
     echo "  $0 <repo_name> <run_id>"
     echo ""
     echo "Example:"
-    echo "  $0 bllvm-consensus 12345678"
+    echo "  $0 blvm-consensus 12345678"
 }
 
 main "$@"

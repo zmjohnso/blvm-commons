@@ -297,7 +297,7 @@ fn create_mock_version_manifest() -> blvm_commons::validation::version_pinning::
     use chrono::Utc;
 
     VersionManifest {
-        repository: "orange-paper".to_string(),
+        repository: "blvm-spec".to_string(),
         created_at: Utc::now(),
         versions: vec![
             VersionManifestEntry {

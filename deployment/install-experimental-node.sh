@@ -1,17 +1,17 @@
 #!/bin/bash
-# Install BLLVM Experimental Node - Custom Features
+# Install BLVM Experimental Node - Custom Features
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-INSTALL_DIR="/opt/bllvm"
-DATA_DIR="/var/lib/bllvm"
-CONFIG_DIR="/etc/bllvm"
-CONFIG_FILE="$CONFIG_DIR/bllvm.toml"
-SERVICE_USER="bllvm"
-SERVICE_NAME="bllvm"
-BINARY_NAME="bllvm-experimental"
-BINARY_URL="https://github.com/BTCDecoded/bllvm/releases/latest/download/bllvm-experimental-linux-x86_64.tar.gz"
+INSTALL_DIR="/opt/blvm"
+DATA_DIR="/var/lib/blvm"
+CONFIG_DIR="/etc/blvm"
+CONFIG_FILE="$CONFIG_DIR/blvm.toml"
+SERVICE_USER="blvm"
+SERVICE_NAME="blvm"
+BINARY_NAME="blvm-experimental"
+BINARY_URL="https://github.com/BTCDecoded/blvm/releases/latest/download/blvm-experimental-linux-x86_64.tar.gz"
 
 PUBLIC_IP=""
 RPC_PASSWORD=""
@@ -30,7 +30,7 @@ while [[ $# -gt 0 ]]; do
         --build-from-source) BUILD_FROM_SOURCE=true; shift ;;
         --source-dir) SOURCE_DIR="$2"; BUILD_FROM_SOURCE=true; shift 2 ;;
         --custom-binary) CUSTOM_BINARY="$2"; shift 2 ;;
-        --version) BINARY_URL="https://github.com/BTCDecoded/bllvm/releases/download/$2/bllvm-experimental-linux-x86_64.tar.gz"; shift 2 ;;
+        --version) BINARY_URL="https://github.com/BTCDecoded/blvm/releases/download/$2/blvm-experimental-linux-x86_64.tar.gz"; shift 2 ;;
         *) echo "Unknown: $1"; exit 1 ;;
     esac
 done
@@ -56,23 +56,23 @@ if [ -n "$CUSTOM_BINARY" ]; then
     cp "$CUSTOM_BINARY" "$INSTALL_DIR/$BINARY_NAME"
 elif [ "$BUILD_FROM_SOURCE" = true ]; then
     if [ -z "$SOURCE_DIR" ]; then
-        SOURCE_DIR="/tmp/bllvm-source"
-        git clone https://github.com/BTCDecoded/bllvm.git "$SOURCE_DIR"
+        SOURCE_DIR="/tmp/blvm-source"
+        git clone https://github.com/BTCDecoded/blvm.git "$SOURCE_DIR"
     fi
     cd "$SOURCE_DIR"
     if ! command -v cargo &> /dev/null; then
         echo "❌ Install Rust: https://rustup.rs/"
         exit 1
     fi
-    cargo build --release --features "$FEATURES" --bin bllvm
-    cp "target/release/bllvm" "$INSTALL_DIR/$BINARY_NAME"
+    cargo build --release --features "$FEATURES" --bin blvm
+    cp "target/release/blvm" "$INSTALL_DIR/$BINARY_NAME"
 else
     cd /tmp
-    wget -q "$BINARY_URL" -O bllvm-experimental.tar.gz
-    tar -xzf bllvm-experimental.tar.gz
-    cp bllvm "$INSTALL_DIR/$BINARY_NAME" 2>/dev/null || \
-    cp bllvm-experimental "$INSTALL_DIR/$BINARY_NAME" 2>/dev/null || \
-    find . -name "bllvm*" -type f -executable | head -1 | xargs -I {} cp {} "$INSTALL_DIR/$BINARY_NAME"
+    wget -q "$BINARY_URL" -O blvm-experimental.tar.gz
+    tar -xzf blvm-experimental.tar.gz
+    cp blvm "$INSTALL_DIR/$BINARY_NAME" 2>/dev/null || \
+    cp blvm-experimental "$INSTALL_DIR/$BINARY_NAME" 2>/dev/null || \
+    find . -name "blvm*" -type f -executable | head -1 | xargs -I {} cp {} "$INSTALL_DIR/$BINARY_NAME"
 fi
 
 chmod +x "$INSTALL_DIR/$BINARY_NAME"

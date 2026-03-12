@@ -5,7 +5,7 @@
 //! They are **transparent**, not **enforcement mechanisms**.
 
 use crate::error::GovernanceError;
-use chrono::{DateTime, Duration, Utc};
+use chrono::{DateTime, Datelike, Duration, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::SqlitePool;
 
@@ -96,25 +96,41 @@ impl MetricsReporter {
         &self,
         month: DateTime<Utc>,
     ) -> Result<GovernanceReport, GovernanceError> {
-        let period_start = month.with_day(1).unwrap();
-        let next_month = if month.month() == 12 {
-            period_start.with_year(month.year() + 1).unwrap().with_month(1).unwrap()
+        let date = month.date_naive();
+        let period_start = date
+            .with_day(1)
+            .unwrap()
+            .and_hms_opt(0, 0, 0)
+            .unwrap()
+            .and_utc();
+        let next_month_date = if date.month() == 12 {
+            date.with_year(date.year() + 1)
+                .unwrap()
+                .with_month(1)
+                .unwrap()
         } else {
-            period_start.with_month(month.month() + 1).unwrap()
+            date.with_month(date.month() + 1).unwrap()
         };
+        let next_month = next_month_date.and_hms_opt(0, 0, 0).unwrap().and_utc();
         let period_end = next_month - Duration::seconds(1);
 
         // Query merge distribution
-        let merge_distribution = self.get_merge_distribution(period_start, period_end).await?;
-        
+        let merge_distribution = self
+            .get_merge_distribution(period_start, period_end)
+            .await?;
+
         // Query PR statistics
         let pr_statistics = self.get_pr_statistics(period_start, period_end).await?;
-        
+
         // Query challenge statistics
-        let challenge_statistics = self.get_challenge_statistics(period_start, period_end).await?;
-        
+        let challenge_statistics = self
+            .get_challenge_statistics(period_start, period_end)
+            .await?;
+
         // Query maintainer activity
-        let maintainer_activity = self.get_maintainer_activity(period_start, period_end).await?;
+        let maintainer_activity = self
+            .get_maintainer_activity(period_start, period_end)
+            .await?;
 
         // Query review statistics
         let review_statistics = self.get_review_statistics(period_start, period_end).await?;
@@ -135,6 +151,8 @@ impl MetricsReporter {
         start: DateTime<Utc>,
         end: DateTime<Utc>,
     ) -> Result<MergeDistribution, GovernanceError> {
+        let start_str = start.to_rfc3339();
+        let end_str = end.to_rfc3339();
         // Query merges from governance_events
         let rows = sqlx::query!(
             r#"
@@ -146,14 +164,14 @@ impl MetricsReporter {
             GROUP BY maintainer
             ORDER BY count DESC
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_all(&self.pool)
         .await?;
 
         let total: u32 = rows.iter().map(|r| r.count as u32).sum();
-        
+
         let by_maintainer: Vec<MaintainerMergeCount> = rows
             .into_iter()
             .map(|row| {
@@ -181,6 +199,8 @@ impl MetricsReporter {
         start: DateTime<Utc>,
         end: DateTime<Utc>,
     ) -> Result<PRStatistics, GovernanceError> {
+        let start_str = start.to_rfc3339();
+        let end_str = end.to_rfc3339();
         // Query PRs opened in period
         let total_prs: i64 = sqlx::query_scalar!(
             r#"
@@ -188,12 +208,11 @@ impl MetricsReporter {
             FROM pull_requests
             WHERE opened_at >= ? AND opened_at <= ?
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         // Query merged PRs
         let merged: i64 = sqlx::query_scalar!(
@@ -203,12 +222,11 @@ impl MetricsReporter {
             WHERE event_type = 'merge_approved'
             AND timestamp >= ? AND timestamp <= ?
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         // Query pending PRs (opened but not merged)
         let pending: i64 = sqlx::query_scalar!(
@@ -218,12 +236,11 @@ impl MetricsReporter {
             WHERE opened_at >= ? AND opened_at <= ?
             AND governance_status != 'merged'
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         // Query rejected PRs (blocked merges)
         let rejected: i64 = sqlx::query_scalar!(
@@ -233,27 +250,26 @@ impl MetricsReporter {
             WHERE event_type = 'merge_blocked'
             AND timestamp >= ? AND timestamp <= ?
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         // Query PRs by tier (from tier_overrides or default classification)
         let tier_rows = sqlx::query!(
             r#"
             SELECT 
-                COALESCE(to.override_tier, 1) as tier,
-                COUNT(*) as count
+                COALESCE(tier_ov.override_tier, 1) as "tier: i64",
+                COUNT(*) as "count: i64"
             FROM pull_requests pr
-            LEFT JOIN tier_overrides to ON pr.repo_name = to.repo_name AND pr.pr_number = to.pr_number
+            LEFT JOIN tier_overrides tier_ov ON pr.repo_name = tier_ov.repo_name AND pr.pr_number = tier_ov.pr_number
             WHERE pr.opened_at >= ? AND pr.opened_at <= ?
-            GROUP BY tier
-            ORDER BY tier
+            GROUP BY 1
+            ORDER BY 1
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_all(&self.pool)
         .await?;
@@ -261,8 +277,8 @@ impl MetricsReporter {
         let by_tier: Vec<TierCount> = tier_rows
             .into_iter()
             .map(|row| TierCount {
-                tier: row.tier as u32,
-                count: row.count as u32,
+                tier: row.tier.unwrap_or(0) as u32,
+                count: row.count.unwrap_or(0) as u32,
             })
             .collect();
 
@@ -280,6 +296,8 @@ impl MetricsReporter {
         start: DateTime<Utc>,
         end: DateTime<Utc>,
     ) -> Result<ChallengeStatistics, GovernanceError> {
+        let start_str = start.to_rfc3339();
+        let end_str = end.to_rfc3339();
         // Query total challenges
         let total: i64 = sqlx::query_scalar!(
             r#"
@@ -287,12 +305,11 @@ impl MetricsReporter {
             FROM challenges
             WHERE created_at >= ? AND created_at <= ?
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         // Query pending challenges
         let pending: i64 = sqlx::query_scalar!(
@@ -302,12 +319,11 @@ impl MetricsReporter {
             WHERE created_at >= ? AND created_at <= ?
             AND status IN ('pending', 'under_review')
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         // Query resolved challenges
         let resolved: i64 = sqlx::query_scalar!(
@@ -317,12 +333,11 @@ impl MetricsReporter {
             WHERE created_at >= ? AND created_at <= ?
             AND status = 'resolved'
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         // Query rejected challenges
         let rejected: i64 = sqlx::query_scalar!(
@@ -332,12 +347,11 @@ impl MetricsReporter {
             WHERE created_at >= ? AND created_at <= ?
             AND status = 'rejected'
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         Ok(ChallengeStatistics {
             total_challenges: total as u32,
@@ -352,6 +366,8 @@ impl MetricsReporter {
         start: DateTime<Utc>,
         end: DateTime<Utc>,
     ) -> Result<Vec<MaintainerActivity>, GovernanceError> {
+        let start_str = start.to_rfc3339();
+        let end_str = end.to_rfc3339();
         // Get all active maintainers
         let maintainers = sqlx::query!(
             r#"
@@ -378,12 +394,11 @@ impl MetricsReporter {
                 AND timestamp >= ? AND timestamp <= ?
                 "#,
                 username,
-                start.to_rfc3339(),
-                end.to_rfc3339()
+                start_str,
+                end_str
             )
             .fetch_one(&self.pool)
-            .await?
-            .unwrap_or(0);
+            .await?;
 
             // Count signatures given (extract from JSON in pull_requests.signatures)
             // SQLite JSON functions: json_each extracts array elements
@@ -397,12 +412,11 @@ impl MetricsReporter {
                 AND json_extract(sig.value, '$.timestamp') <= ?
                 "#,
                 username,
-                start.to_rfc3339(),
-                end.to_rfc3339()
+                start_str,
+                end_str
             )
             .fetch_one(&self.pool)
-            .await?
-            .unwrap_or(0);
+            .await?;
 
             // Count challenges created
             let challenges_created: i64 = sqlx::query_scalar!(
@@ -413,12 +427,11 @@ impl MetricsReporter {
                 AND created_at >= ? AND created_at <= ?
                 "#,
                 username,
-                start.to_rfc3339(),
-                end.to_rfc3339()
+                start_str,
+                end_str
             )
             .fetch_one(&self.pool)
-            .await?
-            .unwrap_or(0);
+            .await?;
 
             // Count challenges resolved
             let challenges_resolved: i64 = sqlx::query_scalar!(
@@ -429,12 +442,11 @@ impl MetricsReporter {
                 AND resolved_at >= ? AND resolved_at <= ?
                 "#,
                 username,
-                start.to_rfc3339(),
-                end.to_rfc3339()
+                start_str,
+                end_str
             )
             .fetch_one(&self.pool)
-            .await?
-            .unwrap_or(0);
+            .await?;
 
             // Count reviews given
             let reviews_given: i64 = sqlx::query_scalar!(
@@ -445,12 +457,11 @@ impl MetricsReporter {
                 AND submitted_at >= ? AND submitted_at <= ?
                 "#,
                 username,
-                start.to_rfc3339(),
-                end.to_rfc3339()
+                start_str,
+                end_str
             )
             .fetch_one(&self.pool)
-            .await?
-            .unwrap_or(0);
+            .await?;
 
             activity.push(MaintainerActivity {
                 username,
@@ -464,8 +475,16 @@ impl MetricsReporter {
 
         // Sort by total activity (signatures + merges + reviews + challenges)
         activity.sort_by(|a, b| {
-            let a_total = a.signatures_given + a.prs_merged + a.reviews_given + a.challenges_created + a.challenges_resolved;
-            let b_total = b.signatures_given + b.prs_merged + b.reviews_given + b.challenges_created + b.challenges_resolved;
+            let a_total = a.signatures_given
+                + a.prs_merged
+                + a.reviews_given
+                + a.challenges_created
+                + a.challenges_resolved;
+            let b_total = b.signatures_given
+                + b.prs_merged
+                + b.reviews_given
+                + b.challenges_created
+                + b.challenges_resolved;
             b_total.cmp(&a_total)
         });
 
@@ -477,6 +496,8 @@ impl MetricsReporter {
         start: DateTime<Utc>,
         end: DateTime<Utc>,
     ) -> Result<ReviewStatistics, GovernanceError> {
+        let start_str = start.to_rfc3339();
+        let end_str = end.to_rfc3339();
         // Query total reviews
         let total_reviews: i64 = sqlx::query_scalar!(
             r#"
@@ -484,24 +505,23 @@ impl MetricsReporter {
             FROM reviews
             WHERE submitted_at >= ? AND submitted_at <= ?
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         // Query reviews by type
         let review_type_rows = sqlx::query!(
             r#"
-            SELECT state, COUNT(*) as count
+            SELECT state, COUNT(*) as "count: i64"
             FROM reviews
             WHERE submitted_at >= ? AND submitted_at <= ?
             GROUP BY state
-            ORDER BY count DESC
+            ORDER BY 2 DESC
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_all(&self.pool)
         .await?;
@@ -510,7 +530,7 @@ impl MetricsReporter {
             .into_iter()
             .map(|row| ReviewTypeCount {
                 state: row.state,
-                count: row.count as u32,
+                count: row.count.unwrap_or(0) as u32,
             })
             .collect();
 
@@ -529,12 +549,11 @@ impl MetricsReporter {
             AND r.reviewer = json_extract(sig.value, '$.signer')
             AND r.submitted_at <= json_extract(sig.value, '$.timestamp')
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         // Total signatures in period
         let total_signatures: i64 = sqlx::query_scalar!(
@@ -546,14 +565,13 @@ impl MetricsReporter {
             AND json_extract(sig.value, '$.timestamp') >= ? 
             AND json_extract(sig.value, '$.timestamp') <= ?
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339(),
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str,
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         let signatures_without_review = (total_signatures - signatures_with_review).max(0) as u32;
 
@@ -566,12 +584,11 @@ impl MetricsReporter {
             AND review_comment IS NOT NULL
             AND review_comment != ''
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         let average_review_comments = if total_reviews > 0 {
             (reviews_with_comments as f64 / total_reviews as f64) * 100.0
@@ -588,12 +605,11 @@ impl MetricsReporter {
             WHERE pr.opened_at >= ? AND pr.opened_at <= ?
             AND r.id IS NULL
             "#,
-            start.to_rfc3339(),
-            end.to_rfc3339()
+            start_str,
+            end_str
         )
         .fetch_one(&self.pool)
-        .await?
-        .unwrap_or(0);
+        .await?;
 
         Ok(ReviewStatistics {
             total_reviews: total_reviews as u32,
@@ -646,16 +662,14 @@ mod tests {
                 resolved: 2,
                 rejected: 1,
             },
-            maintainer_activity: vec![
-                MaintainerActivity {
-                    username: "alice".to_string(),
-                    prs_merged: 6,
-                    signatures_given: 20,
-                    reviews_given: 15,
-                    challenges_created: 1,
-                    challenges_resolved: 2,
-                },
-            ],
+            maintainer_activity: vec![MaintainerActivity {
+                username: "alice".to_string(),
+                prs_merged: 6,
+                signatures_given: 20,
+                reviews_given: 15,
+                challenges_created: 1,
+                challenges_resolved: 2,
+            }],
             review_statistics: ReviewStatistics {
                 total_reviews: 25,
                 reviews_by_type: vec![
@@ -680,4 +694,3 @@ mod tests {
         assert!(json.contains("merge_distribution"));
     }
 }
-

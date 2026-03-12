@@ -28,23 +28,18 @@ impl WeightCalculator {
         0.0
     }
 
-    /// Apply weight cap to prevent whale dominance
-    pub fn apply_weight_cap(&self, calculated_weight: f64, total_system_weight: f64) -> f64 {
-        let max_weight = total_system_weight * self.cap_percentage;
-        calculated_weight.min(max_weight)
+    /// Apply weight cap to prevent whale dominance (reporting only; governance is maintainer-only)
+    pub fn apply_weight_cap(&self, calculated_weight: f64, _total_system_weight: f64) -> f64 {
+        calculated_weight // No cap applied; maintainer-only governance
     }
 
-    /// Check if contribution is eligible for voting (cooling-off period)
+    /// Check if contribution is eligible for voting (cooling-off period; reporting only)
     pub fn check_cooling_off(
         &self,
-        contribution_amount_btc: f64,
-        contribution_age_days: u32,
+        _contribution_amount_btc: f64,
+        _contribution_age_days: u32,
     ) -> bool {
-        if contribution_amount_btc >= self.cooling_off_threshold_btc {
-            contribution_age_days >= self.cooling_off_period_days
-        } else {
-            true // No cooling period for small contributions
-        }
+        true // No cooling period; maintainer-only governance
     }
 
     /// Calculate zap "weight" for reporting purposes only (not used in governance)

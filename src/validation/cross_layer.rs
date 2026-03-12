@@ -175,7 +175,7 @@ impl CrossLayerValidator {
         let required_reference_format = rule
             .get("required_reference_format")
             .and_then(|v| v.as_str())
-            .unwrap_or("orange-paper@v{VERSION}");
+            .unwrap_or("blvm-spec@v{VERSION}");
 
         info!(
             "Checking version reference format: {}",
@@ -220,7 +220,7 @@ impl CrossLayerValidator {
         use chrono::Utc;
 
         let manifest = VersionManifest {
-            repository: "orange-paper".to_string(),
+            repository: "blvm-spec".to_string(),
             created_at: Utc::now(),
             versions: vec![VersionManifestEntry {
                 version: "v1.0.0".to_string(),

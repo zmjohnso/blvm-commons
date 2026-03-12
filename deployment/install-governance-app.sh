@@ -1,5 +1,5 @@
 #!/bin/bash
-# Install Governance App (bllvm-commons) - Direct Installation
+# Install Governance App (blvm-commons) - Direct Installation
 # Works on ArchLinux and Ubuntu
 
 set -e
@@ -32,12 +32,12 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Configuration
-INSTALL_DIR="/opt/bllvm-commons"
-DATA_DIR="/var/lib/bllvm-commons"
-CONFIG_DIR="/etc/bllvm-commons"
-KEYS_DIR="/etc/bllvm-commons/keys"
-SERVICE_USER="bllvm-commons"
-BINARY_URL="https://github.com/BTCDecoded/bllvm-commons/releases/latest/download/bllvm-commons-linux-x86_64.tar.gz"
+INSTALL_DIR="/opt/blvm-commons"
+DATA_DIR="/var/lib/blvm-commons"
+CONFIG_DIR="/etc/blvm-commons"
+KEYS_DIR="/etc/blvm-commons/keys"
+SERVICE_USER="blvm-commons"
+BINARY_URL="https://github.com/BTCDecoded/blvm-commons/releases/latest/download/blvm-commons-linux-x86_64.tar.gz"
 VERSION="latest"
 
 # Parse arguments
@@ -61,7 +61,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         --version)
             VERSION="$2"
-            BINARY_URL="https://github.com/BTCDecoded/bllvm-commons/releases/download/${VERSION}/bllvm-commons-linux-x86_64.tar.gz"
+            BINARY_URL="https://github.com/BTCDecoded/blvm-commons/releases/download/${VERSION}/blvm-commons-linux-x86_64.tar.gz"
             shift 2
             ;;
         *)
@@ -106,25 +106,25 @@ chown -R "$SERVICE_USER:$SERVICE_USER" "$KEYS_DIR"
 
 # Download and install binary
 echo ""
-echo "Downloading bllvm-commons binary..."
+echo "Downloading blvm-commons binary..."
 cd /tmp
-wget -q "$BINARY_URL" -O bllvm-commons.tar.gz || {
+wget -q "$BINARY_URL" -O blvm-commons.tar.gz || {
     echo -e "${RED}❌ Failed to download binary${NC}"
     exit 1
 }
 
 echo "Extracting binary..."
-tar -xzf bllvm-commons.tar.gz
+tar -xzf blvm-commons.tar.gz
 # Try different possible binary names
-if [ -f "bllvm-commons" ]; then
-    cp bllvm-commons "$INSTALL_DIR/"
+if [ -f "blvm-commons" ]; then
+    cp blvm-commons "$INSTALL_DIR/"
 elif [ -f "governance-app" ]; then
-    cp governance-app "$INSTALL_DIR/bllvm-commons"
+    cp governance-app "$INSTALL_DIR/blvm-commons"
 else
-    find . -name "*commons*" -o -name "*governance*" | grep -v ".tar.gz" | head -1 | xargs -I {} cp {} "$INSTALL_DIR/bllvm-commons"
+    find . -name "*commons*" -o -name "*governance*" | grep -v ".tar.gz" | head -1 | xargs -I {} cp {} "$INSTALL_DIR/blvm-commons"
 fi
-chmod +x "$INSTALL_DIR/bllvm-commons"
-chown root:root "$INSTALL_DIR/bllvm-commons"
+chmod +x "$INSTALL_DIR/blvm-commons"
+chown root:root "$INSTALL_DIR/blvm-commons"
 
 # Generate Nostr keys if they don't exist
 echo ""
@@ -230,7 +230,7 @@ chown root:"$SERVICE_USER" "$CONFIG_DIR/environment"
 # Create systemd service
 echo ""
 echo "Creating systemd service..."
-cat > /etc/systemd/system/bllvm-commons.service << EOF
+cat > /etc/systemd/system/blvm-commons.service << EOF
 [Unit]
 Description=BLLVM Commons (Governance App)
 After=network.target
@@ -241,7 +241,7 @@ User=${SERVICE_USER}
 Group=${SERVICE_USER}
 WorkingDirectory=${DATA_DIR}
 EnvironmentFile=${CONFIG_DIR}/environment
-ExecStart=${INSTALL_DIR}/bllvm-commons
+ExecStart=${INSTALL_DIR}/blvm-commons
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -280,11 +280,11 @@ echo "   nostr-tool convert ${KEYS_DIR}/nostr/gov.nsec"
 echo "   sudo nano ${CONFIG_DIR}/app.toml"
 echo ""
 echo "4. Start the service:"
-echo "   sudo systemctl enable bllvm-commons"
-echo "   sudo systemctl start bllvm-commons"
+echo "   sudo systemctl enable blvm-commons"
+echo "   sudo systemctl start blvm-commons"
 echo ""
 echo "5. Check status:"
-echo "   sudo systemctl status bllvm-commons"
-echo "   sudo journalctl -u bllvm-commons -f"
+echo "   sudo systemctl status blvm-commons"
+echo "   sudo journalctl -u blvm-commons -f"
 echo ""
 

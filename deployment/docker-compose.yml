@@ -1,10 +1,10 @@
 version: '3.8'
 
 services:
-  # Governance App (bllvm-commons)
+  # Governance App (blvm-commons)
   governance-app:
     image: ghcr.io/btcdecoded/governance-app:latest
-    container_name: bllvm-commons
+    container_name: blvm-commons
     ports:
       - "8080:8080"
     environment:
@@ -41,8 +41,8 @@ services:
 
   # Archival Node (Base Build - Full History)
   archival-node:
-    image: ghcr.io/btcdecoded/bllvm:latest
-    container_name: bllvm-archival
+    image: ghcr.io/btcdecoded/blvm:latest
+    container_name: blvm-archival
     ports:
       - "8332:8332"  # RPC
       - "8333:8333"  # P2P
@@ -53,7 +53,7 @@ services:
     volumes:
       - ./archival-data:/app/data
       - ./archival-config:/app/config
-    command: ["bllvm", "--config", "/app/config/config.toml"]
+    command: ["blvm", "--config", "/app/config/config.toml"]
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "-u", "${RPC_USER:-btc}:${RPC_PASSWORD}", "http://localhost:8332"]
@@ -63,8 +63,8 @@ services:
 
   # UTXO Commitment Node 1 (Experimental Build)
   utxo-node-1:
-    image: ghcr.io/btcdecoded/bllvm-experimental:latest
-    container_name: bllvm-utxo-1
+    image: ghcr.io/btcdecoded/blvm-experimental:latest
+    container_name: blvm-utxo-1
     ports:
       - "8335:8335"  # RPC
       - "8334:8334"  # P2P
@@ -75,13 +75,13 @@ services:
     volumes:
       - ./utxo-1-data:/app/data
       - ./utxo-1-config:/app/config
-    command: ["bllvm", "--config", "/app/config/config.toml"]
+    command: ["blvm", "--config", "/app/config/config.toml"]
     restart: unless-stopped
 
   # UTXO Commitment Node 2 (Experimental Build)
   utxo-node-2:
-    image: ghcr.io/btcdecoded/bllvm-experimental:latest
-    container_name: bllvm-utxo-2
+    image: ghcr.io/btcdecoded/blvm-experimental:latest
+    container_name: blvm-utxo-2
     ports:
       - "8336:8336"  # RPC
       - "8337:8337"  # P2P
@@ -92,13 +92,13 @@ services:
     volumes:
       - ./utxo-2-data:/app/data
       - ./utxo-2-config:/app/config
-    command: ["bllvm", "--config", "/app/config/config.toml"]
+    command: ["blvm", "--config", "/app/config/config.toml"]
     restart: unless-stopped
 
   # UTXO Commitment Node 3 (Experimental Build)
   utxo-node-3:
-    image: ghcr.io/btcdecoded/bllvm-experimental:latest
-    container_name: bllvm-utxo-3
+    image: ghcr.io/btcdecoded/blvm-experimental:latest
+    container_name: blvm-utxo-3
     ports:
       - "8338:8338"  # RPC
       - "8339:8339"  # P2P
@@ -109,7 +109,7 @@ services:
     volumes:
       - ./utxo-3-data:/app/data
       - ./utxo-3-config:/app/config
-    command: ["bllvm", "--config", "/app/config/config.toml"]
+    command: ["blvm", "--config", "/app/config/config.toml"]
     restart: unless-stopped
 
 networks:

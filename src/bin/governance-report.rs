@@ -42,8 +42,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
 
     // Get database URL from environment
-    let database_url = env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "sqlite:governance.db".to_string());
+    let database_url =
+        env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite:governance.db".to_string());
 
     // Connect to database
     let pool = sqlx::SqlitePool::connect(&database_url).await?;
@@ -78,32 +78,47 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-fn format_report_markdown(report: &blvm_commons::reporting::governance_metrics::GovernanceReport) -> String {
+fn format_report_markdown(
+    report: &blvm_commons::reporting::governance_metrics::GovernanceReport,
+) -> String {
     let mut md = String::new();
-    
+
     md.push_str(&format!("# Governance Report\n\n"));
-    md.push_str(&format!("**Period**: {} to {}\n\n", 
-        report.period_start.format("%Y-%m-%d"), 
-        report.period_end.format("%Y-%m-%d")));
-    
+    md.push_str(&format!(
+        "**Period**: {} to {}\n\n",
+        report.period_start.format("%Y-%m-%d"),
+        report.period_end.format("%Y-%m-%d")
+    ));
+
     // Merge Distribution
     md.push_str("## Merge Distribution\n\n");
-    md.push_str(&format!("Total merges: {}\n\n", report.merge_distribution.total_merges));
+    md.push_str(&format!(
+        "Total merges: {}\n\n",
+        report.merge_distribution.total_merges
+    ));
     md.push_str("| Maintainer | Merges | Percentage |\n");
     md.push_str("|------------|--------|------------|\n");
     for maintainer in &report.merge_distribution.by_maintainer {
-        md.push_str(&format!("| {} | {} | {:.1}% |\n", 
-            maintainer.username, maintainer.count, maintainer.percentage));
+        md.push_str(&format!(
+            "| {} | {} | {:.1}% |\n",
+            maintainer.username, maintainer.count, maintainer.percentage
+        ));
     }
     md.push_str("\n");
-    
+
     // PR Statistics
     md.push_str("## PR Statistics\n\n");
-    md.push_str(&format!("- Total PRs: {}\n", report.pr_statistics.total_prs));
+    md.push_str(&format!(
+        "- Total PRs: {}\n",
+        report.pr_statistics.total_prs
+    ));
     md.push_str(&format!("- Merged: {}\n", report.pr_statistics.merged));
     md.push_str(&format!("- Pending: {}\n", report.pr_statistics.pending));
-    md.push_str(&format!("- Rejected: {}\n\n", report.pr_statistics.rejected));
-    
+    md.push_str(&format!(
+        "- Rejected: {}\n\n",
+        report.pr_statistics.rejected
+    ));
+
     md.push_str("### By Tier\n\n");
     md.push_str("| Tier | Count |\n");
     md.push_str("|------|-------|\n");
@@ -111,44 +126,75 @@ fn format_report_markdown(report: &blvm_commons::reporting::governance_metrics::
         md.push_str(&format!("| {} | {} |\n", tier.tier, tier.count));
     }
     md.push_str("\n");
-    
+
     // Challenge Statistics
     md.push_str("## Challenge Statistics\n\n");
-    md.push_str(&format!("- Total challenges: {}\n", report.challenge_statistics.total_challenges));
-    md.push_str(&format!("- Pending: {}\n", report.challenge_statistics.pending));
-    md.push_str(&format!("- Resolved: {}\n", report.challenge_statistics.resolved));
-    md.push_str(&format!("- Rejected: {}\n\n", report.challenge_statistics.rejected));
-    
+    md.push_str(&format!(
+        "- Total challenges: {}\n",
+        report.challenge_statistics.total_challenges
+    ));
+    md.push_str(&format!(
+        "- Pending: {}\n",
+        report.challenge_statistics.pending
+    ));
+    md.push_str(&format!(
+        "- Resolved: {}\n",
+        report.challenge_statistics.resolved
+    ));
+    md.push_str(&format!(
+        "- Rejected: {}\n\n",
+        report.challenge_statistics.rejected
+    ));
+
     // Review Statistics
     md.push_str("## Review Statistics\n\n");
-    md.push_str(&format!("- Total reviews: {}\n", report.review_statistics.total_reviews));
-    md.push_str(&format!("- Signatures with review: {}\n", report.review_statistics.signatures_with_review));
-    md.push_str(&format!("- Signatures without review: {}\n", report.review_statistics.signatures_without_review));
-    md.push_str(&format!("- PRs without reviews: {}\n", report.review_statistics.prs_without_reviews));
-    md.push_str(&format!("- Reviews with comments: {:.1}%\n\n", report.review_statistics.average_review_comments));
-    
+    md.push_str(&format!(
+        "- Total reviews: {}\n",
+        report.review_statistics.total_reviews
+    ));
+    md.push_str(&format!(
+        "- Signatures with review: {}\n",
+        report.review_statistics.signatures_with_review
+    ));
+    md.push_str(&format!(
+        "- Signatures without review: {}\n",
+        report.review_statistics.signatures_without_review
+    ));
+    md.push_str(&format!(
+        "- PRs without reviews: {}\n",
+        report.review_statistics.prs_without_reviews
+    ));
+    md.push_str(&format!(
+        "- Reviews with comments: {:.1}%\n\n",
+        report.review_statistics.average_review_comments
+    ));
+
     md.push_str("### Reviews by Type\n\n");
     md.push_str("| Type | Count |\n");
     md.push_str("|------|-------|\n");
     for review_type in &report.review_statistics.reviews_by_type {
-        md.push_str(&format!("| {} | {} |\n", review_type.state, review_type.count));
+        md.push_str(&format!(
+            "| {} | {} |\n",
+            review_type.state, review_type.count
+        ));
     }
     md.push_str("\n");
-    
+
     // Maintainer Activity
     md.push_str("## Maintainer Activity\n\n");
     md.push_str("| Maintainer | PRs Merged | Signatures | Reviews | Challenges Created | Challenges Resolved |\n");
     md.push_str("|------------|------------|------------|---------|-------------------|-------------------|\n");
     for activity in &report.maintainer_activity {
-        md.push_str(&format!("| {} | {} | {} | {} | {} | {} |\n",
+        md.push_str(&format!(
+            "| {} | {} | {} | {} | {} | {} |\n",
             activity.username,
             activity.prs_merged,
             activity.signatures_given,
             activity.reviews_given,
             activity.challenges_created,
-            activity.challenges_resolved));
+            activity.challenges_resolved
+        ));
     }
-    
+
     md
 }
-
