@@ -28,16 +28,15 @@ pub struct BlockNotificationResponse {
     pub contributions_found: usize,
 }
 
-/// Handle block notification webhook
-/// Fee forwarding removed - this is now a placeholder
+/// Handle block notification webhook.
+/// Block notifications are acknowledged but not processed (fee forwarding was removed).
 pub async fn handle_block_notification(
     State((_config, _database)): State<(AppConfig, Database)>,
     Json(_payload): Json<BlockNotification>,
 ) -> Json<BlockNotificationResponse> {
-    // Fee forwarding removed - no longer processing blocks
     Json(BlockNotificationResponse {
         success: true,
-        message: "Fee forwarding removed - block notification received but not processed"
+        message: "Block notification acknowledged"
             .to_string(),
         contributions_found: 0,
     })

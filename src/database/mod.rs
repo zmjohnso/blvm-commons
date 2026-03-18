@@ -588,6 +588,17 @@ impl Database {
         Ok(maintainer)
     }
 
+    pub async fn get_maintainers_for_layer(
+        &self,
+        layer: i32,
+    ) -> Result<Vec<crate::database::models::Maintainer>, GovernanceError> {
+        let pool = &self.backend.pool;
+        use crate::database::queries::Queries;
+        Queries::get_maintainers_for_layer(pool, layer)
+            .await
+            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))
+    }
+
     pub async fn get_emergency_keyholders(
         &self,
     ) -> Result<Vec<crate::database::models::EmergencyKeyholder>, GovernanceError> {

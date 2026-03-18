@@ -59,6 +59,48 @@ impl GitHubClient {
         })
     }
 
+    /// Create client from personal access token or installation token.
+    /// Use when GITHUB_TOKEN or GITHUB_INSTALLATION_TOKEN is available (e.g. GitHub Actions).
+    pub fn from_token(token: impl Into<String>) -> Result<Self, GovernanceError> {
+        let token = token.into();
+        if token.is_empty() {
+            return Err(GovernanceError::ConfigError(
+                "GitHub token cannot be empty".to_string(),
+            ));
+        }
+
+        let client = Octocrab::builder()
+            .personal_token(token)
+            .build()
+            .map_err(|e| {
+                GovernanceError::GitHubError(format!("Failed to create GitHub client: {}", e))
+            })?;
+
+        let http_client = ReqwestClient::builder()
+            .user_agent("blvm-commons/0.1.0")
+            .build()
+            .map_err(|e| {
+                GovernanceError::GitHubError(format!("Failed to create HTTP client: {}", e))
+            })?;
+
+        let circuit_breaker = Arc::new(crate::resilience::CircuitBreaker::with_config(
+            "github-api",
+            crate::resilience::CircuitBreakerConfig {
+                failure_threshold: 5,
+                success_threshold: 2,
+                timeout: std::time::Duration::from_secs(60),
+                window_duration: std::time::Duration::from_secs(60),
+            },
+        ));
+
+        Ok(Self {
+            client,
+            app_id: 0,
+            http_client,
+            circuit_breaker,
+        })
+    }
+
     /// Post a status check to GitHub
     pub async fn post_status_check(
         &self,
@@ -187,6 +229,33 @@ impl GitHubClient {
             state, description, check_run_id
         );
 
+        Ok(())
+    }
+
+    /// Post a comment to a GitHub issue
+    pub async fn post_issue_comment(
+        &self,
+        owner: &str,
+        repo: &str,
+        issue_number: u64,
+        body: &str,
+    ) -> Result<(), GovernanceError> {
+        if owner.is_empty() || repo.is_empty() || body.is_empty() {
+            return Err(GovernanceError::GitHubError(
+                "owner, repo, and body must be non-empty".to_string(),
+            ));
+        }
+
+        self.client
+            .issues(owner, repo)
+            .create_comment(issue_number, body)
+            .await
+            .map_err(|e| {
+                error!("Failed to post issue comment: {}", e);
+                GovernanceError::GitHubError(format!("Failed to post issue comment: {}", e))
+            })?;
+
+        info!("Posted comment to {}/{} issue #{}", owner, repo, issue_number);
         Ok(())
     }
 

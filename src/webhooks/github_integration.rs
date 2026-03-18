@@ -59,9 +59,24 @@ impl GitHubIntegration {
             .await?;
 
         // Set up required status checks for the branch
-        // TODO: Implement set_required_checks method or use alternative approach
-        // For now, this is handled by GitHub branch protection rules
-        warn!("set_required_checks not implemented - using GitHub branch protection rules");
+        let base_ref = payload
+            .get("pull_request")
+            .and_then(|pr| pr.get("base"))
+            .and_then(|b| b.get("ref"))
+            .and_then(|r| r.as_str())
+            .unwrap_or("main");
+        let contexts = vec![
+            "governance/review-period".to_string(),
+            "governance/signatures".to_string(),
+            "governance/analysis".to_string(),
+        ];
+        if let Err(e) = self
+            .github_client
+            .set_required_status_checks(owner, repo, base_ref, &contexts)
+            .await
+        {
+            warn!("set_required_checks failed (branch protection may be configured manually): {}", e);
+        }
 
         Ok(())
     }
@@ -231,17 +246,22 @@ impl GitHubIntegration {
         ))
     }
 
-    /// Check signature requirements
+    /// Check signature requirements (from PR signatures in database)
     async fn check_signatures(
         &self,
-        _pr: &crate::database::models::PullRequest,
+        pr: &crate::database::models::PullRequest,
         required: usize,
         total: usize,
     ) -> Result<(bool, String), GovernanceError> {
-        // TODO: Get actual signature count from database
-        let current_signatures = 0; // Placeholder
-        let signers = vec![]; // Placeholder
-        let pending = vec![]; // Placeholder
+        let current_signatures = pr.signatures.len();
+        let signers: Vec<String> = pr.signatures.iter().map(|s| s.signer.clone()).collect();
+
+        let maintainers = self.database.get_maintainers_for_layer(pr.layer).await?;
+        let pending: Vec<String> = maintainers
+            .iter()
+            .map(|m| m.github_username.clone())
+            .filter(|u| !signers.contains(u))
+            .collect();
 
         let signatures_met = current_signatures >= required;
         let status = StatusCheckGenerator::generate_signature_status(

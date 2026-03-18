@@ -4,8 +4,10 @@
 
 use blvm_commons::governance_review::{
     get_database_url, get_github_token, get_governance_repo, AppealManager,
-    DeadlineNotificationManager, GovernanceReviewCaseManager, MediationManager, TimeLimitManager,
+    DeadlineNotificationManager, GovernanceReviewCaseManager, GovernanceReviewGitHubIntegration,
+    MediationManager, TimeLimitManager,
 };
+use blvm_commons::github::client::GitHubClient;
 use sqlx::SqlitePool;
 use tracing::{error, info};
 
@@ -32,11 +34,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Setup GitHub integration (optional)
     let github_integration =
-        if let (Some(_token), Some((owner, name))) = (get_github_token(), get_governance_repo()) {
-            // TODO: Create GitHubClient with token
-            // For now, create integration without client (will log only)
-            info!("GitHub integration available (token found)");
-            None // Placeholder - would create actual integration here
+        if let (Some(token), Some((owner, name))) = (get_github_token(), get_governance_repo()) {
+            match GitHubClient::from_token(&token) {
+                Ok(client) => {
+                    info!("GitHub integration available (token found)");
+                    Some(GovernanceReviewGitHubIntegration::new(client, owner, name))
+                }
+                Err(e) => {
+                    error!("Failed to create GitHub client: {}", e);
+                    None
+                }
+            }
         } else {
             info!("GitHub integration not available (no token or repo config)");
             None

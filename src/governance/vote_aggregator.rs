@@ -3,7 +3,9 @@
 //! Aggregates votes from maintainers for governance proposals.
 //! Governance is maintainer-only multisig (no economic nodes, no contribution-based voting).
 //! Zap votes are tracked for transparency/reporting but do NOT affect governance decisions.
+//! Maintainer signatures come from the database (populated by webhooks from GitHub PR reviews).
 
+use crate::database::queries::Queries;
 use crate::governance::WeightCalculator;
 use crate::nostr::zap_voting::ZapVotingProcessor;
 use anyhow::Result;
@@ -41,10 +43,13 @@ impl VoteAggregator {
         let zap_votes = self.zap_voting.get_proposal_votes(pr_id).await?;
         let zap_totals = self.zap_voting.get_proposal_vote_totals(pr_id).await?;
 
-        // Governance is maintainer-only: votes come from maintainer signatures
-        // Zap votes are tracked for transparency but don't affect governance
-        // TODO: Query maintainer signatures from GitHub PR
-        let maintainer_votes = 0; // Placeholder - should query actual maintainer signatures
+        // Governance is maintainer-only: votes come from maintainer signatures in DB
+        // (populated by webhooks from GitHub PR reviews/approvals)
+        let maintainer_votes = Queries::get_pull_request_by_id(&self.pool, pr_id)
+            .await
+            .map_err(|e| anyhow::anyhow!("Failed to get PR {}: {}", pr_id, e))?
+            .map(|pr| pr.signatures.len() as u32)
+            .unwrap_or(0);
         let total_votes = maintainer_votes as f64;
 
         // Check if threshold met (maintainer signature threshold)

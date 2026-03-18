@@ -100,8 +100,9 @@ impl AuditLogger {
         *self.entry_count.lock().await
     }
 
-    /// Load existing entries to initialize head hash and count
-    async fn load_existing_entries(&self) -> Result<()> {
+    /// Load existing entries to initialize head hash and count.
+    /// Call on startup when opening an existing log file.
+    pub async fn load_existing_entries(&self) -> Result<()> {
         let path = Path::new(&self.log_path);
         let file_size = path.metadata().map(|m| m.len()).unwrap_or(0);
 
@@ -211,12 +212,76 @@ impl AuditLogger {
         Ok(filtered)
     }
 
-    /// Close the audit logger
+    /// Close the audit logger (flush only; does not drop file handle)
     pub async fn close(&self) -> Result<()> {
         if let Some(file) = self.file.lock().await.as_mut() {
             file.flush()
                 .map_err(|e| anyhow!("Failed to flush audit log on close: {}", e))?;
         }
+        Ok(())
+    }
+
+    /// Rotate log: archive current file, open new one, write rotation entry.
+    /// Preserves hash chain by linking new file's first entry to previous file's last hash.
+    pub async fn rotate(&self, server_id: &str) -> Result<()> {
+        use std::fs;
+        use std::path::Path;
+
+        let path = Path::new(&self.log_path);
+
+        // 1. Get current head before closing
+        let previous_head = self.get_head_hash().await;
+        if previous_head.is_empty() {
+            // No entries yet, nothing to rotate
+            return Ok(());
+        }
+
+        // 2. Flush, close, and drop file handle
+        {
+            let mut file_guard = self.file.lock().await;
+            if let Some(ref mut f) = *file_guard {
+                f.flush()
+                    .map_err(|e| anyhow!("Failed to flush before rotation: {}", e))?;
+            }
+            *file_guard = None;
+        }
+
+        // 3. Rename current file to archive (timestamped)
+        if path.exists() {
+            let archive_name = format!(
+                "{}.{}",
+                self.log_path,
+                chrono::Utc::now().format("%Y-%m-%dT%H-%M-%SZ")
+            );
+            fs::rename(&self.log_path, &archive_name)
+                .map_err(|e| anyhow!("Failed to rename audit log for rotation: {}", e))?;
+            info!("Audit log rotated to {}", archive_name);
+        }
+
+        // 4. Open new file
+        let new_file = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&self.log_path)
+            .map_err(|e| anyhow!("Failed to open new audit log after rotation: {}", e))?;
+
+        {
+            let mut file_guard = self.file.lock().await;
+            *file_guard = Some(new_file);
+        }
+
+        // 5. Reset entry count for new file (append_entry will increment to 1)
+        {
+            let mut count = self.entry_count.lock().await;
+            *count = 0;
+        }
+
+        // 6. Write rotation entry (links to previous file's last hash)
+        let rotation_entry =
+            crate::audit::entry::create_rotation_entry(server_id.to_string(), previous_head);
+        self.append_entry(rotation_entry).await?;
+
+        info!("Audit log rotation complete");
         Ok(())
     }
 }

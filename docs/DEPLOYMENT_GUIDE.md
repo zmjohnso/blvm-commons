@@ -42,6 +42,9 @@
 - SSL certificates (Let's Encrypt)
 - Monitoring (Prometheus/Grafana)
 
+### RPC Certificate Auth (S-001)
+If using certificate-based RPC authentication, the RPC endpoint **must** be behind TLS termination (nginx, Caddy, etc.) that validates the client certificate and sets the `x-client-cert-fingerprint` header. Without this, the header is spoofable—clients can forge it. Use token-based auth if RPC is not behind such TLS.
+
 ---
 
 ## 🔐 Step 1: Generate Nostr Bot Keys

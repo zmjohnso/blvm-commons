@@ -804,14 +804,18 @@ mod tests {
         );
     }
 
-    // Helper function to create a test checker
+    // Helper function to create a test checker.
+    // Uses test_fixtures RSA key when available; falls back to from_token("test") for CI (no API calls in unit tests).
     fn create_test_checker() -> Option<CrossLayerStatusChecker> {
-        let temp_dir = tempfile::tempdir().ok()?;
-        let key_path = temp_dir.path().join("test_key.pem");
-        let valid_key = include_str!("../../test_fixtures/test_rsa_key.pem");
-        std::fs::write(&key_path, valid_key).ok()?;
-
-        let github_client = GitHubClient::new(123456, key_path.to_str()?).ok()?;
+        let github_client = {
+            let temp_dir = tempfile::tempdir().ok()?;
+            let key_path = temp_dir.path().join("test_key.pem");
+            let valid_key = include_str!("../../test_fixtures/test_rsa_key.pem");
+            std::fs::write(&key_path, valid_key).ok()?;
+            GitHubClient::new(123456, key_path.to_str()?)
+                .ok()
+                .or_else(|| GitHubClient::from_token("test").ok())?
+        };
         Some(CrossLayerStatusChecker {
             github_client,
             content_hash_validator: ContentHashValidator::new(),
@@ -1448,25 +1452,19 @@ mod tests {
         assert_eq!(sync_status, SyncStatus::SyncFailure);
     }
 
+    /// Integration test: uses test_fixtures/test_rsa_key.pem. Makes real GitHub API calls.
+    /// Skipped when key parsing fails (e.g. CI without fixture). Run with --ignored for full test.
     #[tokio::test]
+    #[ignore = "Makes real GitHub API calls; run with cargo test -- --ignored"]
     async fn test_cross_layer_status_generation() {
         let temp_dir = tempfile::tempdir().unwrap();
         let key_path = temp_dir.path().join("test_key.pem");
-        // Generate a valid RSA private key for testing
-        // Using a minimal valid RSA private key that jsonwebtoken can parse
-        // Note: This is a test key only, not for production use
         let valid_key = include_str!("../../test_fixtures/test_rsa_key.pem");
         std::fs::write(&key_path, valid_key).unwrap();
 
-        // Try to create GitHub client - if it fails due to invalid key, skip the test
-        // In a real scenario, we'd use a proper test key or mock the client
         let github_client = match GitHubClient::new(123456, key_path.to_str().unwrap()) {
             Ok(client) => client,
-            Err(_) => {
-                // Key parsing failed - skip this test for now
-                // TODO: Use a proper test key or mock the GitHub client
-                return;
-            }
+            Err(_) => return, // Skip if key parsing fails
         };
         let mut checker = CrossLayerStatusChecker::new(github_client);
 

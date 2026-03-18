@@ -76,6 +76,7 @@ lightning-invoice = "0.2"
 
 # Additional dependencies for cross-layer validation
 base64 = "0.21"
+bytes = "1.11.1"  # RUSTSEC-2026-0007: align with blvm-node; axum/tower-http accept ^1.0
 uuid = { version = "1.6", features = ["v4", "serde"] }
 getrandom = "=0.2.17"  # Match blvm-protocol version
 regex = "1.10"

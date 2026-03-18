@@ -68,12 +68,42 @@ impl AdoptionTracker {
         Ok(())
     }
 
+    /// Get total network weight by type (for adoption percentage calculations)
+    async fn get_network_totals(&self) -> Result<(f64, f64, f64), GovernanceError> {
+        let total: (f64,) = sqlx::query_as("SELECT COALESCE(SUM(weight), 0) FROM fork_decisions")
+            .fetch_one(&self.pool)
+            .await
+            .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+        let hashpower: (f64,) = sqlx::query_as(
+            "SELECT COALESCE(SUM(weight), 0) FROM fork_decisions WHERE node_type = 'mining_pool'",
+        )
+        .fetch_one(&self.pool)
+        .await
+        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+        let economic: (f64,) = sqlx::query_as(
+            "SELECT COALESCE(SUM(weight), 0) FROM fork_decisions WHERE node_type != 'mining_pool'",
+        )
+        .fetch_one(&self.pool)
+        .await
+        .map_err(|e| GovernanceError::DatabaseError(e.to_string()))?;
+
+        Ok((total.0, hashpower.0, economic.0))
+    }
+
     /// Calculate adoption metrics for a specific ruleset
+    ///
+    /// hashpower_percentage = this ruleset's mining weight / total network mining weight * 100
+    /// economic_activity_percentage = this ruleset's economic weight / total network economic weight * 100
     pub async fn calculate_adoption_metrics(
         &self,
         ruleset_id: &str,
     ) -> Result<AdoptionMetrics, GovernanceError> {
-        // Get all adoption decisions for this ruleset
+        let (total_network_weight, total_network_hashpower, total_network_economic) =
+            self.get_network_totals().await?;
+
+        // Get adoption decisions for this ruleset
         let decisions = sqlx::query(
             r#"
             SELECT node_type, weight, timestamp
@@ -107,16 +137,15 @@ impl AdoptionTracker {
             }
         }
 
-        // Calculate percentages (assuming total network metrics are known)
-        // For now, use placeholder calculations
-        let hashpower_percentage = if total_weight > 0.0 {
-            (hashpower_weight / total_weight) * 100.0
+        // Network-relative adoption: ruleset's share of total hashpower and economic weight
+        let hashpower_percentage = if total_network_hashpower > 0.0 {
+            (hashpower_weight / total_network_hashpower) * 100.0
         } else {
             0.0
         };
 
-        let economic_activity_percentage = if total_weight > 0.0 {
-            (economic_weight / total_weight) * 100.0
+        let economic_activity_percentage = if total_network_economic > 0.0 {
+            (economic_weight / total_network_economic) * 100.0
         } else {
             0.0
         };
@@ -162,23 +191,36 @@ impl AdoptionTracker {
             }
         };
 
+        let (total_network_weight, total_network_hashpower, total_network_economic) =
+            match self.get_network_totals().await {
+                Ok(t) => t,
+                Err(e) => {
+                    if e.to_string().contains("no such table") {
+                        return Ok(AdoptionStatistics {
+                            total_nodes: 0,
+                            total_hashpower: 0.0,
+                            total_economic_activity: 0.0,
+                            rulesets: Vec::new(),
+                            winning_ruleset: None,
+                            adoption_percentage: 0.0,
+                            last_updated: Utc::now(),
+                        });
+                    }
+                    return Err(e);
+                }
+            };
+
         let mut adoption_metrics = Vec::new();
-        let mut total_nodes = 0;
-        let mut total_hashpower = 0.0;
-        let mut total_economic_activity = 0.0;
+        let mut total_nodes = 0u32;
 
         for ruleset in rulesets {
             let ruleset_id = ruleset.get::<String, _>("ruleset_id");
             let metrics = self.calculate_adoption_metrics(&ruleset_id).await?;
-
             total_nodes += metrics.node_count;
-            total_hashpower += metrics.hashpower_percentage;
-            total_economic_activity += metrics.economic_activity_percentage;
-
             adoption_metrics.push(metrics);
         }
 
-        // Find winning ruleset (highest adoption)
+        // Find winning ruleset (highest total weight)
         let winning_ruleset = adoption_metrics
             .iter()
             .max_by(|a, b| {
@@ -188,17 +230,25 @@ impl AdoptionTracker {
             })
             .map(|m| m.ruleset_id.clone());
 
-        // Calculate overall adoption percentage
-        let adoption_percentage = if total_nodes > 0 {
-            (adoption_metrics.len() as f64 / total_nodes as f64) * 100.0
+        // Winning ruleset's share of total network weight
+        let adoption_percentage = if total_network_weight > 0.0 {
+            adoption_metrics
+                .iter()
+                .max_by(|a, b| {
+                    a.total_weight
+                        .partial_cmp(&b.total_weight)
+                        .unwrap_or(std::cmp::Ordering::Equal)
+                })
+                .map(|m| (m.total_weight / total_network_weight) * 100.0)
+                .unwrap_or(0.0)
         } else {
             0.0
         };
 
         Ok(AdoptionStatistics {
             total_nodes,
-            total_hashpower,
-            total_economic_activity,
+            total_hashpower: total_network_hashpower,
+            total_economic_activity: total_network_economic,
             rulesets: adoption_metrics,
             winning_ruleset,
             adoption_percentage,

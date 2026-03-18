@@ -240,13 +240,13 @@ See: https://github.com/{}/{}/issues?q=is:issue+{}"#,
         issue_number: u64,
         body: &str,
     ) -> Result<(), GovernanceError> {
-        // Note: This requires installation token - for now, return placeholder
-        // In production, get installation token from GitHubClient
-        // TODO: Add installation token support to GitHubClient
-        info!(
-            "Issue comment ready for issue #{} - create via workflow",
-            issue_number
-        );
-        Ok(())
+        self.github_client
+            .post_issue_comment(
+                &self.governance_repo_owner,
+                &self.governance_repo_name,
+                issue_number,
+                body,
+            )
+            .await
     }
 }

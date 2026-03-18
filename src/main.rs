@@ -153,7 +153,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Initialize audit logger
     let audit_logger = if config.audit.enabled {
-        Some(AuditLogger::new(config.audit.log_path.clone())?)
+        let logger = AuditLogger::new(config.audit.log_path.clone())?;
+        logger.load_existing_entries().await?;
+        Some(logger)
     } else {
         None
     };
@@ -219,7 +221,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Start background tasks
     let config_clone = config.clone();
     let database_clone = database.clone();
-    // TODO: Implement audit logger cloning or use Arc
+    let audit_logger_for_rotation = audit_logger.clone();
 
     // Nostr status publisher task
     if let Some(publisher) = status_publisher {
@@ -255,18 +257,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Audit log rotation task
-    if audit_logger.is_some() {
+    if let Some(ref logger) = audit_logger_for_rotation {
+        let logger = logger.clone();
+        let server_id = config.server_id.clone();
         let rotation_interval =
             Duration::from_secs(config.audit.rotation_interval_days as u64 * 86400);
         tokio::spawn(async move {
             let mut interval = tokio::time::interval(rotation_interval);
+            interval.tick().await; // skip immediate first tick
             loop {
                 interval.tick().await;
-                // Rotate audit log (implement rotation logic)
-                info!("Audit log rotation triggered");
+                if let Err(e) = logger.rotate(&server_id).await {
+                    error!("Audit log rotation failed: {}", e);
+                }
             }
         });
-        info!("Audit log rotation started");
+        info!("Audit log rotation started (interval: {} days)", config.audit.rotation_interval_days);
     }
 
     // Initialize governance services

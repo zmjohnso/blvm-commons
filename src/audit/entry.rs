@@ -104,6 +104,27 @@ impl AuditLogEntry {
     }
 }
 
+/// Rotation entry linking to previous log file's last hash
+pub fn create_rotation_entry(server_id: String, previous_log_hash: String) -> AuditLogEntry {
+    let mut metadata = HashMap::new();
+    metadata.insert("description".to_string(), "Log rotation".to_string());
+    metadata.insert("version".to_string(), "1.0".to_string());
+    metadata.insert(
+        "rotated_at".to_string(),
+        chrono::Utc::now().to_rfc3339(),
+    );
+
+    AuditLogEntry::new(
+        format!("rotation-{}", chrono::Utc::now().timestamp_millis()),
+        "rotation".to_string(),
+        server_id,
+        "sha256:0000000000000000000000000000000000000000000000000000000000000000".to_string(),
+        "sha256:0000000000000000000000000000000000000000000000000000000000000000".to_string(),
+        previous_log_hash,
+        metadata,
+    )
+}
+
 /// Genesis entry for starting the hash chain
 pub fn create_genesis_entry(server_id: String) -> AuditLogEntry {
     let mut metadata = HashMap::new();

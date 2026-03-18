@@ -43,6 +43,42 @@ impl Queries {
         }
     }
 
+    pub async fn get_pull_request_by_id(
+        pool: &SqlitePool,
+        id: i32,
+    ) -> Result<Option<PullRequest>, sqlx::Error> {
+        let row = sqlx::query(
+            r#"
+            SELECT 
+                id,
+                repo_name,
+                pr_number,
+                opened_at,
+                layer,
+                head_sha,
+                signatures,
+                governance_status,
+                linked_prs,
+                emergency_mode,
+                created_at,
+                updated_at
+            FROM pull_requests
+            WHERE id = ?
+            "#,
+        )
+        .bind(id)
+        .fetch_optional(pool)
+        .await?;
+
+        match row {
+            Some(r) => {
+                let pr_row = PullRequestRow::from_row(&r)?;
+                Ok(Some(pr_row.into()))
+            }
+            None => Ok(None),
+        }
+    }
+
     pub async fn get_maintainers_for_layer(
         pool: &SqlitePool,
         layer: i32,
