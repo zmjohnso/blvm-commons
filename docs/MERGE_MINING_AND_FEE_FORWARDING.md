@@ -94,4 +94,4 @@ Fee forwarding was previously considered as a way for node operators to contribu
 
 - [Module System](../blvm-node/docs/MODULE_SYSTEM.md) - How modules work
 - [Monetization User Guide](./MONETIZATION_USER_GUIDE.md) - Current monetization models
-- [blvm-merge-mining README](../../blvm-merge-mining/README.md) - Merge mining module documentation
+- [blvm-merge-mining README](https://github.com/BTCDecoded/blvm-merge-mining/blob/main/README.md) - Merge mining module documentation

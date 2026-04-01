@@ -383,7 +383,7 @@ curl http://localhost:9090/metrics/app
 - [Configuration Reference](./CONFIGURATION.md) - Configuration options
 - [API Reference](./API_REFERENCE.md) - Complete API documentation
 - [Development Guide](./DEVELOPMENT.md) - Development setup
-- [Main Governance Documentation](../../governance/README.md) - System overview
+- [Main Governance documentation](https://github.com/BTCDecoded/governance/blob/main/README.md) - System overview
 
 
 

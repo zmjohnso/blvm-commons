@@ -165,7 +165,7 @@ If you encounter issues:
 1. Check [Troubleshooting Guide](./TROUBLESHOOTING.md)
 2. Review [Configuration Reference](./CONFIGURATION.md)
 3. Check the [API Reference](./API_REFERENCE.md)
-4. Review [Main Governance Documentation](../../governance/README.md)
+4. Review [Main Governance Documentation](https://github.com/BTCDecoded/governance/blob/main/README.md)
 
 ## Related Documentation
 
@@ -173,7 +173,7 @@ If you encounter issues:
 - [API Reference](./API_REFERENCE.md) - Complete API documentation
 - [Troubleshooting Guide](./TROUBLESHOOTING.md) - Common issues and solutions
 - [Development Guide](./DEVELOPMENT.md) - Development and contribution
-- [Main Governance Documentation](../../governance/README.md) - System overview
+- [Main Governance Documentation](https://github.com/BTCDecoded/governance/blob/main/README.md) - System overview
 
 
 

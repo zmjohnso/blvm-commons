@@ -308,7 +308,7 @@ If you get configuration validation errors:
 - [API Reference](./API_REFERENCE.md) - Complete API documentation
 - [Troubleshooting Guide](./TROUBLESHOOTING.md) - Common issues
 - [Development Guide](./DEVELOPMENT.md) - Development setup
-- [Main Governance Documentation](../../governance/README.md) - System overview
+- [Main Governance documentation](https://github.com/BTCDecoded/governance/blob/main/README.md) - System overview
 
 
 

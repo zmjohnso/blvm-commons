@@ -195,7 +195,7 @@ cargo run --bin governance-app -- test-config
 - [Getting Started Guide](../docs/GETTING_STARTED.md) - Quick setup
 - [Troubleshooting Guide](../docs/TROUBLESHOOTING.md) - Common issues
 - [Development Guide](../docs/DEVELOPMENT.md) - Development setup
-- [Main Governance Documentation](../../governance/README.md) - System overview
+- [Main Governance documentation](https://github.com/BTCDecoded/governance/blob/main/README.md) - System overview
 
 
 

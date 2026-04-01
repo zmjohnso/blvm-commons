@@ -183,6 +183,6 @@ If keys aren't being detected for rotation:
 ## See Also
 
 - [Security Guide](../SECURITY.md) - General security practices
-- [Maintainer Guide](../../governance/guides/MAINTAINER_GUIDE.md) - Maintainer procedures
-- [Key Ceremony](../../docs/production/KEY_CEREMONY.md) - Initial key setup
+- [Maintainer Guide](https://github.com/BTCDecoded/governance/blob/main/guides/MAINTAINER_GUIDE.md) - Maintainer procedures
+- [Key Ceremony](production/KEY_CEREMONY.md) - Initial key setup
 

@@ -497,7 +497,7 @@ export GITHUB_APP_ID=789012
 - [Configuration Reference](./CONFIGURATION.md) - Configuration options
 - [API Reference](./API_REFERENCE.md) - Complete API documentation
 - [Troubleshooting Guide](./TROUBLESHOOTING.md) - Common issues
-- [Main Governance Documentation](../../governance/README.md) - System overview
+- [Main Governance documentation](https://github.com/BTCDecoded/governance/blob/main/README.md) - System overview
 
 
 

@@ -510,7 +510,7 @@ const pr = await client.getPullRequest(1);
 - [Configuration Reference](./CONFIGURATION.md) - Configuration options
 - [Troubleshooting Guide](./TROUBLESHOOTING.md) - Common issues
 - [Development Guide](./DEVELOPMENT.md) - Development setup
-- [Main Governance Documentation](../../governance/README.md) - System overview
+- [Main Governance documentation](https://github.com/BTCDecoded/governance/blob/main/README.md) - System overview
 
 
 

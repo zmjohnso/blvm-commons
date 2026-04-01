@@ -94,6 +94,6 @@ cargo test --test signature_verification
 ## See Also
 
 - [Emergency Signature Verification](../src/validation/emergency.rs)
-- [bllvm-sdk Governance Keys](../../bllvm-sdk/src/governance/keys.rs)
+- [blvm-sdk governance keys](https://github.com/BTCDecoded/blvm-sdk/blob/main/src/governance/keys.rs)
 - [Key Manager CLI](../src/bin/key_manager.rs)
 

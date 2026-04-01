@@ -7,3 +7,6 @@ workflow-logs/
 # Test artifacts
 test_pattern
 *.test
+
+# Local prep / sqlite scratch (never commit)
+*.db
