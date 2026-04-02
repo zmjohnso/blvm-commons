@@ -1,6 +1,9 @@
 target/
 /target/
 
+# Library crate: lockfile not committed
+Cargo.lock
+
 # Workflow logs (large log files from CI)
 workflow-logs/
 
