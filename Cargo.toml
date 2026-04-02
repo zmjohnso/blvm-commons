@@ -82,8 +82,7 @@ getrandom = "=0.2.17"  # Match blvm-protocol version
 regex = "1.10"
 async-trait = "0.1"
 
-# Local development: Use [patch.crates-io] to override with local paths
-# For production/CI, these patches are removed and crates.io versions are used
+# Local monorepo: sibling paths override the version pins above.
 [patch.crates-io]
 blvm-sdk = { path = "../blvm-sdk" }
 blvm-protocol = { path = "../blvm-protocol" }

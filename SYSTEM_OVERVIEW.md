@@ -659,8 +659,8 @@ bllvm-node = { version = "0.1.0", requires = ["bllvm-protocol=0.1.0", "bllvm-con
 
 #### Toolchain Management
 - Each repository has its own `rust-toolchain.toml`
-- Workflows auto-detect toolchain via `dtolnay/rust-toolchain` action
-- No explicit toolchain override in workflows
+- CI installs Rust via the org composite [`BTCDecoded/rust-ci/install-rust-toolchain`](https://github.com/BTCDecoded/rust-ci) (default pin **1.88.0**, optional `toolchain`, `toolchain-file`, or `components`; umbrella workflows often use `toolchain-file: rust-toolchain.toml`)
+- The composite wraps `dtolnay/rust-toolchain`; individual workflows may pass `with: toolchain: …` when a repo needs a different version (for example **1.89.0** in some crates)
 
 ### Local Build Tools
 
