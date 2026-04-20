@@ -182,7 +182,6 @@ check_documentation_consistency() {
         "$GOVERNANCE_DIR/LAYER_TIER_MODEL.md"
         "$GOVERNANCE_DIR/SCOPE.md"
         "$GOVERNANCE_DIR/architecture/CRYPTOGRAPHIC_GOVERNANCE.md"
-        "$GOVERNANCE_DIR/architecture/ECONOMIC_NODES.md"
         "$GOVERNANCE_DIR/architecture/GOVERNANCE_FORK.md"
         "$GOVERNANCE_DIR/architecture/SERVER_AUTHORIZATION.md"
         "$GOVERNANCE_DIR/architecture/CROSS_LAYER_DEPENDENCIES.md"

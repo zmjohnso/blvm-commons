@@ -128,39 +128,6 @@ import_to_postgres() {
                     updated_at = EXCLUDED.updated_at;
             "
             ;;
-        "economic_nodes")
-            psql "$POSTGRES_URL" -c "
-                INSERT INTO $table (entity_name, node_type, public_key, qualification_proof, weight, status, registered_at, last_verified)
-                SELECT entity_name, node_type, public_key, 
-                       COALESCE(qualification_proof, '{}'::jsonb), 
-                       weight, status, 
-                       COALESCE(registered_at, CURRENT_TIMESTAMP), 
-                       COALESCE(last_verified, CURRENT_TIMESTAMP)
-                FROM temp_${table}_import
-                ON CONFLICT (public_key) DO UPDATE SET
-                    entity_name = EXCLUDED.entity_name,
-                    node_type = EXCLUDED.node_type,
-                    qualification_proof = EXCLUDED.qualification_proof,
-                    weight = EXCLUDED.weight,
-                    status = EXCLUDED.status,
-                    last_verified = EXCLUDED.last_verified;
-            "
-            ;;
-        "veto_signals")
-            psql "$POSTGRES_URL" -c "
-                INSERT INTO $table (pr_id, node_id, signal_type, weight, signature, rationale, verified, created_at)
-                SELECT pr_id, node_id, signal_type, weight, signature, rationale, 
-                       COALESCE(verified, false), 
-                       COALESCE(created_at, CURRENT_TIMESTAMP)
-                FROM temp_${table}_import
-                ON CONFLICT (pr_id, node_id) DO UPDATE SET
-                    signal_type = EXCLUDED.signal_type,
-                    weight = EXCLUDED.weight,
-                    signature = EXCLUDED.signature,
-                    rationale = EXCLUDED.rationale,
-                    verified = EXCLUDED.verified;
-            "
-            ;;
         "governance_events")
             psql "$POSTGRES_URL" -c "
                 INSERT INTO $table (event_type, repo_name, pr_number, maintainer, details, timestamp)
@@ -201,8 +168,6 @@ export_sqlite_data "repos" "$TEMP_DIR/repos.csv"
 export_sqlite_data "maintainers" "$TEMP_DIR/maintainers.csv"
 export_sqlite_data "emergency_keyholders" "$TEMP_DIR/emergency_keyholders.csv"
 export_sqlite_data "pull_requests" "$TEMP_DIR/pull_requests.csv"
-export_sqlite_data "economic_nodes" "$TEMP_DIR/economic_nodes.csv"
-export_sqlite_data "veto_signals" "$TEMP_DIR/veto_signals.csv"
 export_sqlite_data "governance_events" "$TEMP_DIR/governance_events.csv"
 export_sqlite_data "cross_layer_rules" "$TEMP_DIR/cross_layer_rules.csv"
 export_sqlite_data "emergency_activations" "$TEMP_DIR/emergency_activations.csv"
@@ -215,8 +180,6 @@ import_to_postgres "repos" "$TEMP_DIR/repos.csv"
 import_to_postgres "maintainers" "$TEMP_DIR/maintainers.csv"
 import_to_postgres "emergency_keyholders" "$TEMP_DIR/emergency_keyholders.csv"
 import_to_postgres "pull_requests" "$TEMP_DIR/pull_requests.csv"
-import_to_postgres "economic_nodes" "$TEMP_DIR/economic_nodes.csv"
-import_to_postgres "veto_signals" "$TEMP_DIR/veto_signals.csv"
 import_to_postgres "governance_events" "$TEMP_DIR/governance_events.csv"
 import_to_postgres "cross_layer_rules" "$TEMP_DIR/cross_layer_rules.csv"
 import_to_postgres "emergency_activations" "$TEMP_DIR/emergency_activations.csv"
@@ -235,10 +198,6 @@ SELECT 'emergency_keyholders', COUNT(*) FROM emergency_keyholders
 UNION ALL
 SELECT 'pull_requests', COUNT(*) FROM pull_requests
 UNION ALL
-SELECT 'economic_nodes', COUNT(*) FROM economic_nodes
-UNION ALL
-SELECT 'veto_signals', COUNT(*) FROM veto_signals
-UNION ALL
 SELECT 'governance_events', COUNT(*) FROM governance_events
 UNION ALL
 SELECT 'cross_layer_rules', COUNT(*) FROM cross_layer_rules
@@ -256,10 +215,6 @@ UNION ALL
 SELECT 'emergency_keyholders', COUNT(*) FROM emergency_keyholders
 UNION ALL
 SELECT 'pull_requests', COUNT(*) FROM pull_requests
-UNION ALL
-SELECT 'economic_nodes', COUNT(*) FROM economic_nodes
-UNION ALL
-SELECT 'veto_signals', COUNT(*) FROM veto_signals
 UNION ALL
 SELECT 'governance_events', COUNT(*) FROM governance_events
 UNION ALL

@@ -97,7 +97,6 @@ pub struct GovernanceActionEvent {
     pub tier_requirement: TierRequirement,
     pub combined_requirement: CombinedRequirement,
     pub signatures: Vec<KeyholderSignature>,
-    pub economic_veto_status: EconomicVetoStatus,
     pub review_period_ends: Option<DateTime<Utc>>,
 }
 
@@ -113,14 +112,12 @@ pub struct TierRequirement {
     pub tier: u32,
     pub signatures: String, // e.g., "3-of-5"
     pub review_days: u32,
-    pub economic_veto: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CombinedRequirement {
     pub signatures: String, // e.g., "6-of-7"
     pub review_days: u32,
-    pub economic_veto: bool,
     pub source: String, // "layer" or "tier"
 }
 
@@ -130,15 +127,6 @@ pub struct KeyholderSignature {
     pub keyholder_type: String, // "maintainer" or "emergency_keyholder"
     pub signature: String,
     pub timestamp: i64,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "snake_case")]
-pub enum EconomicVetoStatus {
-    NotRequired,
-    Pending,
-    Passed,
-    Vetoed,
 }
 
 impl GovernanceActionEvent {

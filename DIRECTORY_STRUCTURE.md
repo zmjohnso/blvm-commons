@@ -26,7 +26,6 @@ governance/
 │   ├── action-tiers.yml         # 5-tier governance model definitions
 │   ├── repository-layers.yml    # Layer definitions and requirements
 │   ├── tier-classification-rules.yml # PR classification rules
-│   ├── economic-nodes.yml       # Economic node configuration
 │   ├── emergency-tiers.yml      # Emergency action tiers
 │   ├── governance-fork.yml      # Governance fork configuration
 │   ├── cross-layer-rules.yml    # Cross-layer dependency rules
@@ -45,7 +44,6 @@ governance/
 │   └── README.md                # Configuration documentation
 ├── architecture/                # Architecture documentation
 │   ├── CRYPTOGRAPHIC_GOVERNANCE.md
-│   ├── ECONOMIC_NODES.md
 │   ├── GOVERNANCE_FORK.md
 │   ├── SERVER_AUTHORIZATION.md
 │   └── CROSS_LAYER_DEPENDENCIES.md
@@ -61,9 +59,6 @@ governance-app/
 ├── src/                         # Source code
 │   ├── bin/                     # CLI tools
 │   │   ├── sign-pr.rs           # PR signing tool
-│   │   ├── economic-node-register.rs
-│   │   ├── economic-node-veto.rs
-│   │   ├── economic-node-verify.rs
 │   │   ├── fork-migrate.rs      # Governance fork migration
 │   │   └── verify-audit-log.rs  # Audit log verification
 │   ├── config/                  # Configuration management
@@ -90,10 +85,6 @@ governance-app/
 │   ├── github/                  # GitHub integration
 │   │   ├── client.rs            # GitHub API client
 │   │   ├── integration.rs       # GitHub integration logic
-│   │   └── mod.rs
-│   ├── economic_nodes/          # Economic node system
-│   │   ├── registry.rs          # Node registry
-│   │   ├── veto.rs              # Veto system
 │   │   └── mod.rs
 │   ├── nostr/                   # Nostr integration
 │   │   ├── client.rs            # Nostr client
@@ -133,7 +124,6 @@ governance-app/
 │   └── development.toml         # Development configuration
 ├── docs/                        # Application documentation
 │   ├── MAINTAINER_SIGNING.md    # Maintainer signing guide
-│   ├── ECONOMIC_NODE_CLI.md     # Economic node CLI guide
 │   ├── GOVERNANCE_FORK_GUIDE.md # Governance fork guide
 │   ├── NOSTR_INTEGRATION.md     # Nostr integration guide
 │   ├── OTS_INTEGRATION.md       # OTS integration guide
@@ -164,7 +154,6 @@ docs/
 │   ├── BACKUP_RECOVERY.md       # Backup and recovery procedures
 │   ├── MAINTENANCE_GUIDE.md     # Maintenance procedures
 │   └── PRODUCTION_READINESS_CHECKLIST.md # Production readiness checklist
-├── ECONOMIC_NODE_CLI.md         # Economic node CLI documentation
 ├── GOVERNANCE_FORK_GUIDE.md     # Governance fork documentation
 ├── MAINTAINER_SIGNING.md        # Maintainer signing documentation
 └── DIRECTORY_STRUCTURE.md       # This file

@@ -18,7 +18,6 @@ pub struct TierConfig {
     pub signatures_required: usize,
     pub signatures_total: usize,
     pub review_period_days: i64,
-    pub economic_veto_required: bool,
     pub description: String,
 }
 
@@ -34,7 +33,6 @@ pub struct LayerConfig {
     pub repositories: Vec<String>,
     pub signatures: SignatureConfig,
     pub review_period_days: i64,
-    pub economic_veto_required: bool,
     pub rationale: String,
 }
 
@@ -70,52 +68,6 @@ pub struct ClassificationConfig {
     pub min_confidence: f32,
     pub file_pattern_weight: f32,
     pub keyword_weight: f32,
-}
-
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct CommonsContributorThresholdsConfig {
-    pub commons_contributor_thresholds: CommonsContributorThresholds,
-    pub weight_calculation: WeightCalculationConfig,
-    #[serde(default)]
-    pub maintainer_notes: Option<String>,
-}
-
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct CommonsContributorThresholds {
-    pub measurement_period_days: u32,
-    #[serde(default = "default_or_logic")]
-    pub qualification_logic: String, // "OR" or "AND"
-    pub merge_mining: ContributionThreshold,
-    pub fee_forwarding: ContributionThreshold,
-    pub zaps: ContributionThreshold,
-    pub marketplace: ContributionThreshold, // BIP70 payments (BTC, not USD)
-}
-
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct ContributionThreshold {
-    pub enabled: bool,
-    pub minimum_contribution_btc: f64,
-    pub description: String,
-    pub verification: String,
-}
-
-// RevenueThreshold removed - all contributions are in BTC now
-
-#[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct WeightCalculationConfig {
-    pub formula: String,
-    pub normalization_factor: f64,
-    pub minimum_weight: f64,
-    pub contribution_types: Vec<String>,
-    pub total_calculation: String,
-}
-
-fn default_or_logic() -> String {
-    "OR".to_string()
-}
-
-fn default_conversion_rate() -> String {
-    "current_market_rate".to_string()
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
@@ -184,8 +136,6 @@ pub struct GovernanceConfigFiles {
     pub repository_layers: RepositoryLayersConfig,
     pub tier_classification: TierClassificationConfig,
     #[serde(default)]
-    pub commons_contributor_thresholds: Option<CommonsContributorThresholdsConfig>,
-    #[serde(default)]
     pub teams: Option<TeamsConfig>,
 }
 
@@ -198,10 +148,6 @@ impl GovernanceConfigFiles {
         let repository_layers = Self::load_yaml(path.join("repository-layers.yml"))?;
         let tier_classification = Self::load_yaml(path.join("tier-classification-rules.yml"))?;
 
-        // Load Commons contributor thresholds (optional - may not exist)
-        let commons_contributor_thresholds =
-            Self::load_yaml_optional(path.join("commons-contributor-thresholds.yml")).ok();
-
         // Load teams configuration (optional - may not exist initially)
         let teams = Self::load_yaml_optional(path.join("maintainers/teams.yml")).ok();
 
@@ -211,7 +157,6 @@ impl GovernanceConfigFiles {
             action_tiers,
             repository_layers,
             tier_classification,
-            commons_contributor_thresholds,
             teams,
         })
     }
@@ -476,7 +421,6 @@ mod tests {
                 signatures_required: 3,
                 signatures_total: 5,
                 review_period_days: 7,
-                economic_veto_required: false,
                 description: "Routine maintenance".to_string(),
             },
         );
@@ -498,7 +442,6 @@ mod tests {
             action_tiers,
             repository_layers,
             tier_classification,
-            commons_contributor_thresholds: None,
             teams: None,
         };
 
@@ -516,7 +459,6 @@ mod tests {
                 signatures_required: 3,
                 signatures_total: 5,
                 review_period_days: 7,
-                economic_veto_required: false,
                 description: "Routine maintenance".to_string(),
             },
         );
@@ -538,7 +480,6 @@ mod tests {
             action_tiers,
             repository_layers,
             tier_classification,
-            commons_contributor_thresholds: None,
             teams: None,
         };
 

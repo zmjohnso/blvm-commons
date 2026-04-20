@@ -28,7 +28,6 @@ pub struct Requirements {
     pub signatures_required: usize,
     pub signatures_total: usize,
     pub review_period_days: i64,
-    pub economic_veto_required: bool,
     pub source: String, // "Layer X", "Tier Y", or "Combined Layer X + Tier Y"
 }
 
@@ -39,8 +38,6 @@ pub struct CurrentState {
     pub signatures_pending: Vec<String>,
     pub review_period_met: bool,
     pub review_period_remaining_days: i64,
-    pub economic_veto_active: bool,
-    pub economic_veto_percent: f64,
     pub emergency_mode: bool,
 }
 
@@ -262,21 +259,6 @@ impl DecisionLogger {
         }
     }
 
-    /// Log economic veto check
-    pub fn log_economic_veto_check(&self, pr_number: i32, active: bool, percent: f64) {
-        if self.log_enforcement_decisions {
-            let prefix = if self.dry_run_mode {
-                "[DRY-RUN]"
-            } else {
-                "[VETO]"
-            };
-            let status = if active { "ACTIVE" } else { "INACTIVE" };
-            info!(
-                "{} Economic veto for PR #{}: {} ({}%)",
-                prefix, pr_number, status, percent
-            );
-        }
-    }
 }
 
 impl Default for DecisionLogger {
@@ -298,7 +280,6 @@ mod tests {
             signatures_required: 4,
             signatures_total: 5,
             review_period_days: 30,
-            economic_veto_required: false,
             source: "Tier 2".to_string(),
         };
 
@@ -308,8 +289,6 @@ mod tests {
             signatures_pending: vec!["charlie".to_string(), "dave".to_string()],
             review_period_met: false,
             review_period_remaining_days: 15,
-            economic_veto_active: false,
-            economic_veto_percent: 0.0,
             emergency_mode: false,
         };
 
@@ -355,7 +334,6 @@ mod tests {
             signatures_required: 4,
             signatures_total: 5,
             review_period_days: 30,
-            economic_veto_required: false,
             source: "Tier 2".to_string(),
         };
 
@@ -365,8 +343,6 @@ mod tests {
             signatures_pending: vec!["bob".to_string()],
             review_period_met: false,
             review_period_remaining_days: 15,
-            economic_veto_active: false,
-            economic_veto_percent: 0.0,
             emergency_mode: false,
         };
 

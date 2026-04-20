@@ -1,7 +1,7 @@
 //! Vote Aggregator
 //!
 //! Aggregates votes from maintainers for governance proposals.
-//! Governance is maintainer-only multisig (no economic nodes, no contribution-based voting).
+//! Governance is maintainer-only multisig.
 //! Zap votes are tracked for transparency/reporting but do NOT affect governance decisions.
 //! Maintainer signatures come from the database (populated by webhooks from GitHub PR reviews).
 
@@ -29,8 +29,7 @@ impl VoteAggregator {
         }
     }
 
-    /// Aggregate all votes for a proposal
-    /// Governance is maintainer-only multisig (no economic nodes, no contribution-based voting)
+    /// Aggregate all votes for a proposal (maintainer multisig only)
     pub async fn aggregate_proposal_votes(
         &self,
         pr_id: i32,
@@ -55,7 +54,6 @@ impl VoteAggregator {
         // Check if threshold met (maintainer signature threshold)
         let threshold_met = total_votes >= threshold as f64;
 
-        // No veto system - governance is maintainer-only
         let veto_blocks = false;
 
         info!(
@@ -91,7 +89,7 @@ impl VoteAggregator {
     }
 }
 
-/// Participation vote totals (from economic nodes and contributors)
+/// Participation vote totals (reporting / transparency only)
 #[derive(Debug, Clone)]
 pub struct ParticipationVoteTotals {
     pub support_weight: f64,

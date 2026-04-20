@@ -119,20 +119,6 @@ impl ForkExecutor {
             config.insert("action_tiers".to_string(), action_tiers);
         }
 
-        // Load economic nodes
-        let economic_nodes_path = path.join("economic-nodes.yml");
-        if economic_nodes_path.exists() {
-            let content = fs::read_to_string(&economic_nodes_path)?;
-            let economic_nodes: serde_json::Value =
-                serde_yaml::from_str(&content).map_err(|e| {
-                    GovernanceError::ConfigError(format!(
-                        "Failed to parse economic-nodes.yml: {}",
-                        e
-                    ))
-                })?;
-            config.insert("economic_nodes".to_string(), economic_nodes);
-        }
-
         // Load maintainers
         let maintainers_path = path.join("maintainers");
         if maintainers_path.exists() {
@@ -258,7 +244,6 @@ impl ForkExecutor {
                         // Construct config from individual fields
                         let config = serde_json::json!({
                             "action_tiers": export.action_tiers,
-                            "economic_nodes": export.economic_nodes,
                             "maintainers": export.maintainers,
                             "repositories": export.repositories,
                             "governance_fork": export.governance_fork,
@@ -457,7 +442,6 @@ mod tests {
         // Create a valid ruleset
         let config = serde_json::json!({
             "action_tiers": {},
-            "economic_nodes": {},
             "maintainers": {},
             "repositories": {}
         });

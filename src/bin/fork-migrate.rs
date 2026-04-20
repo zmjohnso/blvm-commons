@@ -337,7 +337,6 @@ fn create_ruleset(
         },
         "created_at": chrono::Utc::now().to_rfc3339(),
         "action_tiers": current_config.get("action_tiers"),
-        "economic_nodes": current_config.get("economic_nodes"),
         "maintainers": current_config.get("maintainers"),
         "repositories": current_config.get("repositories"),
         "governance_fork": current_config.get("governance_fork"),
@@ -392,13 +391,6 @@ fn compare_rulesets(ruleset1: &str, ruleset2: &str) -> Result<(), Box<dyn std::e
         "Action Tiers",
         &ruleset1_data["action_tiers"],
         &ruleset2_data["action_tiers"],
-    );
-
-    // Compare economic nodes
-    compare_json_section(
-        "Economic Nodes",
-        &ruleset1_data["economic_nodes"],
-        &ruleset2_data["economic_nodes"],
     );
 
     // Compare maintainers
@@ -465,7 +457,6 @@ fn validate_ruleset_content(ruleset: &serde_json::Value) -> Result<(), Box<dyn s
         "ruleset_id",
         "ruleset_version",
         "action_tiers",
-        "economic_nodes",
         "maintainers",
     ];
 
@@ -560,10 +551,6 @@ fn load_current_governance_config() -> Result<serde_json::Value, Box<dyn std::er
     // For now, create a minimal config
     config.insert(
         "action_tiers".to_string(),
-        serde_json::Value::Object(serde_json::Map::new()),
-    );
-    config.insert(
-        "economic_nodes".to_string(),
         serde_json::Value::Object(serde_json::Map::new()),
     );
     config.insert(

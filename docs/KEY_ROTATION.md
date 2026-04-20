@@ -12,7 +12,6 @@ Keys are rotated according to the following schedule:
 |----------|----------------|--------|
 | Maintainer | 6 months | Routine maintainers rotate every 6 months |
 | Emergency | 3 months | Emergency keyholders rotate every 3 months |
-| Economic Node | 1 year | Economic nodes rotate annually |
 | GitHub App | 3 months | GitHub App keys rotate every 3 months |
 | System | 1 year | System keys rotate annually |
 

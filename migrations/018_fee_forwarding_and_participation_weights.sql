@@ -1,14 +1,5 @@
--- Migration 006: Remove Economic Nodes, Veto System, and Fee Forwarding
--- This migration removes deprecated governance systems:
--- - Economic nodes and veto system (removed - maintainer-only governance)
--- - Fee forwarding (removed - not part of monetization model)
--- - Cleans up contribution data
--- - Updates participation_weights table structure
-
--- Drop economic nodes and veto system tables
-DROP TABLE IF EXISTS veto_signals;
-DROP TABLE IF EXISTS economic_nodes;
-DROP TABLE IF EXISTS pr_veto_state;
+-- Migration 018: Remove fee forwarding contributions and reshape participation_weights
+-- Maintainer-only governance; fee forwarding is not tracked for weights.
 
 -- Drop fee forwarding table
 DROP TABLE IF EXISTS fee_forwarding_contributions;

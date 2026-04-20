@@ -90,8 +90,6 @@ Applications → Prometheus → Grafana
 #### Business Metrics
 - **PRs Processed**: Pull requests processed
 - **Signatures Collected**: Signatures received
-- **Economic Nodes**: Active economic nodes
-- **Vetoes**: Economic node vetoes
 - **Governance Events**: Governance actions
 
 #### Performance Metrics
@@ -116,22 +114,6 @@ Applications → Prometheus → Grafana
 - **API Errors**: API error rates
 - **Response Times**: API response times
 - **Retry Attempts**: API retry attempts
-
-### Economic Node Metrics
-
-#### Node Metrics
-- **Active Nodes**: Number of active nodes
-- **Node Types**: Distribution by type
-- **Node Weights**: Total weight distribution
-- **Node Health**: Node health status
-- **Node Updates**: Node update frequency
-
-#### Veto Metrics
-- **Veto Rate**: Vetoes per hour
-- **Veto Weight**: Total veto weight
-- **Veto Duration**: Veto processing time
-- **Veto Success**: Successful veto processing
-- **Veto Failures**: Failed veto processing
 
 ## Security Monitoring
 
@@ -340,8 +322,6 @@ Applications → Prometheus → Grafana
 #### Business Metrics
 - **PRs Processed**: Pull requests over time
 - **Signatures Collected**: Signatures over time
-- **Economic Nodes**: Active nodes over time
-- **Vetoes**: Veto events over time
 - **Governance Events**: Governance actions over time
 
 ### Security Dashboard

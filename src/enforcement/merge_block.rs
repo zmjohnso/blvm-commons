@@ -17,7 +17,7 @@ impl MergeBlocker {
     }
 
     /// Determine if merge should be blocked based on governance requirements
-    /// Governance is maintainer-only multisig (no economic nodes, no veto system)
+    /// Governance is maintainer-only multisig.
     pub fn should_block_merge(
         review_period_met: bool,
         signatures_met: bool,

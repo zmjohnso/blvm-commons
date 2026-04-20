@@ -104,7 +104,6 @@ pub struct GovernanceExport {
     pub ruleset_version: RulesetVersion,
     pub created_at: DateTime<Utc>,
     pub action_tiers: serde_json::Value,
-    pub economic_nodes: serde_json::Value,
     pub maintainers: serde_json::Value,
     pub repositories: serde_json::Value,
     pub governance_fork: serde_json::Value,

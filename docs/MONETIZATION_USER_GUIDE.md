@@ -92,7 +92,6 @@ Fee forwarding has been removed from Bitcoin Commons. It is no longer part of th
 - Only maintainers can vote on proposals
 - Zaps are tracked for transparency/reporting only
 - No contribution-based voting
-- No economic node veto
 
 ### Transparency/Reporting
 
@@ -102,14 +101,6 @@ All contributions (zaps, merge mining, etc.) are tracked for:
 - **Historical record**: Track community engagement
 
 **Important**: These do NOT affect governance decisions.
-
-## Veto Mechanisms
-
-**Status: ❌ Removed**
-
-- **Economic Node Veto**: Removed (economic nodes removed)
-- **Zap Vote Veto**: Removed (zaps don't affect governance)
-- **Governance**: Maintainer-only multisig (no veto system)
 
 ## Checking Your Status
 

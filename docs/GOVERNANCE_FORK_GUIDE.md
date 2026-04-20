@@ -16,7 +16,6 @@ The governance fork system allows users to:
 
 A **ruleset** is a complete governance configuration that includes:
 - Action tiers and signature requirements
-- Economic node configurations
 - Maintainer registries
 - Repository-specific rules
 - Governance fork settings
@@ -172,7 +171,6 @@ A ruleset export contains:
   },
   "created_at": "2024-01-01T00:00:00Z",
   "action_tiers": { /* tier definitions */ },
-  "economic_nodes": { /* economic node config */ },
   "maintainers": { /* maintainer registry */ },
   "repositories": { /* repo-specific rules */ },
   "governance_fork": { /* fork settings */ },
@@ -281,8 +279,7 @@ curl http://localhost:8080/api/fork/status
 - Check system logs for errors
 
 **"Adoption not tracking"**
-- Verify economic nodes are registered
-- Check adoption tracker configuration
+- Check adoption tracker configuration and metrics sources
 - Monitor system logs
 
 ### Getting Help

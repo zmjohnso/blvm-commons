@@ -60,9 +60,8 @@ impl ThresholdValidator {
         )
     }
 
-    /// Validate threshold with economic node veto check for Tier 3+ PRs
-    /// Note: Economic node veto integration will be added in a future update
-    pub async fn validate_threshold_with_veto(
+    /// Async threshold check (signature count only; maintainer multisig).
+    pub async fn validate_threshold_for_merge(
         _pool: &sqlx::SqlitePool,
         _pr_id: i32,
         _tier: u32,
@@ -70,8 +69,7 @@ impl ThresholdValidator {
         required_signatures: usize,
         total_maintainers: usize,
     ) -> Result<bool, GovernanceError> {
-        // For now, just check basic signature threshold
-        // Economic node veto integration will be added later
+        // Signature threshold only
         if current_signatures >= required_signatures {
             Ok(true)
         } else {
@@ -137,11 +135,5 @@ impl ThresholdValidator {
         } else {
             format!("Combined Layer {} + Tier {} requirements", layer, tier)
         }
-    }
-
-    /// Check if economic veto is required for the given layer and tier
-    pub fn requires_economic_veto(_layer: i32, tier: u32) -> bool {
-        // Economic veto is required for Tier 3+ regardless of layer
-        tier >= 3
     }
 }

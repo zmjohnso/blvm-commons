@@ -6,7 +6,7 @@ This guide explains how to set up and run the governance-app testnet environment
 
 The testnet environment provides:
 - Complete governance-app with all features enabled
-- Test maintainer keys and economic nodes
+- Test maintainer keys
 - Monitoring and logging infrastructure
 - Test data generation and validation
 - Docker-based deployment for easy setup
@@ -32,9 +32,6 @@ cd governance-app
 ```bash
 # Generate test maintainer keys
 ./scripts/generate-test-keys.sh
-
-# Generate test economic node keys
-./scripts/generate-economic-node-keys.sh
 ```
 
 ### 3. Start Testnet
@@ -77,10 +74,6 @@ GITHUB_WEBHOOK_SECRET=testnet-webhook-secret
 
 # Nostr
 NOSTR_PRIVATE_KEY_PATH=/app/keys/testnet-nostr-key.pem
-
-# Economic Nodes
-ECONOMIC_NODES_ENABLED=true
-VETO_THRESHOLD_PERCENT=30.0
 
 # Governance Fork
 GOVERNANCE_FORK_ENABLED=true
@@ -137,18 +130,6 @@ The testnet includes 7 test maintainers:
 | frank    | 3     | Integration maintainer |
 | grace    | 3     | Integration maintainer |
 
-### Test Economic Nodes
-
-The testnet includes 5 test economic nodes:
-
-| Name | Type | Hash Rate | Economic Activity |
-|------|------|-----------|-------------------|
-| TestMiningPool1 | mining_pool | 15% | 0% |
-| TestMiningPool2 | mining_pool | 20% | 0% |
-| TestExchange1 | exchange | 0% | 25% |
-| TestExchange2 | exchange | 0% | 20% |
-| TestCustodian1 | custodian | 0% | 15% |
-
 ## Testing Workflows
 
 ### 1. Signature Verification
@@ -164,24 +145,7 @@ cargo run --release --bin sign-pr sign \
 # /governance-sign <signature>
 ```
 
-### 2. Economic Node Veto
-
-```bash
-# Submit veto signal
-cargo run --release --bin economic-node-veto veto \
-  --node "TestMiningPool1" \
-  --key test-keys/TestMiningPool1_private.pem \
-  --repo "test/repo" \
-  --pr 1 \
-  --reason "This change could impact mining economics"
-
-# Check veto status
-cargo run --release --bin economic-node-veto status \
-  --repo "test/repo" \
-  --pr 1
-```
-
-### 3. Governance Fork
+### 2. Governance Fork
 
 ```bash
 # Create new ruleset
@@ -195,7 +159,7 @@ cargo run --release --bin fork-migrate migrate \
   --backup
 ```
 
-### 4. Monitoring
+### 3. Monitoring
 
 ```bash
 # Check system health
@@ -223,9 +187,8 @@ All logs are stored in the `logs/` directory:
 
 Key metrics to monitor:
 
-- **Governance Events**: Signature collections, veto signals, fork events
+- **Governance Events**: Signature collections, fork events
 - **System Health**: Database connections, API response times
-- **Economic Activity**: Node registrations, veto submissions
 - **Fork Activity**: Ruleset adoption, migration events
 
 ### Dashboards
@@ -233,8 +196,7 @@ Key metrics to monitor:
 Grafana dashboards provide:
 
 - **System Overview**: Overall system health and activity
-- **Governance Activity**: Signature and veto activity
-- **Economic Nodes**: Node registration and activity
+- **Governance Activity**: Maintainer signatures and PR flow
 - **Fork Activity**: Ruleset adoption and migration
 
 ## Troubleshooting
@@ -268,7 +230,6 @@ docker-compose up -d
 ```bash
 # Regenerate test keys
 ./scripts/generate-test-keys.sh
-./scripts/generate-economic-node-keys.sh
 
 # Restart services
 docker-compose restart
@@ -324,11 +285,7 @@ docker-compose up -d
    - Add to `scripts/generate-test-keys.sh`
    - Update database schema if needed
 
-2. **New Test Economic Nodes**:
-   - Add to `scripts/generate-economic-node-keys.sh`
-   - Update test data generation
-
-3. **New Test Scenarios**:
+2. **New Test Scenarios**:
    - Add to `tests/integration/testnet_scenarios.rs`
    - Update test documentation
 

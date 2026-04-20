@@ -195,7 +195,6 @@ sqlite3 governance.db "EXPLAIN QUERY PLAN SELECT * FROM pull_requests;"
 **Symptoms:**
 - Error: "Signature verification failed"
 - Maintainer signatures rejected
-- Economic node vetoes rejected
 
 **Solutions:**
 1. Check signature format

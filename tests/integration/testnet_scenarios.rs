@@ -37,19 +37,15 @@ impl TestnetScenarioRunner {
         self.test_signature_verification().await?;
         println!("✅ Signature verification test passed");
 
-        // Test 3: Economic Node Veto
-        self.test_economic_node_veto().await?;
-        println!("✅ Economic node veto test passed");
-
-        // Test 4: Governance Fork
+        // Test 3: Governance Fork
         self.test_governance_fork().await?;
         println!("✅ Governance fork test passed");
 
-        // Test 5: End-to-End Workflow
+        // Test 4: End-to-End Workflow
         self.test_end_to_end_workflow().await?;
         println!("✅ End-to-end workflow test passed");
 
-        // Test 6: Monitoring and Metrics
+        // Test 5: Monitoring and Metrics
         self.test_monitoring_metrics().await?;
         println!("✅ Monitoring and metrics test passed");
 
@@ -180,63 +176,7 @@ impl TestnetScenarioRunner {
         Ok(())
     }
 
-    /// Test 3: Economic Node Veto
-    async fn test_economic_node_veto(&self) -> Result<(), Box<dyn std::error::Error>> {
-        println!("🏭 Testing economic node veto...");
-
-        // Register test economic node
-        let node_data = json!({
-            "name": "TestMiningPool1",
-            "node_type": "mining_pool",
-            "public_key": "test_public_key_1",
-            "hash_rate_percent": 15.0,
-            "economic_activity_percent": 0.0
-        });
-
-        let response = self.client
-            .post(&format!("{}/api/economic-nodes/register", self.base_url))
-            .json(&node_data)
-            .send()
-            .await?;
-
-        assert!(response.status().is_success());
-
-        // Submit veto signal
-        let veto_data = json!({
-            "node_name": "TestMiningPool1",
-            "repository": TEST_REPO,
-            "pr_number": TEST_PR,
-            "reason": "This change could impact mining economics",
-            "strength": 100,
-            "signature": "test_veto_signature_123"
-        });
-
-        let response = self.client
-            .post(&format!("{}/api/veto", self.base_url))
-            .json(&veto_data)
-            .send()
-            .await?;
-
-        assert!(response.status().is_success());
-
-        // Wait for veto processing
-        sleep(Duration::from_secs(2)).await;
-
-        // Check veto status
-        let response = self.client
-            .get(&format!("{}/api/veto/{}/{}", self.base_url, TEST_REPO, TEST_PR))
-            .send()
-            .await?;
-
-        assert!(response.status().is_success());
-
-        let veto_status: serde_json::Value = response.json().await?;
-        assert!(veto_status["active_vetoes"].is_array());
-
-        Ok(())
-    }
-
-    /// Test 4: Governance Fork
+    /// Test 3: Governance Fork
     async fn test_governance_fork(&self) -> Result<(), Box<dyn std::error::Error>> {
         println!("🔄 Testing governance fork...");
 
@@ -247,7 +187,6 @@ impl TestnetScenarioRunner {
             "version": "1.0.0",
             "config": {
                 "action_tiers": {},
-                "economic_nodes": {},
                 "maintainers": {},
                 "repositories": {}
             }
@@ -411,7 +350,6 @@ impl TestnetScenarioRunner {
         let metrics_text = response.text().await?;
         assert!(metrics_text.contains("governance_events_total"));
         assert!(metrics_text.contains("signatures_collected_total"));
-        assert!(metrics_text.contains("veto_signals_total"));
 
         // Check adoption statistics
         let response = self.client
@@ -456,7 +394,6 @@ impl TestnetScenarioRunner {
         match scenario_name {
             "system_health" => self.test_system_health().await,
             "signature_verification" => self.test_signature_verification().await,
-            "economic_node_veto" => self.test_economic_node_veto().await,
             "governance_fork" => self.test_governance_fork().await,
             "end_to_end" => self.test_end_to_end_workflow().await,
             "monitoring" => self.test_monitoring_metrics().await,
@@ -511,7 +448,6 @@ async fn test_individual_scenarios() {
     // Test individual scenarios
     runner.run_scenario("system_health").await.unwrap();
     runner.run_scenario("signature_verification").await.unwrap();
-    runner.run_scenario("economic_node_veto").await.unwrap();
     runner.run_scenario("governance_fork").await.unwrap();
     runner.run_scenario("end_to_end").await.unwrap();
     runner.run_scenario("monitoring").await.unwrap();

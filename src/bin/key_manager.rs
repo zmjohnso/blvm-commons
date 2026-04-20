@@ -24,7 +24,7 @@ struct Cli {
 enum Commands {
     /// Generate a new key pair
     Generate {
-        /// Key type (maintainer, economic_node, emergency, github_app, system)
+        /// Key type (maintainer, emergency, github_app, system)
         #[arg(short, long)]
         key_type: String,
 
@@ -266,7 +266,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 fn parse_key_type(s: &str) -> Result<KeyType, String> {
     match s.to_lowercase().as_str() {
         "maintainer" => Ok(KeyType::Maintainer),
-        "economic_node" => Ok(KeyType::EconomicNode),
         "emergency" => Ok(KeyType::Emergency),
         "github_app" => Ok(KeyType::GitHubApp),
         "system" => Ok(KeyType::System),

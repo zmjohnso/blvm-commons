@@ -7,8 +7,8 @@ use anyhow::Result;
 use crate::config::AppConfig;
 use crate::database::Database;
 use crate::nostr::{
-    CombinedRequirement, EconomicVetoStatus, GovernanceActionPublisher, KeyholderSignature,
-    LayerRequirement, NostrClient, TierRequirement,
+    CombinedRequirement, GovernanceActionPublisher, KeyholderSignature, LayerRequirement,
+    NostrClient, TierRequirement,
 };
 use crate::validation::threshold::ThresholdValidator;
 
@@ -45,7 +45,6 @@ pub async fn publish_merge_action(
 
     let (tier_sigs_req, tier_sigs_total) = ThresholdValidator::get_tier_threshold(tier);
     let tier_review = ThresholdValidator::get_tier_review_period(tier);
-    let tier_economic_veto = ThresholdValidator::requires_economic_veto(layer, tier);
 
     // Get combined requirements
     let (final_sigs_req, final_sigs_total, final_review_days) =
@@ -63,26 +62,16 @@ pub async fn publish_merge_action(
         tier,
         signatures: format!("{}-of-{}", tier_sigs_req, tier_sigs_total),
         review_days: tier_review as u32,
-        economic_veto: tier_economic_veto,
     };
 
     let combined_req = CombinedRequirement {
         signatures: format!("{}-of-{}", final_sigs_req, final_sigs_total),
         review_days: final_review_days as u32,
-        economic_veto: tier_economic_veto,
         source: source.clone(),
     };
 
     // Get signatures from database
     let signatures = get_signatures_from_db(database, repository, pr_number).await?;
-
-    // Determine economic veto status
-    let economic_veto_status = if tier < 3 {
-        EconomicVetoStatus::NotRequired
-    } else {
-        // Check if veto was active (simplified - would need actual veto check)
-        EconomicVetoStatus::Passed
-    };
 
     // Create Nostr client and publisher
     let nsec = std::fs::read_to_string(&config.nostr.server_nsec_path)
@@ -111,7 +100,6 @@ pub async fn publish_merge_action(
             tier_req,
             combined_req.clone(),
             signatures,
-            economic_veto_status,
             None, // review_period_ends - already merged
         )
         .await?;

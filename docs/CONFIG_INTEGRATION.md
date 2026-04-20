@@ -14,7 +14,6 @@ governance/
 │   ├── action-tiers.yml              # Tier definitions and requirements
 │   ├── repository-layers.yml         # Layer definitions and requirements
 │   ├── tier-classification-rules.yml # PR classification rules
-│   ├── economic-nodes.yml            # Economic node configuration
 │   ├── emergency-tiers.yml           # Emergency tier definitions
 │   ├── governance-fork.yml           # Governance fork configuration
 │   ├── maintainers/                  # Maintainer configurations by layer
@@ -63,7 +62,6 @@ tiers:
     signatures_required: 3
     signatures_total: 5
     review_period_days: 7
-    economic_veto_required: false
     description: "Bug fixes, documentation, performance improvements"
   
   tier2:
@@ -71,7 +69,6 @@ tiers:
     signatures_required: 4
     signatures_total: 5
     review_period_days: 30
-    economic_veto_required: false
     description: "New RPC methods, P2P changes, wallet features"
   
   tier3:
@@ -79,7 +76,6 @@ tiers:
     signatures_required: 5
     signatures_total: 5
     review_period_days: 90
-    economic_veto_required: true
     description: "Changes affecting consensus validation"
   
   tier4:
@@ -87,7 +83,6 @@ tiers:
     signatures_required: 4
     signatures_total: 5
     review_period_days: 0
-    economic_veto_required: false
     description: "Critical security patches, network threats"
   
   tier5:
@@ -95,7 +90,6 @@ tiers:
     signatures_required: 6
     signatures_total: 7
     review_period_days: 180
-    economic_veto_required: false
     description: "Changes to governance rules themselves"
 ```
 
@@ -135,7 +129,6 @@ layers:
       required: 6
       total: 7
     review_period_days: 180
-    economic_veto_required: false
     rationale: "Constitutional changes require highest consensus"
   
   layer2:
@@ -146,7 +139,6 @@ layers:
       required: 6
       total: 7
     review_period_days: 180
-    economic_veto_required: false
     rationale: "Consensus validation requires highest consensus"
   
   layer3:
@@ -157,7 +149,6 @@ layers:
       required: 4
       total: 5
     review_period_days: 90
-    economic_veto_required: false
     rationale: "Protocol implementation requires technical consensus"
   
   layer4:
@@ -168,7 +159,6 @@ layers:
       required: 3
       total: 5
     review_period_days: 60
-    economic_veto_required: false
     rationale: "Node implementation requires operational consensus"
   
   layer5:
@@ -179,7 +169,6 @@ layers:
       required: 2
       total: 3
     review_period_days: 14
-    economic_veto_required: false
     rationale: "Developer tools require minimal consensus"
 ```
 
@@ -340,13 +329,10 @@ impl GovernanceConfigFiles {
             tier.review_period_days
         );
         
-        let economic_veto_required = layer.economic_veto_required || tier.economic_veto_required;
-        
         Ok(CombinedRequirements {
             signatures_required,
             signatures_total,
             review_period_days,
-            economic_veto_required,
             layer_name: layer_name.to_string(),
             tier_name: tier_name.to_string(),
         })
@@ -358,7 +344,6 @@ pub struct CombinedRequirements {
     pub signatures_required: usize,
     pub signatures_total: usize,
     pub review_period_days: i64,
-    pub economic_veto_required: bool,
     pub layer_name: String,
     pub tier_name: String,
 }

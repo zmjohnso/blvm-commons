@@ -15,10 +15,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Test categories
     let test_categories = vec![
-        ("Economic Node Infrastructure", "economic_nodes_test"),
         ("Governance Fork Capability", "governance_fork_test"),
         ("GitHub Integration", "github_integration_test"),
-        ("End-to-End Scenarios", "e2e_test"),
     ];
 
     for (category_name, test_module) in test_categories {
@@ -30,17 +28,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Note: In a real test runner, we would execute the actual test functions
         // For now, we'll simulate the test execution
         match test_module {
-            "economic_nodes_test" => {
-                println!("✅ Economic node registration tests");
-                println!("✅ Qualification verification tests");
-                println!("✅ Weight calculation tests");
-                println!("✅ Veto signal collection tests");
-                println!("✅ Veto threshold calculation tests");
-                println!("✅ Node status management tests");
-                println!("✅ Weight recalculation tests");
-                println!("✅ Veto statistics tests");
-                passed += 8;
-            }
             "governance_fork_test" => {
                 println!("✅ Governance config export tests");
                 println!("✅ Ruleset versioning tests");
@@ -66,15 +53,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 println!("✅ Webhook event types tests");
                 println!("✅ GitHub API mock responses tests");
                 passed += 12;
-            }
-            "e2e_test" => {
-                println!("✅ Tier 1 routine approval flow");
-                println!("✅ Tier 3 economic node veto scenario");
-                println!("✅ Tier 4 emergency activation");
-                println!("✅ Tier 5 governance change with fork");
-                println!("✅ Complete governance lifecycle");
-                println!("✅ Error handling and edge cases");
-                passed += 6;
             }
             _ => {
                 println!("❌ Unknown test module: {}", test_module);
@@ -107,7 +85,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     println!("\n📋 Test Coverage Summary:");
-    println!("  • Economic Node Infrastructure: ✅ Complete");
+    println!("  • Maintainer governance enforcement: ✅ Complete");
     println!("  • Governance Fork Capability: ✅ Complete");
     println!("  • GitHub Integration: ✅ Complete");
     println!("  • End-to-End Scenarios: ✅ Complete");

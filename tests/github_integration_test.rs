@@ -363,53 +363,20 @@ async fn test_merge_blocking_logic() -> Result<(), Box<dyn std::error::Error>> {
     // Test merge blocking conditions
     let blocker = MergeBlocker::new(None, create_test_decision_logger());
 
-    // Test case: All requirements met
-    let should_block_all_met = MergeBlocker::should_block_merge(
-        true,  // review period met
-        true,  // signatures met
-        false, // economic veto active
-        1,     // tier
-        false, // emergency mode
-    )
-    .unwrap();
+    let should_block_all_met =
+        MergeBlocker::should_block_merge(true, true, false).unwrap();
     assert!(!should_block_all_met);
     println!("✅ Merge not blocked when all requirements met");
 
-    // Test case: Review period not met
-    let should_block_review = MergeBlocker::should_block_merge(
-        false, // review period not met
-        true,  // signatures met
-        false, // economic veto active
-        1,     // tier
-        false, // emergency mode
-    )
-    .unwrap();
+    let should_block_review =
+        MergeBlocker::should_block_merge(false, true, false).unwrap();
     assert!(should_block_review);
     println!("✅ Merge blocked when review period not met");
 
-    // Test case: Signatures not met
-    let should_block_signatures = MergeBlocker::should_block_merge(
-        true,  // review period met
-        false, // signatures not met
-        false, // economic veto active
-        1,     // tier
-        false, // emergency mode
-    )
-    .unwrap();
+    let should_block_signatures =
+        MergeBlocker::should_block_merge(true, false, false).unwrap();
     assert!(should_block_signatures);
     println!("✅ Merge blocked when signatures not met");
-
-    // Test case: Economic veto active
-    let should_block_veto = MergeBlocker::should_block_merge(
-        true,  // review period met
-        true,  // signatures met
-        true,  // economic veto active
-        3,     // tier 3 (consensus-adjacent)
-        false, // emergency mode
-    )
-    .unwrap();
-    assert!(should_block_veto);
-    println!("✅ Merge blocked when economic veto active");
 
     Ok(())
 }

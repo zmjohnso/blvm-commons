@@ -19,4 +19,4 @@ CREATE INDEX idx_governance_events_repo_pr ON governance_events(repo_name, pr_nu
 -- Event types that will be logged:
 -- 'pr_opened', 'pr_synchronized', 'signature_collected', 'signature_verified',
 -- 'review_period_met', 'threshold_met', 'merge_approved', 'merge_blocked',
--- 'emergency_activated', 'economic_node_veto', 'governance_fork_initiated'
+-- 'emergency_activated', 'governance_fork_initiated'

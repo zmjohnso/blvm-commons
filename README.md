@@ -81,10 +81,9 @@ cargo test
 cargo test
 
 # Run specific test suites
-cargo test --test economic_nodes_test
 cargo test --test governance_fork_test
 cargo test --test github_integration_test
-cargo test --test e2e_test
+cargo test --test simple_test
 ```
 
 ## Documentation
@@ -96,16 +95,14 @@ cargo test --test e2e_test
 
 ### Development Guides
 - [Maintainer Guide](governance/MAINTAINER_GUIDE.md) - For maintainers
-- [Economic Node Guide](governance/ECONOMIC_NODE_GUIDE.md) - For economic nodes
 - [Deployment Guide](blvm-commons/DEPLOYMENT.md) - Deployment instructions
 
 ## Implementation Status
 
 ### Completed Features
-- Economic Node Infrastructure: Database schema, node registry, veto signal collection
 - Governance Fork Capability: Configuration export, adoption tracking, multiple ruleset support
 - GitHub Status Check Integration: Status check posting, merge blocking, webhook integration
-- Comprehensive Testing: Economic node tests, governance fork tests, GitHub integration tests
+- Comprehensive Testing: Governance fork tests, GitHub integration tests, governance workflows
 - Documentation: Organization-level disclaimers, repository-level warnings
 
 ## Contributing

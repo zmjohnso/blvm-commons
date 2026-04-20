@@ -465,7 +465,6 @@ fn get_default_config() -> TierClassificationConfig {
                 "governance/**".to_string(),
                 "maintainers/**".to_string(),
                 "**/action-tiers.yml".to_string(),
-                "**/economic-nodes.yml".to_string(),
             ],
             keywords: vec![
                 "governance".to_string(),

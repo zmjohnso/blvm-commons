@@ -46,7 +46,6 @@ Bitcoin Commons is a comprehensive Bitcoin implementation ecosystem that provide
 
 - **Constitutional Governance**: 5-tier governance model with graduated thresholds
 - **Cryptographic Enforcement**: Multi-signature requirements for all changes
-- **Economic Node Veto**: Network participants can veto consensus-adjacent changes
 - **Formal Verification**: Kani model checking for consensus-critical code
 - **Transparent Audit Trails**: Immutable logs of all governance decisions
 - **Governance Fork Capability**: Users can fork governance rulesets
@@ -448,9 +447,8 @@ The governance system enforces a structured PR process with cryptographic signat
 2. **Governance App classifies tier** automatically (with temporary manual override)
 3. **Maintainers review and sign**: `/governance-sign <signature>`
 4. **Review period elapses** (tier-specific duration)
-5. **Economic node veto period** (Tier 3+ only)
-6. **Requirements met** → merge enabled
-7. **PR merged**
+5. **Requirements met** → merge enabled
+6. **PR merged**
 
 ### Governance Tiers
 
@@ -471,7 +469,6 @@ The system uses a **5-tier constitutional governance model**:
 #### Tier 3: Consensus-Adjacent
 - **Signatures**: 5-of-5 maintainers
 - **Review Period**: 90 days
-- **Economic Node Veto**: 30%+ hashpower or 40%+ economic activity
 - **Scope**: Changes affecting consensus validation code
 - **Requirement**: Formal verification (Kani) required
 
@@ -479,13 +476,12 @@ The system uses a **5-tier constitutional governance model**:
 - **Signatures**: 4-of-5 maintainers
 - **Review Period**: 0 days (immediate)
 - **Scope**: Critical security patches, network-threatening bugs
-- **Requirement**: Real-time economic node oversight, post-mortem required
+- **Requirement**: Post-mortem required after merge
 - **Sub-tiers**: Critical Emergency (7 days), Urgent Security (30 days), Elevated Priority (90 days)
 
 #### Tier 5: Governance Changes
 - **Signatures**: Special process (5-of-7 maintainers + 2-of-3 emergency keyholders)
 - **Review Period**: 180 days
-- **Economic Node Signaling**: 50%+ hashpower, 60%+ economic activity
 - **Scope**: Changes to governance rules themselves
 
 ### Layer + Tier Combination
@@ -520,16 +516,6 @@ See [governance/LAYER_TIER_MODEL.md](governance/LAYER_TIER_MODEL.md) for the com
 3. **Post Signature**: Comment `/governance-sign <signature>` on PR
 4. **Governance App Verifies**: Cryptographically verifies signature
 5. **Status Check Updates**: Shows signature count progress
-
-### Economic Node Veto System
-
-For Tier 3+ changes, economic nodes can veto:
-
-- **Hashpower Threshold**: 30%+ of network hashpower
-- **Economic Activity Threshold**: 40%+ of economic activity
-- **Veto Period**: During review period
-- **Veto Process**: Economic nodes register and signal veto
-- **Enforcement**: Veto blocks merge until resolved
 
 ### Emergency Procedures
 
@@ -860,7 +846,6 @@ See [commons/docs/BUILD_SYSTEM.md](commons/docs/BUILD_SYSTEM.md) for detailed bu
 - Signature verification
 - Status check posting
 - Merge blocking logic
-- Economic node registry
 - Governance fork system
 - Audit logging
 

@@ -2,7 +2,7 @@
 CREATE TABLE IF NOT EXISTS key_metadata (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     key_id TEXT NOT NULL UNIQUE,
-    key_type TEXT NOT NULL, -- 'maintainer', 'economic_node', 'emergency', 'github_app', 'system'
+    key_type TEXT NOT NULL, -- 'maintainer', 'emergency', 'github_app', 'system'
     owner TEXT NOT NULL,
     public_key TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'pending', -- 'active', 'pending', 'revoked', 'expired', 'compromised'

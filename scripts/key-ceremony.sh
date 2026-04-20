@@ -36,7 +36,7 @@ documentation and verification.
 Options:
   --maintainer-id ID     Maintainer identifier (required)
   --output DIR           Output directory for keys (default: ./keys)
-  --key-type TYPE        Key type: maintainer, emergency, economic_node (default: maintainer)
+  --key-type TYPE        Key type: maintainer, emergency (default: maintainer)
   --verify-only          Only verify existing keys, don't generate new ones
   --help                 Show this help message
 
@@ -260,7 +260,6 @@ cat > "${OUTPUT_DIR}/${MAINTAINER_ID}-backup-instructions.txt" <<EOF
 
 - **Maintainer keys**: Every 6 months
 - **Emergency keys**: Every 3 months
-- **Economic node keys**: Every 6 months
 
 ## Emergency Procedures
 

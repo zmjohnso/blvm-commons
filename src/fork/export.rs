@@ -32,7 +32,6 @@ impl GovernanceExporter {
     ) -> Result<GovernanceExport, GovernanceError> {
         // Load all governance configuration files
         let action_tiers = self.load_config_file("action-tiers.yml").await?;
-        let economic_nodes = self.load_config_file("economic-nodes.yml").await?;
         let maintainers = self.load_maintainers_config().await?;
         let repositories = self.load_repositories_config().await?;
         let governance_fork = self.load_config_file("governance-fork.yml").await?;
@@ -40,7 +39,6 @@ impl GovernanceExporter {
         // Create configuration hash
         let config_data = serde_json::json!({
             "action_tiers": action_tiers,
-            "economic_nodes": economic_nodes,
             "maintainers": maintainers,
             "repositories": repositories,
             "governance_fork": governance_fork,
@@ -64,7 +62,6 @@ impl GovernanceExporter {
             ruleset_version: version.clone(),
             created_at: Utc::now(),
             action_tiers,
-            economic_nodes,
             maintainers,
             repositories,
             governance_fork,
@@ -107,7 +104,6 @@ impl GovernanceExporter {
     pub fn verify_export(&self, export: &GovernanceExport) -> Result<bool, GovernanceError> {
         let config_data = serde_json::json!({
             "action_tiers": export.action_tiers,
-            "economic_nodes": export.economic_nodes,
             "maintainers": export.maintainers,
             "repositories": export.repositories,
             "governance_fork": export.governance_fork,

@@ -4,7 +4,7 @@ This document provides a comprehensive reference for the BTCDecoded governance a
 
 ## API Overview
 
-The governance application provides a REST API for managing governance operations, economic nodes, and GitHub integration.
+The governance application provides a REST API for managing governance operations and GitHub integration.
 
 ### Base URL
 
@@ -89,14 +89,6 @@ Get specific pull request details.
       "timestamp": "2025-01-01T00:00:00Z"
     }
   ],
-  "veto_signals": [
-    {
-      "node_id": 1,
-      "signal_type": "veto",
-      "weight": 10.5,
-      "timestamp": "2025-01-01T00:00:00Z"
-    }
-  ],
   "created_at": "2025-01-01T00:00:00Z",
   "updated_at": "2025-01-01T00:00:00Z"
 }
@@ -119,86 +111,6 @@ Add maintainer signature to pull request.
 {
   "status": "success",
   "message": "Signature added successfully"
-}
-```
-
-### Economic Node Management
-
-#### GET /api/economic-nodes
-
-List all economic nodes.
-
-**Query Parameters:**
-- `status` (optional) - Filter by status
-- `type` (optional) - Filter by node type
-- `limit` (optional) - Limit results (default: 100)
-- `offset` (optional) - Offset for pagination
-
-**Response:**
-```json
-{
-  "economic_nodes": [
-    {
-      "id": 1,
-      "node_type": "mining_pool",
-      "entity_name": "Example Pool",
-      "public_key": "public_key_hash",
-      "weight": 10.5,
-      "status": "active",
-      "registered_at": "2025-01-01T00:00:00Z"
-    }
-  ],
-  "total": 1,
-  "limit": 100,
-  "offset": 0
-}
-```
-
-#### POST /api/economic-nodes
-
-Register new economic node.
-
-**Request Body:**
-```json
-{
-  "node_type": "mining_pool",
-  "entity_name": "Example Pool",
-  "public_key": "public_key_hash",
-  "qualification_data": {
-    "hash_power_percent": 5.0,
-    "btc_holdings": 1000.0
-  }
-}
-```
-
-**Response:**
-```json
-{
-  "id": 1,
-  "status": "success",
-  "message": "Economic node registered successfully"
-}
-```
-
-#### POST /api/economic-nodes/{id}/veto
-
-Submit veto signal for pull request.
-
-**Request Body:**
-```json
-{
-  "pr_id": 1,
-  "signal_type": "veto",
-  "signature": "signature_hash",
-  "rationale": "Security concerns"
-}
-```
-
-**Response:**
-```json
-{
-  "status": "success",
-  "message": "Veto signal submitted successfully"
 }
 ```
 
@@ -365,11 +277,6 @@ Get system statistics.
     "approved": 80,
     "rejected": 10
   },
-  "economic_nodes": {
-    "total": 50,
-    "active": 45,
-    "inactive": 5
-  },
   "keys": {
     "total": 200,
     "active": 180,
@@ -379,27 +286,6 @@ Get system statistics.
     "total": 1000,
     "last_24h": 50
   }
-}
-```
-
-#### GET /api/statistics/veto
-
-Get veto statistics for pull request.
-
-**Query Parameters:**
-- `pr_id` (required) - Pull request ID
-
-**Response:**
-```json
-{
-  "pr_id": 1,
-  "veto_active": false,
-  "mining_veto_percent": 15.0,
-  "economic_veto_percent": 25.0,
-  "total_signals": 10,
-  "veto_count": 2,
-  "support_count": 6,
-  "abstain_count": 2
 }
 ```
 

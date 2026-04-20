@@ -30,7 +30,6 @@ Reference documentation for the Bitcoin Commons ecosystem.
 - **[MAINNET_QUICK_REFERENCE.md](MAINNET_QUICK_REFERENCE.md)** - Mainnet quick reference
 - **[HIGH_AVAILABILITY_GUIDE.md](HIGH_AVAILABILITY_GUIDE.md)** - High availability
 - **[INCREMENTAL_PRUNING_GUIDE.md](INCREMENTAL_PRUNING_GUIDE.md)** - Incremental pruning
-- **[ECONOMIC_NODE_CLI.md](ECONOMIC_NODE_CLI.md)** - Economic node CLI
 - **[MERGE_MINING_AND_FEE_FORWARDING.md](MERGE_MINING_AND_FEE_FORWARDING.md)** - Merge mining
 - **[MONETIZATION_USER_GUIDE.md](MONETIZATION_USER_GUIDE.md)** - Monetization
 

@@ -98,11 +98,6 @@ test_cli_tools() {
     # Test sign-pr tool
     run_test "Sign PR Tool" "cargo run --release --bin sign-pr -- --help"
     
-    # Test economic node tools
-    run_test "Economic Node Register" "cargo run --release --bin economic-node-register -- --help"
-    run_test "Economic Node Veto" "cargo run --release --bin economic-node-veto -- --help"
-    run_test "Economic Node Verify" "cargo run --release --bin economic-node-verify -- --help"
-    
     # Test fork migration tool
     run_test "Fork Migrate Tool" "cargo run --release --bin fork-migrate -- --help"
     
@@ -122,7 +117,6 @@ test_api_endpoints() {
     
     # Governance endpoints
     run_test "PR List" "curl -s $base_url/api/prs | jq -e '.prs | type == \"array\"'"
-    run_test "Economic Nodes" "curl -s $base_url/api/economic-nodes | jq -e '.nodes | type == \"array\"'"
     run_test "Adoption Statistics" "curl -s $base_url/api/adoption/statistics | jq -e '.total_nodes | type == \"number\"'"
     run_test "Fork Status" "curl -s $base_url/api/fork/status | jq -e '.current_ruleset | type == \"string\"'"
     
@@ -163,34 +157,6 @@ test_signature_workflow() {
     run_test "Submit Test Signature" "curl -s -X POST http://localhost:8080/webhooks/github -H 'Content-Type: application/json' -d '$signature_data' | jq -e '.status == \"signature_verified\"'"
 }
 
-# Function to test economic node workflow
-test_economic_node_workflow() {
-    echo "🏭 Testing economic node workflow..."
-    
-    # Register test economic node
-    local node_data='{
-        "name": "TestMiningPool",
-        "node_type": "mining_pool",
-        "public_key": "test_public_key",
-        "hash_rate_percent": 15.0,
-        "economic_activity_percent": 0.0
-    }'
-    
-    run_test "Register Economic Node" "curl -s -X POST http://localhost:8080/api/economic-nodes/register -H 'Content-Type: application/json' -d '$node_data' | jq -e '.status == \"success\"'"
-    
-    # Submit veto signal
-    local veto_data='{
-        "node_name": "TestMiningPool",
-        "repository": "test/governance-test",
-        "pr_number": 999,
-        "reason": "Test veto signal",
-        "strength": 100,
-        "signature": "test_veto_signature"
-    }'
-    
-    run_test "Submit Veto Signal" "curl -s -X POST http://localhost:8080/api/veto -H 'Content-Type: application/json' -d '$veto_data' | jq -e '.status == \"success\"'"
-}
-
 # Function to test governance fork workflow
 test_governance_fork_workflow() {
     echo "🔄 Testing governance fork workflow..."
@@ -202,7 +168,6 @@ test_governance_fork_workflow() {
         "version": "1.0.0",
         "config": {
             "action_tiers": {},
-            "economic_nodes": {},
             "maintainers": {},
             "repositories": {}
         }
@@ -309,7 +274,6 @@ main() {
     test_cli_tools
     test_api_endpoints
     test_signature_workflow
-    test_economic_node_workflow
     test_governance_fork_workflow
     test_monitoring_metrics
     test_database_integrity
@@ -341,7 +305,6 @@ case "${1:-}" in
         check_testnet_running
         wait_for_testnet
         test_signature_workflow
-        test_economic_node_workflow
         test_governance_fork_workflow
         generate_test_report
         ;;
@@ -366,7 +329,7 @@ case "${1:-}" in
         echo "Test categories:"
         echo "  cli         - Test CLI tools"
         echo "  api         - Test API endpoints"
-        echo "  workflow    - Test signature and veto workflows"
+        echo "  workflow    - Test signature and fork workflows"
         echo "  monitoring  - Test monitoring and metrics"
         echo "  integration - Run integration tests"
         echo "  all         - Run all tests (default)"

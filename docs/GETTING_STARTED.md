@@ -154,9 +154,8 @@ Once you have the basic setup working:
 
 1. **Configure Governance Rules**: Set up your governance configuration
 2. **Add Maintainers**: Configure maintainer keys and permissions
-3. **Set Up Economic Nodes**: Configure economic node registry
-4. **Test Workflows**: Test different governance scenarios
-5. **Production Deployment**: Deploy to production environment
+3. **Test Workflows**: Test different governance scenarios
+4. **Production Deployment**: Deploy to production environment
 
 ## Getting Help
 

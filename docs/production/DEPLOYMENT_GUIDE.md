@@ -358,10 +358,8 @@ This guide provides step-by-step instructions for deploying the BTCDecoded gover
    - Verify status checks are posted
    - Test merge blocking functionality
 
-3. **Economic Node Integration**
-   - Test economic node registration
-   - Verify veto functionality
-   - Check adoption tracking
+3. **Governance fork / adoption** (if enabled)
+   - Verify ruleset export and adoption metrics as documented for your deployment
 
 ### 3. Security Verification
 

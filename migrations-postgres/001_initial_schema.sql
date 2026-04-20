@@ -46,33 +46,6 @@ CREATE TABLE pull_requests (
   UNIQUE(repo_name, pr_number)
 );
 
--- Economic nodes registry
-CREATE TABLE economic_nodes (
-  id SERIAL PRIMARY KEY,
-  entity_name TEXT NOT NULL,
-  node_type TEXT NOT NULL,
-  public_key TEXT NOT NULL UNIQUE,
-  qualification_proof JSONB NOT NULL,
-  weight REAL NOT NULL,
-  status TEXT NOT NULL,
-  registered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  last_verified TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Veto signals
-CREATE TABLE veto_signals (
-  id SERIAL PRIMARY KEY,
-  pr_id INTEGER NOT NULL REFERENCES pull_requests(id),
-  node_id INTEGER NOT NULL REFERENCES economic_nodes(id),
-  signal_type TEXT NOT NULL,
-  weight REAL NOT NULL,
-  signature TEXT NOT NULL,
-  rationale TEXT NOT NULL,
-  verified BOOLEAN DEFAULT false,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE(pr_id, node_id)
-);
-
 -- Governance events (audit log)
 CREATE TABLE governance_events (
   id SERIAL PRIMARY KEY,
@@ -137,8 +110,6 @@ CREATE INDEX idx_prs_layer_tier ON pull_requests(layer, tier);
 CREATE INDEX idx_maintainers_layer ON maintainers(layer, active);
 CREATE INDEX idx_events_timestamp ON governance_events(timestamp DESC);
 CREATE INDEX idx_events_pr ON governance_events(pr_number);
-CREATE INDEX idx_economic_nodes_status ON economic_nodes(status);
-CREATE INDEX idx_veto_signals_pr ON veto_signals(pr_id);
 CREATE INDEX idx_emergency_active ON emergency_activations(active, expires_at);
 
 

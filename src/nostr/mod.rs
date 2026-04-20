@@ -15,9 +15,8 @@ pub mod zap_voting;
 pub use bot_manager::NostrBotManager;
 pub use client::{NostrClient, ZapEvent};
 pub use events::{
-    CombinedRequirement, EconomicVetoStatus, GovernanceActionEvent, GovernanceStatus, Hashes,
-    KeyholderAnnouncement, KeyholderSignature, LayerRequirement, NodeStatusReport, ServerHealth,
-    TierRequirement,
+    CombinedRequirement, GovernanceActionEvent, GovernanceStatus, Hashes, KeyholderAnnouncement,
+    KeyholderSignature, LayerRequirement, NodeStatusReport, ServerHealth, TierRequirement,
 };
 pub use governance_publisher::GovernanceActionPublisher;
 pub use helpers::{

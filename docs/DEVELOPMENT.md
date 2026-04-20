@@ -42,7 +42,6 @@ bllvm-commons/
 │   ├── api/                    # API handlers
 │   ├── crypto/                 # Cryptographic functions
 │   ├── database/               # Database layer
-│   ├── economic_nodes/         # Economic node system
 │   ├── fork/                   # Governance fork system
 │   ├── github/                 # GitHub integration
 │   ├── validation/             # Validation logic

@@ -188,7 +188,7 @@ impl GitHubIntegration {
             self.post_signature_status(owner, repo, sha, &signature_status)
                 .await?;
 
-            // Post combined status (maintainer-only, no economic nodes)
+            // Post combined status (maintainer multisig)
             self.post_combined_status(
                 owner,
                 repo,

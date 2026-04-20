@@ -31,13 +31,6 @@ tiers:
     review_period_days: 7
 "#;
 
-    let economic_nodes_content = r#"
-nodes:
-  - type: "mining_pool"
-    name: "Test Pool"
-    hashpower_percent: 5.0
-"#;
-
     let maintainers_content = r#"
 maintainers:
   - name: "Test Maintainer"
@@ -63,11 +56,6 @@ fork:
     tokio::fs::write(
         format!("{}/action-tiers.yml", config_path),
         action_tiers_content,
-    )
-    .await?;
-    tokio::fs::write(
-        format!("{}/economic-nodes.yml", config_path),
-        economic_nodes_content,
     )
     .await?;
     tokio::fs::write(

@@ -21,7 +21,6 @@ use crate::error::GovernanceError;
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum KeyType {
     Maintainer,
-    EconomicNode,
     Emergency,
     GitHubApp,
     System,
@@ -31,7 +30,6 @@ impl KeyType {
     pub fn as_str(&self) -> &'static str {
         match self {
             KeyType::Maintainer => "maintainer",
-            KeyType::EconomicNode => "economic_node",
             KeyType::Emergency => "emergency",
             KeyType::GitHubApp => "github_app",
             KeyType::System => "system",
@@ -45,7 +43,6 @@ impl std::str::FromStr for KeyType {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "maintainer" => Ok(KeyType::Maintainer),
-            "economic_node" => Ok(KeyType::EconomicNode),
             "emergency" => Ok(KeyType::Emergency),
             "github_app" => Ok(KeyType::GitHubApp),
             "system" => Ok(KeyType::System),
@@ -60,7 +57,6 @@ impl KeyType {
     pub fn rotation_period(&self) -> Duration {
         match self {
             KeyType::Maintainer => Duration::from_secs(180 * 24 * 60 * 60), // 6 months
-            KeyType::EconomicNode => Duration::from_secs(365 * 24 * 60 * 60), // 1 year
             KeyType::Emergency => Duration::from_secs(90 * 24 * 60 * 60),   // 3 months
             KeyType::GitHubApp => Duration::from_secs(90 * 24 * 60 * 60),   // 3 months
             KeyType::System => Duration::from_secs(365 * 24 * 60 * 60),     // 1 year
@@ -71,7 +67,6 @@ impl KeyType {
     pub fn key_strength(&self) -> KeyStrength {
         match self {
             KeyType::Maintainer => KeyStrength::High,
-            KeyType::EconomicNode => KeyStrength::High,
             KeyType::Emergency => KeyStrength::Critical,
             KeyType::GitHubApp => KeyStrength::Medium,
             KeyType::System => KeyStrength::High,

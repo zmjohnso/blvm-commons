@@ -10,8 +10,7 @@ use tracing::info;
 
 use crate::nostr::client::NostrClient;
 use crate::nostr::events::{
-    CombinedRequirement, EconomicVetoStatus, GovernanceActionEvent, KeyholderSignature,
-    LayerRequirement, TierRequirement,
+    CombinedRequirement, GovernanceActionEvent, KeyholderSignature, LayerRequirement, TierRequirement,
 };
 
 /// Publisher for governance action events
@@ -51,7 +50,6 @@ impl GovernanceActionPublisher {
         tier_req: TierRequirement,
         combined_req: CombinedRequirement,
         signatures: Vec<KeyholderSignature>,
-        economic_veto_status: EconomicVetoStatus,
         review_period_ends: Option<chrono::DateTime<chrono::Utc>>,
     ) -> Result<()> {
         info!(
@@ -70,7 +68,6 @@ impl GovernanceActionPublisher {
             tier_requirement: tier_req,
             combined_requirement: combined_req.clone(),
             signatures,
-            economic_veto_status,
             review_period_ends,
         };
 

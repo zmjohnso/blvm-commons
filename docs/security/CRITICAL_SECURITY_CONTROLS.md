@@ -42,7 +42,7 @@ Controls that validate inputs and enforce security boundaries.
 | **C-001** | Database Query Implementation | bllvm-commons | ✅ Complete | - | No | - |
 | **C-002** | Cross-layer File Verification | bllvm-commons | ✅ Complete | - | No | - |
 | **C-003** | Tier Classification Logic | bllvm-commons | Partial | P1 | No | Audit |
-| **C-004** | Economic Node Veto System | bllvm-commons | Placeholder | P1 | No | Audit |
+| **C-004** | *Retired* (superseded; not applicable) | — | N/A | — | — | — |
 | **D-001** | Audit Log Hash Chain | bllvm-commons | Implemented | P1 | No | Audit |
 | **D-002** | OTS Timestamping | bllvm-commons | Placeholder | P1 | No | Audit |
 | **D-003** | Database Transaction Integrity | bllvm-commons | Implemented | P1 | No | Audit |
@@ -167,19 +167,14 @@ Controls that validate inputs and enforce security boundaries.
    - **Location**: `bllvm-consensus/src/taproot.rs`, `bllvm-consensus/src/witness.rs`
    - **Note**: Previously listed as missing, but verified complete
 
-8. **Economic Node Veto System** (C-004)
-   - **Why Important**: Economic node veto returns mock data
-   - **Impact**: Veto system not functional
-   - **Effort**: Medium - implement real database queries
-
-9. **OTS Timestamping** (D-002)
+8. **OTS Timestamping** (D-002)
    - **Why Important**: Audit logs not timestamped externally
    - **Impact**: Audit trail integrity not externally verifiable
    - **Effort**: Medium - integrate with OTS service
 
 ### P2 (Medium) - Should Fix Before Audit
 
-10. **API Rate Limiting** (E-004)
+9. **API Rate Limiting** (E-004)
     - **Why Important**: No rate limiting on webhook endpoints
     - **Impact**: Vulnerable to DoS attacks
     - **Effort**: Low - add rate limiting middleware
@@ -234,11 +229,10 @@ Controls that validate inputs and enforce security boundaries.
 ### Phase 2: Enhanced Security (P1) - 1-2 weeks
 6. ✅ **SegWit Support** (A-002) - **COMPLETE** (verified 2025-01-XX)
 7. ✅ **Taproot Support** (A-003) - **COMPLETE** (verified 2025-01-XX)
-8. **Fix Economic Node Veto** (C-004)
-9. **Add OTS Timestamping** (D-002)
+8. **Add OTS Timestamping** (D-002)
 
 ### Phase 3: Operational Security (P2) - 1 week
-10. **Add API Rate Limiting** (E-004)
+9. **Add API Rate Limiting** (E-004)
 
 ## Definition of Audit Ready
 
