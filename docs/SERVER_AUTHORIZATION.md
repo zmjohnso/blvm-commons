@@ -574,7 +574,7 @@ sudo journalctl -u bllvm-commons | grep "server.*status"
 
 ## References
 
-- [Server Authorization Architecture](../governance/architecture/SERVER_AUTHORIZATION.md)
+- [Server Authorization Architecture](https://github.com/BTCDecoded/governance/blob/main/architecture/SERVER_AUTHORIZATION.md)
 - [Verification Guide](VERIFICATION.md)
 - [Nostr Integration](NOSTR_INTEGRATION.md)
 - [Audit Log System](AUDIT_LOG_SYSTEM.md)

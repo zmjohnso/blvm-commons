@@ -490,5 +490,5 @@ nikto -h localhost:8080
 - [Deployment Requirements](docs/deployment/DEPLOYMENT_REQUIREMENTS.md)
 - [Configuration Reference](docs/CONFIGURATION.md)
 - [Troubleshooting Guide](docs/TROUBLESHOOTING.md)
-- [Audit Materials](../audit-materials/README.md)
-- [Main Governance Documentation](../governance/README.md)
+- [Organization security policy](https://github.com/BTCDecoded/.github/blob/main/SECURITY.md)
+- [Main Governance Documentation](https://github.com/BTCDecoded/governance/blob/main/README.md)

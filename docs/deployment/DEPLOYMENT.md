@@ -510,4 +510,4 @@ sudo journalctl -u bllvm-commons | grep "database"
 - [Configuration Reference](docs/CONFIGURATION.md)
 - [Security Guide](SECURITY.md)
 - [Troubleshooting Guide](docs/TROUBLESHOOTING.md)
-- [Main Governance Documentation](../governance/README.md)
+- [Main Governance Documentation](https://github.com/BTCDecoded/governance/blob/main/README.md)

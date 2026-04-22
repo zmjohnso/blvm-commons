@@ -616,5 +616,5 @@ sudo journalctl -u blvm-commons | grep "config.*error"
 
 - [Configuration Reference](CONFIGURATION.md)
 - [Troubleshooting Guide](TROUBLESHOOTING.md)
-- [Main Governance Documentation](../governance/README.md)
-- [Layer + Tier Model](../governance/LAYER_TIER_MODEL.md)
+- [Main Governance Documentation](https://github.com/BTCDecoded/governance/blob/main/README.md)
+- [Layer + Tier Model](https://github.com/BTCDecoded/governance/blob/main/LAYER_TIER_MODEL.md)
