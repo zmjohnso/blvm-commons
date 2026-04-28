@@ -578,7 +578,7 @@ This guide outlines comprehensive maintenance procedures for the BTCDecoded gove
    sudo cp -r /var/log /opt/evidence/logs_$(date +%Y%m%d_%H%M%S)
    
    # Notify security team
-   echo "Security incident detected" | mail -s "Security Alert" security@btcdecoded.org
+   echo "Security incident detected" | mail -s "Security Alert" security@thebitcoincommons.org
    ```
 
 ## Documentation Updates

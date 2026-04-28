@@ -92,13 +92,13 @@ This project follows the BTCDecoded governance system:
 - Never commit private keys or secrets
 - Use environment variables for configuration
 - Follow secure coding practices
-- Report security issues to security@btcdecoded.org
+- Report security issues to security@thebitcoincommons.org
 
 ## Questions?
 
 - GitHub Issues for bug reports and feature requests
 - GitHub Discussions for questions
-- security@btcdecoded.org for security issues
+- security@thebitcoincommons.org for security issues
 
 ## License
 

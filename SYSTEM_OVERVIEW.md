@@ -285,7 +285,7 @@ For consensus changes, the following verification stack is required:
 ### Vulnerability Reporting
 
 **Critical Security Issues:**
-- **Email**: security@btcdecoded.org
+- **Email**: security@thebitcoincommons.org
 - **Subject**: `[SECURITY] <repository> vulnerability`
 - **DO NOT**: Create public issues, discuss publicly, post on social media
 
@@ -947,7 +947,7 @@ bllvm-verify <signature> <message> <public-key>
 ### Key URLs
 
 - **GitHub Organization**: https://github.com/BTCDecoded
-- **Security Email**: security@btcdecoded.org
+- **Security Email**: security@thebitcoincommons.org
 - **Website**: https://btcdecoded.org
 
 ### Governance Quick Reference
@@ -993,7 +993,7 @@ bllvm-verify <signature> <message> <public-key>
 - **Documentation**: Check repository README.md files
 - **Issues**: Search existing issues or create new ones
 - **Discussions**: Use GitHub Discussions for questions
-- **Security**: See security@btcdecoded.org for security issues
+- **Security**: See security@thebitcoincommons.org for security issues
 
 ---
 
