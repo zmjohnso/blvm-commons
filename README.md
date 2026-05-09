@@ -4,7 +4,7 @@
 
 **Phase 1 (Infrastructure Building)**: System not yet activated or tested in production.
 
-Contains the Bitcoin Commons governance and implementation ecosystem, managed by the BTCDecoded GitHub organization. Implements a constitutional governance model that makes Bitcoin governance 6x harder to capture than Bitcoin Core's current model.
+Contains the Bitcoin Commons governance and implementation ecosystem, managed by the BTCDecoded GitHub organization. It implements the constitutional governance model described in the [**Bitcoin Commons Compact**](https://github.com/BTCDecoded/governance/blob/main/COMPACT.md) and related governance repositories.
 
 ## Important Disclaimers
 
@@ -53,7 +53,7 @@ Bitcoin Commons implements a 5-tier constitutional governance system:
 ## Quick Start
 
 ### Prerequisites
-- Rust 1.70+
+- **Rust** toolchain (use a version compatible with this crate’s dependencies; `cargo build` will report if your compiler is too old)
 - SQLite3
 - Git
 

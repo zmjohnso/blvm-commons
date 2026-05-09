@@ -1,12 +1,11 @@
 #!/bin/bash
 # Testnet Test Suite
-# Comprehensive testing for the governance-app testnet environment
+# Comprehensive testing for the blvm-commons testnet environment
 
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
-GOVERNANCE_APP_DIR="$PROJECT_ROOT/governance-app"
 TESTNET_DIR="$PROJECT_ROOT/deployment/testnet"
 
 echo "🧪 Starting testnet test suite..."
@@ -80,7 +79,7 @@ wait_for_testnet() {
 run_integration_tests() {
     echo "🧪 Running integration tests..."
     
-    cd "$GOVERNANCE_APP_DIR"
+    cd "$PROJECT_ROOT"
     
     # Run testnet scenarios
     run_test "Testnet Scenarios" "cargo test --test testnet_scenarios -- --nocapture"
@@ -93,7 +92,7 @@ run_integration_tests() {
 test_cli_tools() {
     echo "🔧 Testing CLI tools..."
     
-    cd "$GOVERNANCE_APP_DIR"
+    cd "$PROJECT_ROOT"
     
     # Test sign-pr tool
     run_test "Sign PR Tool" "cargo run --release --bin sign-pr -- --help"

@@ -1,6 +1,6 @@
 # Deployment Documentation
 
-This directory contains documentation related to deploying `bllvm-commons` in production and development environments.
+This directory contains documentation related to deploying **`blvm-commons`** in production and development environments.
 
 ## Files
 

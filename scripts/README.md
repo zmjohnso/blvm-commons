@@ -19,11 +19,9 @@ This directory contains utility scripts for benchmarking and analysis.
 ## Other Script Locations
 
 ### Component Scripts
-- `commons/scripts/` - Build and CI scripts
-- `commons/tools/` - Build tools
-- `bllvm-consensus/scripts/` - Test data scripts
-- `bllvm-consensus/fuzz/` - Fuzzing scripts
-- `governance-app/scripts/` - Governance app setup scripts
+
+- **This repo** — `scripts/` (this directory), build/CI helpers elsewhere under the repo root
+- **Sibling [`blvm-consensus`](https://github.com/BTCDecoded/blvm-consensus)** — `scripts/`, `fuzz/` (separate checkout)
 
 ### Root Scripts
 - `check_and_push_all.sh` - Check git status for all repos

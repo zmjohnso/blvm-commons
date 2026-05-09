@@ -89,7 +89,7 @@ max_request_size = 1048576
 [logging]
 level = "info"
 format = "json"
-file = "/var/log/governance-app.log"
+file = "/var/log/blvm-commons.log"
 max_size = 10485760
 max_files = 5
 ```
@@ -125,7 +125,7 @@ base_url = "https://api.github.com"
 # config/production.toml
 [logging]
 level = "info"
-file = "/var/log/governance-app.log"
+file = "/var/log/blvm-commons.log"
 
 [database]
 url = "sqlite:/var/lib/governance/prod.db"
@@ -178,15 +178,10 @@ chmod 700 /var/lib/governance/
 
 ### Debug Configuration
 
+The primary binary is **`blvm-commons`**. Configuration is loaded on startup from the paths described in **[Configuration Reference](../docs/CONFIGURATION.md)**.
+
 ```bash
-# Validate configuration
-cargo run --bin governance-app -- validate-config
-
-# Show current configuration
-cargo run --bin governance-app -- show-config
-
-# Test configuration
-cargo run --bin governance-app -- test-config
+cargo run --bin blvm-commons
 ```
 
 ## Related Documentation

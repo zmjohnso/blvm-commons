@@ -6,10 +6,10 @@
 
 ```bash
 # Unit tests
-cargo test --package bllvm-commons --lib build
+cargo test --package blvm-commons --lib build
 
 # Integration tests (when implemented)
-cargo test --package bllvm-commons --test build_orchestration_test
+cargo test --package blvm-commons --test build_orchestration_test
 
 # E2E test script
 ./tests/e2e/release_flow_test.sh

@@ -2,7 +2,7 @@
 # This configuration enables all features for testing with test keys
 
 [app]
-name = "governance-app-testnet"
+name = "blvm-commons-testnet"
 version = "0.1.0"
 environment = "testnet"
 
@@ -12,7 +12,7 @@ port = 8080
 workers = 4
 
 [database]
-url = "sqlite:governance-app-testnet.db"
+url = "sqlite:blvm-commons-testnet.db"
 max_connections = 10
 timeout_seconds = 30
 

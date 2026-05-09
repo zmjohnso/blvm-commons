@@ -11,7 +11,7 @@ This directory contains scripts for comparing performance between Bitcoin Core a
    - Or set `BITCOIN_CORE_BIN` and `BITCOIN_CLI_BIN` directly
 
 2. **BTCDecoded** compiled locally
-   - Consensus-proof and bllvm-node crates must be built
+   - Consensus-proof and blvm-node crates must be built
 
 3. **Python 3** with standard library
 4. **Rust** and Cargo installed
@@ -53,8 +53,8 @@ export BITCOIN_DATA_DIR="/tmp/bitcoin-benchmark-data"
 ### BTCDecoded Benchmarks
 
 The script automatically runs:
-- `bllvm-consensus` benchmarks (with `--features production`)
-- `bllvm-node` benchmarks (if available)
+- `blvm-consensus` benchmarks (with `--features production`)
+- `blvm-node` benchmarks (if available)
 
 Results are saved to `benchmark-results/btdcoded_<timestamp>/`
 
@@ -145,7 +145,7 @@ make
 
 ```bash
 # Build BTCDecoded with production features
-cd bllvm-consensus
+cd blvm-consensus
 cargo build --release --features production
 
 # Run benchmarks manually to debug
@@ -172,7 +172,7 @@ rm -rf /tmp/bitcoin-benchmark-data
 
 ```bash
 # BTCDecoded only
-cd bllvm-consensus
+cd blvm-consensus
 cargo bench --features production
 
 # Bitcoin Core only

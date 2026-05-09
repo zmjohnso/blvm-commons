@@ -1,11 +1,11 @@
 # Testnet Setup Guide
 
-This guide explains how to set up and run the governance-app testnet environment for Phase 2A testing.
+This guide explains how to run the **Phase 2A testnet** Docker stack from the **`blvm-commons`** repository (`deployment/testnet`). The main application runs as the Docker Compose service **`blvm-commons`** (`container_name: blvm-commons-testnet`).
 
 ## Overview
 
 The testnet environment provides:
-- Complete governance-app with all features enabled
+- **blvm-commons** (governance enforcement app) with test configuration
 - Test maintainer keys
 - Monitoring and logging infrastructure
 - Test data generation and validation
@@ -23,9 +23,12 @@ The testnet environment provides:
 ### 1. Clone and Setup
 
 ```bash
-git clone https://github.com/btcdecoded/governance-app.git
-cd governance-app
+# Use the monorepo layout (blvm-commons next to blvm-sdk, etc.). Example:
+git clone https://github.com/BTCDecoded/btc-commons.git
+cd btc-commons/blvm-commons
 ```
+
+**Docker build context:** The compose file builds from the **monorepo root** (the parent directory that contains `blvm-commons`, `blvm-sdk`, and other patched dependencies). Run `docker compose build` from `deployment/testnet` after cloning the full **btc-commons** tree so `blvm-commons/deployment/testnet/Dockerfile.testnet` can resolve sibling crates.
 
 ### 2. Generate Test Keys
 
@@ -47,8 +50,8 @@ docker-compose up -d
 # Check if all services are running
 docker-compose ps
 
-# Check governance-app logs
-docker-compose logs governance-app
+# Check blvm-commons logs
+docker-compose logs blvm-commons
 
 # Check health endpoint
 curl http://localhost:8080/health
@@ -62,7 +65,7 @@ The testnet uses the following key environment variables:
 
 ```bash
 # Database
-DATABASE_URL=sqlite:governance-app-testnet.db
+DATABASE_URL=sqlite:blvm-commons-testnet.db
 
 # Governance
 DRY_RUN_MODE=false
@@ -178,7 +181,7 @@ curl http://localhost:9091/api/v1/targets
 
 All logs are stored in the `logs/` directory:
 
-- `governance-app.log`: Main application logs
+- `blvm-commons.log`: Main application logs
 - `enforcement-decisions.jsonl`: Governance enforcement decisions
 - `audit.log`: Tamper-evident audit log
 - `fork-events.jsonl`: Governance fork events
@@ -206,7 +209,7 @@ Grafana dashboards provide:
 **"Service not starting"**
 ```bash
 # Check logs
-docker-compose logs governance-app
+docker-compose logs blvm-commons
 
 # Check resource usage
 docker stats
@@ -222,7 +225,7 @@ ls -la data/
 
 # Recreate database
 docker-compose down
-rm -rf data/governance-app-testnet.db
+rm -rf data/blvm-commons-testnet.db
 docker-compose up -d
 ```
 
@@ -244,7 +247,7 @@ docker-compose ps
 curl http://localhost:8080/health
 
 # Check logs for errors
-docker-compose logs governance-app
+docker-compose logs blvm-commons
 ```
 
 ### Debug Mode

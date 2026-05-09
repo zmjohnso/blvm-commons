@@ -12,7 +12,7 @@
 cd deployment
 chmod +x blvm.sh
 
-# Install BLLVM node
+# Install BLVM node
 sudo ./blvm.sh install blvm --public-ip YOUR_IP
 
 # Check status
@@ -42,7 +42,7 @@ sudo ./blvm.sh [update|uninstall] [component]
 
 ## 🎯 Components
 
-- **`blvm`** - Base BLLVM node (production build)
+- **`blvm`** - Base **BLVM** node (production build)
 - **`experimental`** - Experimental node (UTXO commitments, custom features)
 - **`commons`** - Governance app (blvm-commons)
 
@@ -61,7 +61,7 @@ sudo ./blvm.sh [update|uninstall] [component]
 
 ## 📋 What Gets Installed
 
-### BLLVM Node
+### BLVM node
 - Binary: `/opt/blvm/blvm`
 - Config: `/etc/blvm/blvm.toml`
 - Data: `/var/lib/blvm`
