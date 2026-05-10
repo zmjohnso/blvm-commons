@@ -11,8 +11,8 @@ This document defines the naming conventions for Bitcoin Commons BLLVM (Bitcoin 
 
 ## Executive Summary
 
-- **Executables**: Use `bllvm-*` prefix (short, technical)
-- **Package names**: Use `bitcoin-commons-bllvm` or `bitcoin-commons`
+- **Executables**: Use `blvm-*` prefix (short, technical)
+- **Package names**: Use `bitcoin-commons-blvm` or `bitcoin-commons`
 - **Branding**: Use "Bitcoin Commons" for user-facing documentation
 - **Technical docs**: Use "BLLVM" for implementation details
 - **Repository URLs**: Keep as `BTCDecoded` (historical/organizational)
@@ -20,17 +20,17 @@ This document defines the naming conventions for Bitcoin Commons BLLVM (Bitcoin 
 ## Binary Naming
 
 ### Main Node Executable
-- **Binary name**: `bllvm`
+- **Binary name**: `blvm`
 - **Display name**: "Bitcoin Commons BLLVM" or "BLLVM Node"
 - **Installation path**:
-  - Linux: `/usr/bin/bllvm` or `/usr/local/bin/bllvm`
-  - macOS: `/usr/local/bin/bllvm` or in app bundle
-  - Windows: `C:\Program Files\Bitcoin Commons\bllvm.exe`
+  - Linux: `/usr/bin/blvm` or `/usr/local/bin/blvm`
+  - macOS: `/usr/local/bin/blvm` or in app bundle
+  - Windows: `C:\Program Files\Bitcoin Commons\blvm.exe`
 
 ### CLI Tools (Developer SDK)
-- `bllvm-keygen` - Generate governance keypairs
-- `bllvm-sign` - Sign governance messages
-- `bllvm-verify` - Verify signatures and multisig thresholds
+- `blvm-keygen` - Generate governance keypairs
+- `blvm-sign` - Sign governance messages
+- `blvm-verify` - Verify signatures and multisig thresholds
 
 ### Governance Tools
 - `bitcoin-commons-governance` or `bc-governance` - Governance application
@@ -39,8 +39,8 @@ This document defines the naming conventions for Bitcoin Commons BLLVM (Bitcoin 
 ## Package Naming
 
 ### Linux Packages
-- **RPM**: `bitcoin-commons-bllvm`
-- **DEB**: `bitcoin-commons-bllvm`
+- **RPM**: `bitcoin-commons-blvm`
+- **DEB**: `bitcoin-commons-blvm`
 - **Package description**: "Bitcoin Commons BLLVM - Bitcoin Low-Level Virtual Machine implementation"
 
 ### macOS Packages
@@ -56,10 +56,10 @@ This document defines the naming conventions for Bitcoin Commons BLLVM (Bitcoin 
 ### Source Code Directories
 - Repository root: `BTCDecoded/` (keep as-is for GitHub organization)
 - Component directories: Keep technical names
-  - `bllvm-consensus/`
-  - `bllvm-protocol/`
-  - `bllvm-node/` (consider renaming to `bllvm-node/` in future)
-  - `bllvm-sdk/`
+  - `blvm-consensus/`
+  - `blvm-protocol/`
+  - `blvm-node/` (consider renaming to `blvm-node/` in future)
+  - `blvm-sdk/`
   - `governance-app/`
 
 ### Installation Directories
@@ -126,21 +126,21 @@ This document defines the naming conventions for Bitcoin Commons BLLVM (Bitcoin 
 
 **Executables**:
 ```bash
-bllvm --help
-bllvm-keygen --output key.pem
-bllvm-sign release --version v1.0.0
+blvm --help
+blvm-keygen --output key.pem
+blvm-sign release --version v1.0.0
 ```
 
 **Package Installation**:
 ```bash
 # Debian/Ubuntu
-apt install bitcoin-commons-bllvm
+apt install bitcoin-commons-blvm
 
 # RPM
-yum install bitcoin-commons-bllvm
+yum install bitcoin-commons-blvm
 
 # macOS
-brew install bitcoin-commons-bllvm  # If available via Homebrew
+brew install bitcoin-commons-blvm  # If available via Homebrew
 ```
 
 **Documentation**:
@@ -150,7 +150,7 @@ brew install bitcoin-commons-bllvm  # If available via Homebrew
 
 ### Incorrect Usage (Do Not Use)
 
-- ❌ `btcdecoded` as executable name (use `bllvm`)
+- ❌ `btcdecoded` as executable name (use `blvm`)
 - ❌ "BTCDecoded" in user-facing materials (use "Bitcoin Commons")
 - ❌ "Bitcoin Commons" in technical API docs (use "BLLVM" where appropriate)
 - ❌ Changing repository URLs from `BTCDecoded` (keep as-is)
@@ -159,31 +159,31 @@ brew install bitcoin-commons-bllvm  # If available via Homebrew
 
 For BIP21 URI scheme registration:
 - **Application name**: "Bitcoin Commons BLLVM"
-- **Executable**: `bllvm`
-- **Desktop entry**: `bitcoin-commons-bllvm-bitcoin.desktop`
+- **Executable**: `blvm`
+- **Desktop entry**: `bitcoin-commons-blvm-bitcoin.desktop`
 - **Registry keys**: `HKEY_CLASSES_ROOT\bitcoin` (Windows)
 
 ## Migration Notes
 
 ### Already Updated
-- ✅ Binary names: `bllvm-*` (renamed from `btcdecoded-*`)
+- ✅ Binary names: `blvm-*` (renamed from `btcdecoded-*`)
 - ✅ Package authors: "Bitcoin Commons Team" (renamed from "BTCDecoded Team")
 - ✅ BIP21 installer guide: Uses "Bitcoin Commons BLLVM"
 - ✅ Build scripts: Updated to use new binary names
 
 ### Future Considerations
-- Consider renaming `bllvm-node/` to `bllvm-node/` (breaking change)
+- Consider renaming `blvm-node/` to `blvm-node/` (breaking change)
 - Update website branding to "Bitcoin Commons" consistently
 - Create migration guide for users switching from old names
 
 ## Repository URLs (Keep Unchanged)
 
 All repository URLs remain as `BTCDecoded`:
-- `https://github.com/BTCDecoded/bllvm-consensus`
-- `https://github.com/BTCDecoded/bllvm-node`
-- `https://github.com/BTCDecoded/bllvm-sdk`
+- `https://github.com/BTCDecoded/blvm-consensus`
+- `https://github.com/BTCDecoded/blvm-node`
+- `https://github.com/BTCDecoded/blvm-sdk`
 - `https://github.com/BTCDecoded/governance-app`
-- `https://github.com/BTCDecoded/bllvm-protocol`
+- `https://github.com/BTCDecoded/blvm-protocol`
 
 This maintains consistency with existing GitHub organization structure and avoids breaking existing links/clones.
 

@@ -1,4 +1,4 @@
-# Getting Started with Bitcoin Commons (bllvm-commons)
+# Getting Started with Bitcoin Commons (blvm-commons)
 
 This guide will help you get started with Bitcoin Commons governance enforcement.
 
@@ -17,8 +17,8 @@ Before you begin, ensure you have:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/BTCDecoded/bllvm-commons.git
-cd bllvm-commons
+git clone https://github.com/BTCDecoded/blvm-commons.git
+cd blvm-commons
 ```
 
 ### 2. Install Dependencies
@@ -37,13 +37,13 @@ cp config/app.toml.example config/app.toml
 ### 4. Run Database Migrations
 
 ```bash
-cargo run --bin bllvm-commons -- migrate
+cargo run --bin blvm-commons -- migrate
 ```
 
 ### 5. Start the Application
 
 ```bash
-cargo run --bin bllvm-commons
+cargo run --bin blvm-commons
 ```
 
 ## Configuration
@@ -119,7 +119,7 @@ Create a test pull request to verify webhook integration.
 Monitor the application logs:
 
 ```bash
-tail -f logs/bllvm-commons.log
+tail -f logs/blvm-commons.log
 ```
 
 ## Common Issues

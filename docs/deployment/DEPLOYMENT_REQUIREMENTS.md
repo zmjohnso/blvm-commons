@@ -1,8 +1,8 @@
-# bllvm-commons Deployment Requirements
+# blvm-commons Deployment Requirements
 
 ## Overview
 
-`bllvm-commons` is a Rust binary that runs as a web service. It requires minimal setup but needs specific configuration and files.
+`blvm-commons` is a Rust binary that runs as a web service. It requires minimal setup but needs specific configuration and files.
 
 ## Required Components
 
@@ -14,16 +14,16 @@ The binary is built from source:
 ```bash
 cd governance-app
 cargo build --release
-# Binary will be at: target/release/bllvm-commons
+# Binary will be at: target/release/blvm-commons
 ```
 
 **Installation**:
 ```bash
-sudo cp target/release/bllvm-commons /usr/local/bin/
-sudo chmod +x /usr/local/bin/bllvm-commons
+sudo cp target/release/blvm-commons /usr/local/bin/
+sudo chmod +x /usr/local/bin/blvm-commons
 ```
 
-**Note**: The binary name is `bllvm-commons` (defined in `Cargo.toml`).
+**Note**: The binary name is `blvm-commons` (defined in `Cargo.toml`).
 
 ### 2. Environment Variables
 
@@ -44,7 +44,7 @@ DATABASE_URL=postgresql://user:password@localhost:5432/governance
 
 # GitHub App (REQUIRED)
 GITHUB_APP_ID=123456
-GITHUB_PRIVATE_KEY_PATH=/opt/bllvm-commons/keys/github-app.pem
+GITHUB_PRIVATE_KEY_PATH=/opt/blvm-commons/keys/github-app.pem
 GITHUB_WEBHOOK_SECRET=your_webhook_secret_here
 
 # Server Configuration (OPTIONAL - has defaults)
@@ -56,7 +56,7 @@ SERVER_ID=governance-01       # Default: governance-01
 GOVERNANCE_REPO=BTCDecoded/governance  # Default: BTCDecoded/governance
 DRY_RUN_MODE=false            # Default: false
 LOG_ENFORCEMENT_DECISIONS=true # Default: true
-ENFORCEMENT_LOG_PATH=/var/log/bllvm-commons/enforcement.log  # Optional
+ENFORCEMENT_LOG_PATH=/var/log/blvm-commons/enforcement.log  # Optional
 
 # Nostr (OPTIONAL - disabled by default)
 NOSTR_ENABLED=false
@@ -80,15 +80,15 @@ AUDIT_ROTATION_INTERVAL_DAYS=30
 **Minimal Production Setup**:
 ```bash
 # Create .env file
-cat > /etc/bllvm-commons/.env <<EOF
+cat > /etc/blvm-commons/.env <<EOF
 DATABASE_URL=postgresql://governance_user:password@localhost:5432/governance
 GITHUB_APP_ID=123456
-GITHUB_PRIVATE_KEY_PATH=/opt/bllvm-commons/keys/github-app.pem
+GITHUB_PRIVATE_KEY_PATH=/opt/blvm-commons/keys/github-app.pem
 GITHUB_WEBHOOK_SECRET=$(openssl rand -hex 32)
 SERVER_PORT=3000
 EOF
 
-chmod 600 /etc/bllvm-commons/.env
+chmod 600 /etc/blvm-commons/.env
 ```
 
 ### 3. Configuration File
@@ -109,10 +109,10 @@ The `config/production.toml` file exists but **is not currently used** by the ap
 ```bash
 # Download from GitHub App settings
 # Place at: GITHUB_PRIVATE_KEY_PATH
-sudo mkdir -p /opt/bllvm-commons/keys
-sudo cp github-app.pem /opt/bllvm-commons/keys/
-sudo chmod 600 /opt/bllvm-commons/keys/github-app.pem
-sudo chown governance:governance /opt/bllvm-commons/keys/github-app.pem
+sudo mkdir -p /opt/blvm-commons/keys
+sudo cp github-app.pem /opt/blvm-commons/keys/
+sudo chmod 600 /opt/blvm-commons/keys/github-app.pem
+sudo chown governance:governance /opt/blvm-commons/keys/github-app.pem
 ```
 
 **Database** (REQUIRED):
@@ -124,35 +124,35 @@ sudo chown governance:governance /opt/bllvm-commons/keys/github-app.pem
 
 **Required Directories**:
 ```bash
-/opt/bllvm-commons/          # Application root
-├── bllvm-commons            # Binary (or symlink to /usr/local/bin)
+/opt/blvm-commons/          # Application root
+├── blvm-commons            # Binary (or symlink to /usr/local/bin)
 ├── keys/                    # Private keys (github-app.pem)
 │   └── github-app.pem
 ├── data/                    # Database files (if SQLite)
 │   └── governance.db
 └── logs/                    # Application logs (optional)
 
-/var/log/bllvm-commons/      # Log directory (if using file logging)
+/var/log/blvm-commons/      # Log directory (if using file logging)
 ```
 
 **Create directories**:
 ```bash
-sudo mkdir -p /opt/bllvm-commons/{keys,data,logs}
-sudo mkdir -p /var/log/bllvm-commons
-sudo chown -R governance:governance /opt/bllvm-commons
-sudo chown -R governance:governance /var/log/bllvm-commons
-sudo chmod 700 /opt/bllvm-commons/keys
+sudo mkdir -p /opt/blvm-commons/{keys,data,logs}
+sudo mkdir -p /var/log/blvm-commons
+sudo chown -R governance:governance /opt/blvm-commons
+sudo chown -R governance:governance /var/log/blvm-commons
+sudo chmod 700 /opt/blvm-commons/keys
 ```
 
 ### 6. Systemd Service
 
 **Status**: ✅ **Recommended**
 
-Create `/etc/systemd/system/bllvm-commons.service`:
+Create `/etc/systemd/system/blvm-commons.service`:
 
 ```ini
 [Unit]
-Description=Bitcoin Commons (bllvm-commons)
+Description=Bitcoin Commons (blvm-commons)
 After=network.target postgresql.service
 Requires=postgresql.service
 
@@ -160,20 +160,20 @@ Requires=postgresql.service
 Type=simple
 User=governance
 Group=governance
-WorkingDirectory=/opt/bllvm-commons
-ExecStart=/usr/local/bin/bllvm-commons
+WorkingDirectory=/opt/blvm-commons
+ExecStart=/usr/local/bin/blvm-commons
 Restart=always
 RestartSec=5
 Environment=RUST_LOG=info
-EnvironmentFile=/etc/bllvm-commons/.env
+EnvironmentFile=/etc/blvm-commons/.env
 
 # Security settings
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/bllvm-commons/data
-ReadWritePaths=/var/log/bllvm-commons
+ReadWritePaths=/opt/blvm-commons/data
+ReadWritePaths=/var/log/blvm-commons
 
 # Resource limits
 LimitNOFILE=65536
@@ -186,21 +186,21 @@ WantedBy=multi-user.target
 **Enable and start**:
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable bllvm-commons
-sudo systemctl start bllvm-commons
-sudo systemctl status bllvm-commons
+sudo systemctl enable blvm-commons
+sudo systemctl start blvm-commons
+sudo systemctl status blvm-commons
 ```
 
 ## Quick Deployment Checklist
 
 - [ ] Build binary: `cargo build --release`
-- [ ] Install binary: `sudo cp target/release/bllvm-commons /usr/local/bin/`
-- [ ] Create directories: `/opt/bllvm-commons/{keys,data,logs}`
+- [ ] Install binary: `sudo cp target/release/blvm-commons /usr/local/bin/`
+- [ ] Create directories: `/opt/blvm-commons/{keys,data,logs}`
 - [ ] Set up database (PostgreSQL or SQLite)
-- [ ] Download GitHub App private key to `/opt/bllvm-commons/keys/github-app.pem`
+- [ ] Download GitHub App private key to `/opt/blvm-commons/keys/github-app.pem`
 - [ ] Create `.env` file with required variables
 - [ ] Create systemd service file
-- [ ] Start service: `sudo systemctl start bllvm-commons`
+- [ ] Start service: `sudo systemctl start blvm-commons`
 - [ ] Verify: `curl http://localhost:3000/health`
 
 ## Minimal Production Deployment
@@ -211,15 +211,15 @@ cd governance-app
 cargo build --release
 
 # 2. Install
-sudo cp target/release/bllvm-commons /usr/local/bin/
-sudo chmod +x /usr/local/bin/bllvm-commons
+sudo cp target/release/blvm-commons /usr/local/bin/
+sudo chmod +x /usr/local/bin/blvm-commons
 
 # 3. Create user
-sudo useradd -r -s /bin/false -d /opt/bllvm-commons governance
+sudo useradd -r -s /bin/false -d /opt/blvm-commons governance
 
 # 4. Create directories
-sudo mkdir -p /opt/bllvm-commons/{keys,data}
-sudo chown -R governance:governance /opt/bllvm-commons
+sudo mkdir -p /opt/blvm-commons/{keys,data}
+sudo chown -R governance:governance /opt/blvm-commons
 
 # 5. Set up database (PostgreSQL example)
 sudo -u postgres createdb governance
@@ -228,36 +228,36 @@ sudo -u postgres psql -c "ALTER USER governance_user WITH PASSWORD 'secure_passw
 sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE governance TO governance_user;"
 
 # 6. Create .env file
-sudo tee /etc/bllvm-commons/.env > /dev/null <<EOF
+sudo tee /etc/blvm-commons/.env > /dev/null <<EOF
 DATABASE_URL=postgresql://governance_user:secure_password@localhost:5432/governance
 GITHUB_APP_ID=YOUR_APP_ID
-GITHUB_PRIVATE_KEY_PATH=/opt/bllvm-commons/keys/github-app.pem
+GITHUB_PRIVATE_KEY_PATH=/opt/blvm-commons/keys/github-app.pem
 GITHUB_WEBHOOK_SECRET=$(openssl rand -hex 32)
 SERVER_PORT=3000
 EOF
-sudo chmod 600 /etc/bllvm-commons/.env
+sudo chmod 600 /etc/blvm-commons/.env
 
 # 7. Copy GitHub App key
-sudo cp github-app.pem /opt/bllvm-commons/keys/
-sudo chmod 600 /opt/bllvm-commons/keys/github-app.pem
-sudo chown governance:governance /opt/bllvm-commons/keys/github-app.pem
+sudo cp github-app.pem /opt/blvm-commons/keys/
+sudo chmod 600 /opt/blvm-commons/keys/github-app.pem
+sudo chown governance:governance /opt/blvm-commons/keys/github-app.pem
 
 # 8. Create systemd service (see above)
 
 # 9. Start
 sudo systemctl daemon-reload
-sudo systemctl enable bllvm-commons
-sudo systemctl start bllvm-commons
+sudo systemctl enable blvm-commons
+sudo systemctl start blvm-commons
 ```
 
 ## Verification
 
 ```bash
 # Check service status
-sudo systemctl status bllvm-commons
+sudo systemctl status blvm-commons
 
 # Check logs
-sudo journalctl -u bllvm-commons -f
+sudo journalctl -u blvm-commons -f
 
 # Test health endpoint
 curl http://localhost:3000/health
@@ -274,7 +274,7 @@ curl http://localhost:3000/status
 
 3. **Port**: Default is `3000`, configurable via `SERVER_PORT` environment variable.
 
-4. **Binary name**: The binary is named `bllvm-commons` (not `governance-app`).
+4. **Binary name**: The binary is named `blvm-commons` (not `governance-app`).
 
 5. **Environment variables**: All configuration comes from environment variables. No `.env` file loader is included, but you can use systemd's `EnvironmentFile` directive.
 

@@ -22,7 +22,7 @@ cargo install cargo-fuzz
 #### Run Individual Targets
 
 ```bash
-cd bllvm-consensus
+cd blvm-consensus
 
 # Transaction validation (24+ hours recommended)
 cargo fuzz run transaction_validation -- -max_total_time=86400 -artifact_prefix=./fuzz-artifacts/
@@ -90,7 +90,7 @@ Benchmarks use the `criterion` framework for statistical analysis and regression
 #### Consensus-Proof Benchmarks
 
 ```bash
-cd bllvm-consensus
+cd blvm-consensus
 
 # Run all benchmarks
 cargo bench
@@ -104,7 +104,7 @@ cargo bench --bench block_validation
 #### Reference-Node Benchmarks (Compact Blocks)
 
 ```bash
-cd bllvm-node
+cd blvm-node
 
 # Compact block benchmarks
 cargo bench --bench compact_blocks
@@ -158,7 +158,7 @@ cargo bench -- --output-format json > benchmark_results.json
 
 ### Current Optimizations
 
-Both `bllvm-consensus` and `bllvm-node` are configured with:
+Both `blvm-consensus` and `blvm-node` are configured with:
 
 ```toml
 [profile.release]

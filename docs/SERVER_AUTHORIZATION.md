@@ -82,7 +82,7 @@ Server authorization serves as a **security boundary mechanism** by:
 **CLI Commands**:
 ```bash
 # Add new server
-bllvm-commons server add \
+blvm-commons server add \
   --server-id governance-02 \
   --operator-name "Bob Johnson" \
   --jurisdiction "Switzerland" \
@@ -94,7 +94,7 @@ bllvm-commons server add \
   --ots-enabled
 
 # Verify server addition
-bllvm-commons server verify --server-id governance-02
+blvm-commons server verify --server-id governance-02
 ```
 
 **Programmatic Addition**:
@@ -134,13 +134,13 @@ async fn add_server(
 **CLI Commands**:
 ```bash
 # Remove server gracefully
-bllvm-commons server remove \
+blvm-commons server remove \
   --server-id governance-02 \
   --reason "Planned decommissioning" \
   --grace-period 30
 
 # Force remove server
-bllvm-commons server remove \
+blvm-commons server remove \
   --server-id governance-02 \
   --reason "Security incident" \
   --force
@@ -149,7 +149,7 @@ bllvm-commons server remove \
 **Emergency Revocation**:
 ```bash
 # Emergency revocation
-bllvm-commons server compromise \
+blvm-commons server compromise \
   --server-id governance-02 \
   --reason "Suspected key compromise" \
   --emergency
@@ -166,13 +166,13 @@ bllvm-commons server compromise \
 **Status Updates**:
 ```bash
 # Update server status
-bllvm-commons server status \
+blvm-commons server status \
   --server-id governance-02 \
   --status inactive \
   --reason "Maintenance window"
 
 # Reactivate server
-bllvm-commons server status \
+blvm-commons server status \
   --server-id governance-02 \
   --status active \
   --reason "Maintenance completed"
@@ -192,13 +192,13 @@ bllvm-commons server status \
 **CLI Verification**:
 ```bash
 # Verify server authorization
-bllvm-commons server verify --server-id governance-01
+blvm-commons server verify --server-id governance-01
 
 # List all authorized servers
-bllvm-commons server list
+blvm-commons server list
 
 # Check server status
-bllvm-commons server status --server-id governance-01
+blvm-commons server status --server-id governance-01
 ```
 
 **Programmatic Verification**:
@@ -367,13 +367,13 @@ async fn create_server_status_check(
 **Health Checks**:
 ```bash
 # Check server health
-bllvm-commons server health --server-id governance-01
+blvm-commons server health --server-id governance-01
 
 # Monitor server operations
-bllvm-commons server operations --server-id governance-01 --limit 10
+blvm-commons server operations --server-id governance-01 --limit 10
 
 # Check server compliance
-bllvm-commons server compliance --server-id governance-01
+blvm-commons server compliance --server-id governance-01
 ```
 
 **Programmatic Monitoring**:
@@ -483,25 +483,25 @@ sudo ufw deny from any to any port 8080
 **Compromise Detection**:
 ```bash
 # Detect compromised server
-bllvm-commons server compromise \
+blvm-commons server compromise \
   --server-id governance-02 \
   --reason "Suspected key compromise" \
   --evidence "Unauthorized access detected"
 
 # Isolate compromised server
-bllvm-commons server isolate --server-id governance-02
+blvm-commons server isolate --server-id governance-02
 ```
 
 **Recovery Procedures**:
 ```bash
 # Generate new keys for compromised server
-bllvm-commons server regenerate-keys --server-id governance-02
+blvm-commons server regenerate-keys --server-id governance-02
 
 # Verify new keys
-bllvm-commons server verify --server-id governance-02
+blvm-commons server verify --server-id governance-02
 
 # Reactivate server
-bllvm-commons server status --server-id governance-02 --status active
+blvm-commons server status --server-id governance-02 --status active
 ```
 
 ## Troubleshooting
@@ -527,26 +527,26 @@ bllvm-commons server status --server-id governance-02 --status active
 
 ```bash
 # Debug server authorization
-bllvm-commons server debug --server-id governance-01
+blvm-commons server debug --server-id governance-01
 
 # Check server operations
-bllvm-commons server operations --server-id governance-01 --limit 5
+blvm-commons server operations --server-id governance-01 --limit 5
 
 # Verify server keys
-bllvm-commons server verify-keys --server-id governance-01
+blvm-commons server verify-keys --server-id governance-01
 ```
 
 ### Log Analysis
 
 ```bash
 # Check server authorization logs
-sudo journalctl -u bllvm-commons | grep "server.*authorization"
+sudo journalctl -u blvm-commons | grep "server.*authorization"
 
 # Check server operations
-sudo journalctl -u bllvm-commons | grep "server.*operation"
+sudo journalctl -u blvm-commons | grep "server.*operation"
 
 # Check server status changes
-sudo journalctl -u bllvm-commons | grep "server.*status"
+sudo journalctl -u blvm-commons | grep "server.*status"
 ```
 
 ## Best Practices

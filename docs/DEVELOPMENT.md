@@ -15,8 +15,8 @@ This guide provides information for developers who want to contribute to the Bit
 ### Clone and Setup
 
 ```bash
-git clone https://github.com/BTCDecoded/bllvm-commons.git
-cd bllvm-commons
+git clone https://github.com/BTCDecoded/blvm-commons.git
+cd blvm-commons
 cargo build
 ```
 
@@ -34,7 +34,7 @@ cargo install cargo-tarpaulin
 ## Project Structure
 
 ```
-bllvm-commons/
+blvm-commons/
 ├── src/
 │   ├── main.rs                 # Application entry point
 │   ├── lib.rs                  # Library root
@@ -113,16 +113,16 @@ cargo outdated
 
 ```bash
 # Create new migration
-cargo run --bin bllvm-commons -- create-migration migration_name
+cargo run --bin blvm-commons -- create-migration migration_name
 
 # Run migrations
-cargo run --bin bllvm-commons -- migrate
+cargo run --bin blvm-commons -- migrate
 
 # Rollback migration
-cargo run --bin bllvm-commons -- rollback
+cargo run --bin blvm-commons -- rollback
 
 # Check migration status
-cargo run --bin bllvm-commons -- migrate-status
+cargo run --bin blvm-commons -- migrate-status
 ```
 
 ## Code Standards
@@ -447,7 +447,7 @@ COPY . .
 RUN cargo build --release
 
 EXPOSE 3000
-CMD ["./target/release/bllvm-commons"]
+CMD ["./target/release/blvm-commons"]
 ```
 
 ### Environment Configuration

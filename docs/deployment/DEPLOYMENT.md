@@ -2,7 +2,7 @@
 
 ## Overview
 
-This guide covers production deployment of the Bitcoin Commons governance system (bllvm-commons), including environment configuration, database setup, GitHub App installation, and monitoring.
+This guide covers production deployment of the Bitcoin Commons governance system (blvm-commons), including environment configuration, database setup, GitHub App installation, and monitoring.
 
 ## Prerequisites
 
@@ -250,7 +250,7 @@ sudo chown governance:governance /etc/governance/servers
 
 ```bash
 # Add this server to authorized registry
-bllvm-commons server add \
+blvm-commons server add \
   --server-id governance-01 \
   --operator-name "Bitcoin Commons Foundation" \
   --jurisdiction "United States" \
@@ -263,7 +263,7 @@ bllvm-commons server add \
 
 ```bash
 # Verify server is authorized
-bllvm-commons server verify --server-id governance-01
+blvm-commons server verify --server-id governance-01
 ```
 
 ## Application Deployment
@@ -273,14 +273,14 @@ bllvm-commons server verify --server-id governance-01
 ```bash
 # Clone repository
 git clone https://github.com/btcdecoded/governance-system.git
-cd governance-system/bllvm-commons
+cd governance-system/blvm-commons
 
 # Build for production
 cargo build --release
 
 # Install binary
-sudo cp target/release/bllvm-commons /usr/local/bin/
-sudo chmod +x /usr/local/bin/bllvm-commons
+sudo cp target/release/blvm-commons /usr/local/bin/
+sudo chmod +x /usr/local/bin/blvm-commons
 ```
 
 ### 2. Create System User
@@ -294,11 +294,11 @@ sudo chown governance:governance /var/lib/governance
 
 ### 3. Create Systemd Service
 
-Create `/etc/systemd/system/bllvm-commons.service`:
+Create `/etc/systemd/system/blvm-commons.service`:
 
 ```ini
 [Unit]
-Description=Bitcoin Commons (bllvm-commons)
+Description=Bitcoin Commons (blvm-commons)
 After=network.target postgresql.service
 
 [Service]
@@ -306,7 +306,7 @@ Type=simple
 User=governance
 Group=governance
 WorkingDirectory=/var/lib/governance
-ExecStart=/usr/local/bin/bllvm-commons
+ExecStart=/usr/local/bin/blvm-commons
 Restart=always
 RestartSec=5
 Environment=RUST_LOG=info
@@ -323,13 +323,13 @@ WantedBy=multi-user.target
 sudo systemctl daemon-reload
 
 # Enable service
-sudo systemctl enable bllvm-commons
+sudo systemctl enable blvm-commons
 
 # Start service
-sudo systemctl start bllvm-commons
+sudo systemctl start blvm-commons
 
 # Check status
-sudo systemctl status bllvm-commons
+sudo systemctl status blvm-commons
 ```
 
 ## Monitoring and Health Checks
@@ -352,13 +352,13 @@ Detailed status information:
 
 ```bash
 # View application logs
-sudo journalctl -u bllvm-commons -f
+sudo journalctl -u blvm-commons -f
 
 # View specific log levels
-sudo journalctl -u bllvm-commons -p err
+sudo journalctl -u blvm-commons -p err
 
 # View logs from specific time
-sudo journalctl -u bllvm-commons --since "2024-01-15 10:00:00"
+sudo journalctl -u blvm-commons --since "2024-01-15 10:00:00"
 ```
 
 ### 4. Database Monitoring
@@ -496,13 +496,13 @@ server {
 
 ```bash
 # Check for errors
-sudo journalctl -u bllvm-commons -p err --since "1 hour ago"
+sudo journalctl -u blvm-commons -p err --since "1 hour ago"
 
 # Check for specific errors
-sudo journalctl -u bllvm-commons | grep "ERROR"
+sudo journalctl -u blvm-commons | grep "ERROR"
 
 # Check database errors
-sudo journalctl -u bllvm-commons | grep "database"
+sudo journalctl -u blvm-commons | grep "database"
 ```
 
 ## References

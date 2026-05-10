@@ -187,15 +187,15 @@ This guide provides comprehensive high-availability patterns, monitoring strateg
 
 **1. Systemd/Process Supervisor Integration**
 ```systemd
-# /etc/systemd/system/bllvm-node.service
+# /etc/systemd/system/blvm-node.service
 [Unit]
 Description=Bitcoin Commons Node
 After=network.target
 
 [Service]
 Type=simple
-User=bllvm
-ExecStart=/usr/local/bin/bllvm-node --config /etc/bllvm/config.toml
+User=blvm
+ExecStart=/usr/local/bin/blvm-node --config /etc/blvm/config.toml
 Restart=always
 RestartSec=10
 StandardOutput=journal

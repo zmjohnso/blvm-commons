@@ -45,10 +45,10 @@ sqlite3 governance.db "SELECT 1;"
 
 ```bash
 # Run migrations manually
-cargo run --bin bllvm-commons -- migrate
+cargo run --bin blvm-commons -- migrate
 
 # Check migration status
-cargo run --bin bllvm-commons -- migrate-status
+cargo run --bin blvm-commons -- migrate-status
 ```
 
 ### GitHub API Issues
@@ -112,7 +112,7 @@ ngrok http 3000
 
 ```bash
 # Validate configuration
-cargo run --bin bllvm-commons -- validate-config
+cargo run --bin blvm-commons -- validate-config
 
 # Check configuration file
 toml-cli validate config/app.toml
@@ -158,10 +158,10 @@ export GITHUB_APP_ID="123456"
 ```bash
 # Monitor memory usage
 htop
-ps aux | grep bllvm-commons
+ps aux | grep blvm-commons
 
 # Check connection pool
-cargo run --bin bllvm-commons -- stats
+cargo run --bin blvm-commons -- stats
 ```
 
 #### Slow Database Queries
@@ -204,7 +204,7 @@ sqlite3 governance.db "EXPLAIN QUERY PLAN SELECT * FROM pull_requests;"
 
 ```bash
 # Test signature verification
-cargo run --bin bllvm-commons -- test-signature
+cargo run --bin blvm-commons -- test-signature
 
 # Check public key format
 openssl rsa -pubin -in public_key.pem -text
@@ -225,10 +225,10 @@ openssl rsa -pubin -in public_key.pem -text
 
 ```bash
 # List all keys
-cargo run --bin bllvm-commons -- list-keys
+cargo run --bin blvm-commons -- list-keys
 
 # Check key status
-cargo run --bin bllvm-commons -- key-status <key_id>
+cargo run --bin blvm-commons -- key-status <key_id>
 ```
 
 ## Debugging
@@ -239,36 +239,36 @@ cargo run --bin bllvm-commons -- key-status <key_id>
 [logging]
 level = "debug"
 format = "json"
-file = "/var/log/bllvm-commons.log"
+file = "/var/log/blvm-commons.log"
 ```
 
 ### Check Application Logs
 
 ```bash
 # Follow logs
-tail -f /var/log/bllvm-commons.log
+tail -f /var/log/blvm-commons.log
 
 # Filter by level
-grep "ERROR" /var/log/bllvm-commons.log
+grep "ERROR" /var/log/blvm-commons.log
 
 # Filter by component
-grep "database" /var/log/bllvm-commons.log
+grep "database" /var/log/blvm-commons.log
 ```
 
 ### Test Individual Components
 
 ```bash
 # Test database connection
-cargo run --bin bllvm-commons -- test-database
+cargo run --bin blvm-commons -- test-database
 
 # Test GitHub API
-cargo run --bin bllvm-commons -- test-github
+cargo run --bin blvm-commons -- test-github
 
 # Test signature verification
-cargo run --bin bllvm-commons -- test-signatures
+cargo run --bin blvm-commons -- test-signatures
 
 # Test webhook validation
-cargo run --bin bllvm-commons -- test-webhook
+cargo run --bin blvm-commons -- test-webhook
 ```
 
 ### Monitor System Resources
@@ -281,7 +281,7 @@ htop
 df -h
 
 # Monitor network connections
-netstat -tulpn | grep bllvm-commons
+netstat -tulpn | grep blvm-commons
 
 # Monitor database connections
 sqlite3 governance.db "PRAGMA database_list;"
@@ -316,7 +316,7 @@ worker_threads = 16
 [logging]
 level = "info"
 format = "json"
-file = "/var/log/bllvm-commons.log"
+file = "/var/log/blvm-commons.log"
 max_size = 104857600
 max_files = 10
 ```
@@ -360,7 +360,7 @@ curl http://localhost:9090/metrics/app
 
 ### Check Logs
 
-1. Application logs: `/var/log/bllvm-commons.log`
+1. Application logs: `/var/log/blvm-commons.log`
 2. System logs: `/var/log/syslog`
 3. Database logs: Check SQLite journal files
 

@@ -8,7 +8,7 @@ See `docs/UTXO_COMMITMENTS_IROH_INTEGRATION.md` for detailed Iroh integration in
 
 ## Overview
 
-This guide explains how to integrate the UTXO Commitments module with the bllvm-node's network layer.
+This guide explains how to integrate the UTXO Commitments module with the blvm-node's network layer.
 
 ## Configuration
 
@@ -66,7 +66,7 @@ See `examples/utxo_commitments_config_example.json` for a complete example.
 
 ### Implementing UtxoCommitmentsNetworkClient
 
-In `bllvm-node`, implement the trait:
+In `blvm-node`, implement the trait:
 
 ```rust
 use consensus_proof::utxo_commitments::UtxoCommitmentsNetworkClient;
@@ -101,7 +101,7 @@ impl UtxoCommitmentsNetworkClient for NetworkManager {
 
 ### Handling Protocol Messages
 
-Wire up message handlers in `bllvm-node/src/network/protocol_extensions.rs`:
+Wire up message handlers in `blvm-node/src/network/protocol_extensions.rs`:
 
 ```rust
 use crate::network::protocol::{GetUTXOSetMessage, UTXOSetMessage};

@@ -50,7 +50,7 @@ BIP330 (Erlay) reduces transaction relay bandwidth by ~40% using set reconciliat
 
 ### Files to Create
 
-1. **`bllvm-node/src/network/erlay.rs`**
+1. **`blvm-node/src/network/erlay.rs`**
    - Set reconciliation logic
    - Sketch computation and decoding
    - Transaction set management

@@ -163,7 +163,7 @@ GROUP BY vote_type;
 **Check**:
 1. Was it sent to the correct bot pubkey?
 2. Was it a valid NIP-57 zap receipt?
-3. Check logs: `journalctl -u bllvm-commons | grep zap`
+3. Check logs: `journalctl -u blvm-commons | grep zap`
 
 ### My Weight Isn't Updating
 
@@ -182,7 +182,7 @@ GROUP BY vote_type;
 ## Support
 
 For issues or questions:
-- GitHub Issues: https://github.com/BTCDecoded/bllvm-commons/issues
+- GitHub Issues: https://github.com/BTCDecoded/blvm-commons/issues
 - Nostr: @BTCCommons_Gov
 - Email: governance@btcdecoded.org
 

@@ -24,10 +24,10 @@ All maintainer configuration files contain placeholder public keys:
 
 ### 1. Generate Real Keys
 
-Each maintainer must generate a secp256k1 keypair using `bllvm-sdk`:
+Each maintainer must generate a secp256k1 keypair using `blvm-sdk`:
 
 ```rust
-use bllvm_sdk::governance::GovernanceKeypair;
+use blvm_sdk::governance::GovernanceKeypair;
 
 let keypair = GovernanceKeypair::generate()?;
 let public_key = keypair.public_key();
@@ -37,7 +37,7 @@ println!("Public key: {}", public_key);
 Or use the `key-manager` CLI tool:
 
 ```bash
-cd bllvm-commons
+cd blvm-commons
 cargo run --bin key-manager generate
 ```
 
@@ -87,9 +87,9 @@ cargo test --test signature_verification
 
 ## Related Code
 
-- Key generation: `bllvm-commons/src/bin/key_manager.rs`
-- Signature verification: `bllvm-commons/src/validation/emergency.rs:262`
-- Public key parsing: `bllvm-sdk/src/governance/keys.rs`
+- Key generation: `blvm-commons/src/bin/key_manager.rs`
+- Signature verification: `blvm-commons/src/validation/emergency.rs:262`
+- Public key parsing: `blvm-sdk/src/governance/keys.rs`
 
 ## See Also
 

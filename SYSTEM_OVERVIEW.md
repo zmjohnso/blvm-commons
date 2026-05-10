@@ -46,7 +46,7 @@ Bitcoin Commons is a comprehensive Bitcoin implementation ecosystem that provide
 
 - **Constitutional Governance**: 5-tier governance model with graduated thresholds
 - **Cryptographic Enforcement**: Multi-signature requirements for all changes
-- **Formal Verification**: Kani model checking for consensus-critical code
+- **Spec-lock & tests**: **blvm-spec-lock** on `#[spec_locked]` Orange Paper contracts, plus comprehensive automated tests (see **blvm-consensus** CI and README)
 - **Transparent Audit Trails**: Immutable logs of all governance decisions
 - **Governance Fork Capability**: Users can fork governance rulesets
 
@@ -61,28 +61,28 @@ Bitcoin Commons implements a **6-tier layered architecture** that builds from ma
 ```
 1. Orange Paper (mathematical foundation)
     ↓ (direct mathematical implementation)
-2. bllvm-consensus (pure math: CheckTransaction, ConnectBlock, etc.)
+2. blvm-consensus (pure math: CheckTransaction, ConnectBlock, etc.)
     ↓ (protocol abstraction)
-3. bllvm-protocol (Bitcoin abstraction: mainnet, testnet, regtest)
+3. blvm-protocol (Bitcoin abstraction: mainnet, testnet, regtest)
     ↓ (full node implementation)
-4. bllvm-node (validation, storage, mining, RPC)
+4. blvm-node (validation, storage, mining, RPC)
     ↓ (ergonomic API)
-5. bllvm-sdk (developer toolkit)
+5. blvm-sdk (developer toolkit)
     ↓ (cryptographic governance)
-6. governance + governance-app (enforcement engine)
+6. governance + blvm-commons (enforcement engine)
 ```
 
 ### Tier Descriptions
 
 #### Tier 1: Orange Paper
 - **Purpose**: Mathematical foundation - timeless consensus rules
-- **Repository**: `bllvm-spec/` (directory: `the-orange-paper/` until GitHub rename)
+- **Repository**: `blvm-spec/` (Orange Paper: `PROTOCOL.md`, `ARCHITECTURE.md`, `THE_ORANGE_PAPER.md`)
 - **Type**: Documentation and specification
 - **Governance**: Layer 1 (Constitutional - 6-of-7 maintainers, 180 days)
 
 #### Tier 2: Consensus-Proof
 - **Purpose**: Pure mathematical implementation of Orange Paper functions
-- **Repository**: `bllvm-consensus/`
+- **Repository**: `blvm-consensus/`
 - **Type**: Rust library (pure functions, no side effects)
 - **Governance**: Layer 2 (Constitutional - 6-of-7 maintainers, 180 days)
 - **Key Functions**: CheckTransaction, ConnectBlock, EvalScript, VerifyScript, etc.
@@ -90,71 +90,71 @@ Bitcoin Commons implements a **6-tier layered architecture** that builds from ma
 
 #### Tier 3: Protocol-Engine
 - **Purpose**: Protocol abstraction layer enabling multiple Bitcoin variants
-- **Repository**: `bllvm-protocol/`
+- **Repository**: `blvm-protocol/`
 - **Type**: Rust library
 - **Governance**: Layer 3 (Implementation - 4-of-5 maintainers, 90 days)
 - **Supports**: mainnet, testnet, regtest, and future protocol variants
-- **Dependencies**: bllvm-consensus (exact version)
+- **Dependencies**: blvm-consensus (exact version)
 
 #### Tier 4: Reference-Node
 - **Purpose**: Minimal, production-ready Bitcoin implementation
-- **Repository**: `bllvm-node/`
+- **Repository**: `blvm-node/`
 - **Type**: Rust binaries (full node)
 - **Governance**: Layer 4 (Application - 3-of-5 maintainers, 60 days)
 - **Components**: Block validation, storage (sled), P2P networking, RPC, mining
-- **Dependencies**: bllvm-protocol, bllvm-consensus (exact versions)
+- **Dependencies**: blvm-protocol, blvm-consensus (exact versions)
 
 #### Tier 5: Developer-SDK
 - **Purpose**: Developer toolkit for building alternative Bitcoin implementations. Provides module composition framework for declaratively assembling custom Bitcoin nodes, plus governance cryptographic primitives.
-- **Repository**: `bllvm-sdk/`
+- **Repository**: `blvm-sdk/`
 - **Type**: Rust library and CLI tools
 - **Governance**: Layer 5 (Extension - 2-of-3 maintainers, 14 days)
 - **Components**: Key generation, signing, verification, multisig operations
-- **CLI Tools**: `bllvm-keygen`, `bllvm-sign`, `bllvm-verify`
+- **CLI Tools**: `blvm-keygen`, `blvm-sign`, `blvm-verify`
 - **Dependencies**: Standalone (no consensus dependencies)
 
 #### Tier 6: Governance Infrastructure
 - **Purpose**: Cryptographic governance enforcement
-- **Repositories**: `governance/` (configuration), `governance-app/` (enforcement)
+- **Repositories**: `governance/` (configuration), `blvm-commons/` (enforcement)
 - **Type**: Rust service (GitHub App)
 - **Governance**: Layer 5 (Extension - 2-of-3 maintainers, 14 days)
 - **Components**: GitHub integration, signature verification, status checks, merge blocking
-- **Dependencies**: bllvm-sdk
+- **Dependencies**: blvm-sdk
 
 ### Dependency Graph
 
 ```
-bllvm-consensus (no dependencies)
+blvm-consensus (no dependencies)
     ↓
-bllvm-protocol
+blvm-protocol
     ↓
-bllvm-node
+blvm-node
 
-bllvm-sdk (no dependencies)
+blvm-sdk (no dependencies)
     ↓
-governance-app
+blvm-commons
 ```
 
 **Build Order:**
-1. bllvm-consensus (foundation)
-2. bllvm-sdk (parallel with bllvm-consensus)
-3. bllvm-protocol (depends on bllvm-consensus)
-4. bllvm-node (depends on bllvm-protocol + bllvm-consensus)
-5. governance-app (depends on bllvm-sdk)
+1. blvm-consensus (foundation)
+2. blvm-sdk (parallel with blvm-consensus)
+3. blvm-protocol (depends on blvm-consensus)
+4. blvm-node (depends on blvm-protocol + blvm-consensus)
+5. blvm-commons (depends on blvm-sdk)
 
 ### Component Interaction
 
-- **Consensus Layer**: bllvm-consensus provides pure mathematical functions
-- **Protocol Layer**: bllvm-protocol wraps bllvm-consensus with protocol-specific parameters
-- **Node Layer**: bllvm-node uses bllvm-protocol and bllvm-consensus for validation
-- **SDK Layer**: bllvm-sdk provides module composition framework and governance cryptographic primitives
-- **Governance Layer**: governance-app uses bllvm-sdk for cryptographic operations
+- **Consensus Layer**: blvm-consensus provides pure mathematical functions
+- **Protocol Layer**: blvm-protocol wraps blvm-consensus with protocol-specific parameters
+- **Node Layer**: blvm-node uses blvm-protocol and blvm-consensus for validation
+- **SDK Layer**: blvm-sdk provides module composition framework and governance cryptographic primitives
+- **Governance Layer**: blvm-commons uses blvm-sdk for cryptographic operations
 
 ### Cross-Layer Validation
 
 - Dependencies between layers are strictly enforced
 - Consensus rule modifications are prevented in application layers
-- Equivalence proofs required between Orange Paper and bllvm-consensus
+- Equivalence proofs required between Orange Paper and blvm-consensus
 - Version coordination ensures compatibility across layers
 
 See [DESIGN.md](DESIGN.md) for detailed architecture documentation.
@@ -172,8 +172,8 @@ See [DESIGN.md](DESIGN.md) for detailed architecture documentation.
 
 ### Storage Technologies
 
-- **bllvm-node**: Sled 0.34.7 (embedded database for blockchain state)
-- **governance-app**: 
+- **blvm-node**: Sled 0.34.7 (embedded database for blockchain state)
+- **blvm-commons**: 
   - SQLite (development, testnet)
   - PostgreSQL (production)
 
@@ -181,12 +181,12 @@ See [DESIGN.md](DESIGN.md) for detailed architecture documentation.
 
 - **P2P Protocol**: Custom Bitcoin protocol implementation
 - **RPC**: JSON-RPC 2.0 interface
-- **Webhooks**: GitHub webhook integration (governance-app)
+- **Webhooks**: GitHub webhook integration (blvm-commons)
 
 ### Development Tools
 
 - **Testing**: Cargo test, property-based testing (proptest)
-- **Formal Verification**: Kani (for consensus-critical code)
+- **Spec-lock verification**: **blvm-spec-lock** (`cargo spec-lock verify`; optional Z3 for full contract checks in CI)
 - **Code Quality**: rustfmt, clippy
 - **Coverage**: tarpaulin (test coverage measurement)
 
@@ -218,7 +218,7 @@ See [DESIGN.md](DESIGN.md) for detailed architecture documentation.
 Bitcoin Commons implements a multi-layered security model:
 
 1. **Exact Dependency Pinning**: All consensus-critical and cryptographic dependencies use exact versions
-2. **Formal Verification**: Kani model checking required for consensus changes
+2. **Spec-lock + tests**: **blvm-spec-lock** verification and the test gates defined in **blvm-consensus** CI are required for consensus-impacting changes
 3. **Cryptographic Enforcement**: Multi-signature requirements for all governance actions
 4. **Security Boundaries**: Clear separation of concerns per repository
 5. **Responsible Disclosure**: Coordinated vulnerability disclosure process
@@ -228,15 +228,15 @@ Bitcoin Commons implements a multi-layered security model:
 #### Consensus-Proof
 - **Handles**: Bitcoin consensus rule validation
 - **Threats**: Consensus bypasses, cryptographic vulnerabilities, memory safety issues
-- **Requirements**: 95%+ test coverage, formal verification for changes
-- **See**: [bllvm-consensus/SECURITY.md](bllvm-consensus/SECURITY.md)
+- **Requirements**: 95%+ test coverage, **blvm-spec-lock** / `#[spec_locked]` gates and tests as defined in the consensus repository
+- **See**: [blvm-consensus/SECURITY.md](blvm-consensus/SECURITY.md)
 
 #### Developer-SDK
 - **Handles**: Governance cryptography (keys, signatures, multisig)
 - **Does NOT Handle**: User funds, network enforcement, consensus validation
 - **Threats**: Cryptographic vulnerabilities, message tampering, multisig bypass
 - **Requirements**: 100% test coverage for crypto operations
-- **See**: [bllvm-sdk/SECURITY.md](bllvm-sdk/SECURITY.md)
+- **See**: [blvm-sdk/SECURITY.md](blvm-sdk/SECURITY.md)
 
 #### Governance
 - **Handles**: Governance rule configuration
@@ -258,21 +258,19 @@ Bitcoin Commons implements a multi-layered security model:
 - **Message Format**: Standardized formats to prevent replay attacks
 - **Multisig Thresholds**: Strictly enforced with no bypasses
 
-### Formal Verification
+### Spec-lock and test verification
 
-For consensus changes, the following verification stack is required:
+For consensus changes, the following verification stack applies (exact gates follow **blvm-consensus** CI and `SECURITY.md`):
 
-1. **Kani Model Checking** (required)
-   - Symbolic verification with bounded model checking
-   - Proves mathematical invariants hold for all possible inputs
-   - Cannot be bypassed or overridden
+1. **blvm-spec-lock** (required for annotated surfaces)
+   - `#[spec_locked("…")]` links implementation to Orange Paper section IDs
+   - `cargo spec-lock verify` runs in CI; optional Z3-backed contract checks when enabled
 
 2. **Property-Based Testing** (required)
    - Randomized testing with `proptest`
-   - Discovers edge cases through fuzzing
-   - Complements Kani with empirical coverage
+   - Discovers edge cases; complements spec-lock with empirical coverage
 
-3. **Mathematical Specifications** (required)
+3. **Mathematical specifications** (required)
    - Formal documentation of consensus rules
    - Invariants documented in code
    - Traceability to Orange Paper
@@ -329,8 +327,8 @@ For consensus changes, the following verification stack is required:
 ### Testing Requirements
 
 #### Coverage Thresholds
-- **bllvm-consensus**: 95%+ test coverage (consensus-critical)
-- **bllvm-sdk**: 77%+ test coverage (governance crypto)
+- **blvm-consensus**: 95%+ test coverage (consensus-critical)
+- **blvm-sdk**: 77%+ test coverage (governance crypto)
 - **Other repositories**: Comprehensive test coverage
 
 #### Test Types
@@ -415,17 +413,17 @@ ci(workflows): add version validation job
 - Rust 1.70+
 - Git
 - SQLite3 (for development)
-- PostgreSQL (for production governance-app)
+- PostgreSQL (for production blvm-commons)
 
 #### Local Development
 ```bash
 # Clone repositories
-git clone https://github.com/BTCDecoded/bllvm-consensus.git
-git clone https://github.com/BTCDecoded/bllvm-protocol.git
+git clone https://github.com/BTCDecoded/blvm-consensus.git
+git clone https://github.com/BTCDecoded/blvm-protocol.git
 # ... (other repositories)
 
 # Build
-cd bllvm-consensus
+cd blvm-consensus
 cargo build
 cargo test
 
@@ -470,7 +468,7 @@ The system uses a **5-tier constitutional governance model**:
 - **Signatures**: 5-of-5 maintainers
 - **Review Period**: 90 days
 - **Scope**: Changes affecting consensus validation code
-- **Requirement**: Formal verification (Kani) required
+- **Requirement**: **blvm-spec-lock** verification and consensus CI tests satisfied per **blvm-consensus** policy
 
 #### Tier 4: Emergency Actions
 - **Signatures**: 4-of-5 maintainers
@@ -512,7 +510,7 @@ See [governance/LAYER_TIER_MODEL.md](governance/LAYER_TIER_MODEL.md) for the com
 ### Maintainer Signing Process
 
 1. **Review PR**: Understand the change and its impact
-2. **Generate Signature**: Use `bllvm-sign` from bllvm-sdk
+2. **Generate Signature**: Use `blvm-sign` from blvm-sdk
 3. **Post Signature**: Comment `/governance-sign <signature>` on PR
 4. **Governance App Verifies**: Cryptographically verifies signature
 5. **Status Check Updates**: Shows signature count progress
@@ -564,7 +562,7 @@ See [governance/GOVERNANCE.md](governance/GOVERNANCE.md) for detailed emergency 
 3. Run release orchestrator workflow
 4. Build all repositories in dependency order
 5. Generate artifacts and SHA256SUMS
-6. Create verification bundles (bllvm-consensus)
+6. Create verification bundles (blvm-consensus)
 7. Publish release with attestations
 
 ### CI/CD Workflows
@@ -572,7 +570,7 @@ See [governance/GOVERNANCE.md](governance/GOVERNANCE.md) for detailed emergency 
 All workflows run on **self-hosted Linux x64 runners only**.
 
 #### Reusable Workflows (commons/)
-- `verify_consensus.yml`: Runs tests and optional Kani verification
+- `verify_consensus.yml`: Runs tests and **blvm-spec-lock** verification (see **blvm-consensus** workflow; name may vary by org)
 - `build_lib.yml`: Deterministic library build with artifact hashing
 - `build_docker.yml`: Docker image build and optional push
 - `release_orchestrator.yml`: Sequences all builds from versions.toml
@@ -598,24 +596,24 @@ The `commons/` repository serves as the **central orchestrator** for all builds 
 - **Reusable Workflows**: Repos call commons workflows via `workflow_call` for consistency
 - **Self-Hosted Only**: All CI runs on `[self-hosted, linux, x64]` runners
 - **Deterministic Builds**: `--locked` builds, rust-toolchain per repo, artifact hashing
-- **Security Gates**: Consensus verification (tests + optional Kani) precedes builds downstream
-- **Clear Ordering**: L2 (bllvm-consensus) → L3 (bllvm-protocol) → L4 (bllvm-node) → bllvm-sdk → governance-app
+- **Security Gates**: Consensus verification (tests + **blvm-spec-lock**) precedes builds downstream
+- **Clear Ordering**: L2 (blvm-consensus) → L3 (blvm-protocol) → L4 (blvm-node) → blvm-sdk → blvm-commons
 
 ### Build Order
 
 The build system follows strict dependency ordering:
 
 ```
-1. bllvm-consensus (no dependencies)
+1. blvm-consensus (no dependencies)
    ↓
-2. bllvm-protocol (depends on bllvm-consensus)
+2. blvm-protocol (depends on blvm-consensus)
    ↓
-3. bllvm-node (depends on bllvm-protocol + bllvm-consensus)
+3. blvm-node (depends on blvm-protocol + blvm-consensus)
 
 Parallel:
-4. bllvm-sdk (no dependencies)
+4. blvm-sdk (no dependencies)
    ↓
-5. governance-app (depends on bllvm-sdk)
+5. blvm-commons (depends on blvm-sdk)
 ```
 
 ### Version Coordination
@@ -625,9 +623,9 @@ The `commons/versions.toml` file is the authoritative version map:
 
 ```toml
 [versions]
-bllvm-consensus = { version = "0.1.0", git_tag = "v0.1.0", ... }
-bllvm-protocol = { version = "0.1.0", requires = ["bllvm-consensus=0.1.0"], ... }
-bllvm-node = { version = "0.1.0", requires = ["bllvm-protocol=0.1.0", "bllvm-consensus=0.1.0"], ... }
+blvm-consensus = { version = "0.1.0", git_tag = "v0.1.0", ... }
+blvm-protocol = { version = "0.1.0", requires = ["blvm-consensus=0.1.0"], ... }
+blvm-node = { version = "0.1.0", requires = ["blvm-protocol=0.1.0", "blvm-consensus=0.1.0"], ... }
 ```
 
 #### Version Validation
@@ -653,7 +651,7 @@ bllvm-node = { version = "0.1.0", requires = ["bllvm-protocol=0.1.0", "bllvm-con
 #### build_release_set.sh
 Sequences local builds from local clones:
 - Builds all repositories in dependency order
-- Optional governance-app source/docker build
+- Optional blvm-commons source/docker build
 - Optional `MANIFEST.json` aggregation
 - Generates SHA256SUMS
 
@@ -664,18 +662,18 @@ Deterministic build wrapper:
 - Generates hashes
 
 #### make_verification_bundle.sh
-Generates bllvm-consensus verification bundle:
+Generates blvm-consensus verification bundle:
 - Includes test results
-- Optional Kani verification results
+- Optional **blvm-spec-lock** attestation artifacts (when published with a release)
 - Optional OpenTimestamps anchoring
 
 ### Artifact Management
 
 #### Binary Collection
 Built binaries are collected in `artifacts/binaries/`:
-- `bllvm-node` - Bitcoin reference node
-- `bllvm-keygen`, `bllvm-sign`, `bllvm-verify` - SDK tools
-- `governance-app`, `key-manager`, `test-content-hash*` - Governance tools
+- `blvm-node` - Bitcoin reference node
+- `blvm-keygen`, `blvm-sign`, `blvm-verify` - SDK tools
+- `blvm-commons`, `key-manager`, `test-content-hash*` - Governance tools
 
 #### Release Artifacts
 - `SHA256SUMS` - Checksums for all binaries
@@ -691,7 +689,7 @@ The `release_orchestrator.yml` workflow:
 2. Sequences all builds in dependency order
 3. Validates compatibility
 4. Generates artifacts and hashes
-5. Sends `repository_dispatch: deploy` to governance-app
+5. Sends `repository_dispatch: deploy` to blvm-commons
 
 #### Reusable Workflows
 Other repositories call commons workflows:
@@ -700,9 +698,9 @@ jobs:
   build:
     uses: BTCDecoded/commons/.github/workflows/build_lib.yml@main
     with:
-      repo: bllvm-node
+      repo: blvm-node
       ref: v0.1.0
-      package: bllvm-node
+      package: blvm-node
     secrets: inherit
 ```
 
@@ -753,8 +751,8 @@ See [commons/RELEASE_SET.md](commons/RELEASE_SET.md) for details.
 4. Review build logs in `/tmp/<repo>-build.log`
 
 #### Missing Binaries
-- Libraries (bllvm-consensus, bllvm-protocol) don't produce binaries
-- Only bllvm-node, bllvm-sdk, and governance-app produce binaries
+- Libraries (blvm-consensus, blvm-protocol) don't produce binaries
+- Only blvm-node, blvm-sdk, and blvm-commons produce binaries
 - Check `target/release/` in each repo after build
 
 #### Version Mismatches
@@ -780,18 +778,18 @@ See [commons/docs/BUILD_SYSTEM.md](commons/docs/BUILD_SYSTEM.md) for detailed bu
 
 **Governance**: Layer 5 (Extension - 2-of-3 maintainers, 14 days)
 
-#### 2. bllvm-consensus/
+#### 2. blvm-consensus/
 **Purpose**: Pure mathematical implementation of Bitcoin consensus rules
 
 **Key Components:**
 - Mathematical functions: CheckTransaction, ConnectBlock, EvalScript, etc.
 - Property-based tests
-- Kani verification (for consensus changes)
+- **blvm-spec-lock** verification on `#[spec_locked]` functions (see **blvm-consensus** README / CI)
 - Verification bundles
 
 **Governance**: Layer 2 (Constitutional - 6-of-7 maintainers, 180 days)
 
-#### 3. bllvm-protocol/
+#### 3. blvm-protocol/
 **Purpose**: Bitcoin protocol abstraction layer
 
 **Key Components:**
@@ -801,11 +799,11 @@ See [commons/docs/BUILD_SYSTEM.md](commons/docs/BUILD_SYSTEM.md) for detailed bu
 
 **Governance**: Layer 3 (Implementation - 4-of-5 maintainers, 90 days)
 
-#### 4. bllvm-node/
+#### 4. blvm-node/
 **Purpose**: Minimal, production-ready Bitcoin implementation
 
 **Key Components:**
-- Block validation (uses bllvm-consensus)
+- Block validation (uses blvm-consensus)
 - Storage layer (sled)
 - P2P networking
 - RPC interface
@@ -813,13 +811,13 @@ See [commons/docs/BUILD_SYSTEM.md](commons/docs/BUILD_SYSTEM.md) for detailed bu
 
 **Governance**: Layer 4 (Application - 3-of-5 maintainers, 60 days)
 
-#### 5. bllvm-sdk/
+#### 5. blvm-sdk/
 **Purpose**: Bitcoin governance infrastructure and cryptographic primitives
 
 **Key Components:**
-- Key generation (`bllvm-keygen`)
-- Signing (`bllvm-sign`)
-- Verification (`bllvm-verify`)
+- Key generation (`blvm-keygen`)
+- Signing (`blvm-sign`)
+- Verification (`blvm-verify`)
 - Multisig operations
 - Message formats
 
@@ -838,7 +836,7 @@ See [commons/docs/BUILD_SYSTEM.md](commons/docs/BUILD_SYSTEM.md) for detailed bu
 
 **Governance**: Layer 5 (Extension - 2-of-3 maintainers, 14 days)
 
-#### 7. governance-app/
+#### 7. blvm-commons/
 **Purpose**: GitHub App for cryptographic governance enforcement
 
 **Key Components:**
@@ -853,7 +851,7 @@ See [commons/docs/BUILD_SYSTEM.md](commons/docs/BUILD_SYSTEM.md) for detailed bu
 
 ### Infrastructure Repositories
 
-#### bllvm-spec/ (the-orange-paper/ directory)
+#### blvm-spec/ (the-orange-paper/ directory)
 **Purpose**: Mathematical foundation and specification
 
 **Governance**: Layer 1 (Constitutional - 6-of-7 maintainers, 180 days)
@@ -891,7 +889,7 @@ See [DIRECTORY_STRUCTURE.md](DIRECTORY_STRUCTURE.md) for detailed directory stru
 #### Development
 ```bash
 # Build a repository
-cd bllvm-consensus
+cd blvm-consensus
 cargo build
 
 # Run tests
@@ -926,13 +924,13 @@ cd commons
 #### Governance
 ```bash
 # Generate keypair
-bllvm-keygen
+blvm-keygen
 
 # Sign a PR
-bllvm-sign <message>
+blvm-sign <message>
 
 # Verify signature
-bllvm-verify <signature> <message> <public-key>
+blvm-verify <signature> <message> <public-key>
 ```
 
 ### Key Files
@@ -962,18 +960,18 @@ bllvm-verify <signature> <message> <public-key>
 
 | Layer | Signatures | Review Period | Repositories |
 |-------|------------|---------------|--------------|
-| 1-2 | 6-of-7 | 180 days | Orange Paper, bllvm-consensus |
-| 3 | 4-of-5 | 90 days | bllvm-protocol |
-| 4 | 3-of-5 | 60 days | bllvm-node |
-| 5 | 2-of-3 | 14 days | bllvm-sdk, governance, governance-app |
+| 1-2 | 6-of-7 | 180 days | Orange Paper, blvm-consensus |
+| 3 | 4-of-5 | 90 days | blvm-protocol |
+| 4 | 3-of-5 | 60 days | blvm-node |
+| 5 | 2-of-3 | 14 days | blvm-sdk, governance, blvm-commons |
 
 ### Build Order Quick Reference
 
-1. bllvm-consensus (no deps)
-2. bllvm-sdk (no deps) - parallel
-3. bllvm-protocol (needs bllvm-consensus)
-4. bllvm-node (needs bllvm-protocol + bllvm-consensus)
-5. governance-app (needs bllvm-sdk)
+1. blvm-consensus (no deps)
+2. blvm-sdk (no deps) - parallel
+3. blvm-protocol (needs blvm-consensus)
+4. blvm-node (needs blvm-protocol + blvm-consensus)
+5. blvm-commons (needs blvm-sdk)
 
 ---
 

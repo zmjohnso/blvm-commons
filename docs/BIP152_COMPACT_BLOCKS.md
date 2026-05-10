@@ -53,13 +53,13 @@ Where:
 
 ### Files to Create
 
-1. **`bllvm-node/src/network/compact_blocks.rs`**
+1. **`blvm-node/src/network/compact_blocks.rs`**
    - `CompactBlock` structure
    - `ShortTxId` calculation
    - Block reconstruction logic
    - SipHash implementation
 
-2. **`bllvm-node/src/network/protocol.rs`** (update)
+2. **`blvm-node/src/network/protocol.rs`** (update)
    - Add `CmpctBlock`, `GetBlockTxn`, `BlockTxn` message types
    - Update `sendcmpct` handling
 

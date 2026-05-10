@@ -20,7 +20,7 @@ UTXO Commitments Module
     ↓
 UtxoCommitmentsNetworkClient (trait)
     ↓
-NetworkManager (bllvm-node)
+NetworkManager (blvm-node)
     ↓
 Transport Abstraction Layer
     ├── TcpTransport
@@ -52,7 +52,7 @@ The `UtxoCommitmentsClient` implementation:
 
 ### Protocol Extensions
 
-**Location**: `bllvm-node/src/network/protocol_extensions.rs`
+**Location**: `blvm-node/src/network/protocol_extensions.rs`
 
 **Messages**:
 - `GetUTXOSet`: Request UTXO set at specific height
@@ -226,7 +226,7 @@ Client                    Server
 # Cargo.toml features
 [features]
 iroh = ["dep:iroh-net", "dep:quinn"]
-utxo-commitments = []  # Inherits from bllvm-consensus
+utxo-commitments = []  # Inherits from blvm-consensus
 ```
 
 ```bash

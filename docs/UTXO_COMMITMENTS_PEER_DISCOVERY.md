@@ -18,13 +18,13 @@ The current implementation uses a **"try and see"** approach:
 ### Code Locations
 
 **Request Flow**:
-- `bllvm-consensus/src/utxo_commitments/peer_consensus.rs::request_utxo_sets()` - Sends requests to peers
-- `bllvm-node/src/network/utxo_commitments_client.rs::request_utxo_set()` - Network client implementation
-- `bllvm-node/src/network/protocol_extensions.rs::handle_get_utxo_set()` - Handles incoming requests
+- `blvm-consensus/src/utxo_commitments/peer_consensus.rs::request_utxo_sets()` - Sends requests to peers
+- `blvm-node/src/network/utxo_commitments_client.rs::request_utxo_set()` - Network client implementation
+- `blvm-node/src/network/protocol_extensions.rs::handle_get_utxo_set()` - Handles incoming requests
 
 **Current Behavior**:
 ```rust
-// bllvm-consensus/src/utxo_commitments/peer_consensus.rs
+// blvm-consensus/src/utxo_commitments/peer_consensus.rs
 pub async fn request_utxo_sets(
     &self,
     peers: &[PeerInfo],
@@ -44,7 +44,7 @@ pub async fn request_utxo_sets(
 Add a service flag similar to `NODE_COMPACT_FILTERS`:
 
 ```rust
-// bllvm-node/src/network/protocol.rs
+// blvm-node/src/network/protocol.rs
 pub const NODE_UTXO_COMMITMENTS: u64 = 1 << 27; // Next available bit
 
 // In create_version_message()
@@ -75,7 +75,7 @@ Check `user_agent` in version message for known implementations:
 ```rust
 fn supports_utxo_commitments(version: &VersionMessage) -> bool {
     let ua = version.user_agent.to_lowercase();
-    ua.contains("bllvm") || ua.contains("btcdecoded")
+    ua.contains("blvm") || ua.contains("btcdecoded")
 }
 ```
 
@@ -98,7 +98,7 @@ fn peer_supports_utxo_commitments(peer: &PeerInfo, version: &VersionMessage) -> 
     }
     
     // Check user agent (fallback)
-    if version.user_agent.to_lowercase().contains("bllvm") {
+    if version.user_agent.to_lowercase().contains("blvm") {
         return true;
     }
     
@@ -112,10 +112,10 @@ fn peer_supports_utxo_commitments(peer: &PeerInfo, version: &VersionMessage) -> 
 ### Step 1: Add Service Flag
 
 ```rust
-// bllvm-node/src/network/protocol.rs
+// blvm-node/src/network/protocol.rs
 pub const NODE_UTXO_COMMITMENTS: u64 = 1 << 27;
 
-// bllvm-node/src/network/mod.rs
+// blvm-node/src/network/mod.rs
 pub fn create_version_message(...) -> VersionMessage {
     let mut services_with_filters = services;
     services_with_filters |= NODE_COMPACT_FILTERS;
@@ -135,13 +135,13 @@ pub fn create_version_message(...) -> VersionMessage {
 ### Step 2: Check Flag Before Requests
 
 ```rust
-// bllvm-consensus/src/utxo_commitments/peer_consensus.rs
+// blvm-consensus/src/utxo_commitments/peer_consensus.rs
 pub fn discover_diverse_peers_with_capabilities(
     &self,
     all_peers: Vec<PeerInfo>,
     peer_versions: &HashMap<IpAddr, VersionMessage>, // Need to store versions
 ) -> Vec<PeerInfo> {
-    use bllvm_node::network::protocol::NODE_UTXO_COMMITMENTS;
+    use blvm_node::network::protocol::NODE_UTXO_COMMITMENTS;
     
     let mut diverse_peers = Vec::new();
     
@@ -166,7 +166,7 @@ pub fn discover_diverse_peers_with_capabilities(
 Need to store `VersionMessage` for each peer:
 
 ```rust
-// bllvm-node/src/network/peer.rs
+// blvm-node/src/network/peer.rs
 pub struct Peer {
     // ... existing fields ...
     pub version: Option<VersionMessage>, // Store version message
@@ -183,7 +183,7 @@ Until service flag is implemented, the system works by:
 1. **Sending requests to all diverse peers**
 2. **Handling errors gracefully**:
    ```rust
-   // bllvm-node/src/network/utxo_commitments_client.rs
+   // blvm-node/src/network/utxo_commitments_client.rs
    match request_utxo_set(...).await {
        Ok(commitment) => { /* use commitment */ }
        Err(e) => {
@@ -217,5 +217,5 @@ For **Case B (without peers)**:
 
 - BIP157 uses `NODE_COMPACT_FILTERS` service flag (bit 6)
 - Bitcoin Core service flags: https://en.bitcoin.it/wiki/Protocol_documentation#version
-- Current implementation: `bllvm-node/src/network/protocol.rs::create_version_message()`
+- Current implementation: `blvm-node/src/network/protocol.rs::create_version_message()`
 

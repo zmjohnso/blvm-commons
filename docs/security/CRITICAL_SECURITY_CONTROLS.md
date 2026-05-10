@@ -4,9 +4,9 @@
 
 This document identifies the minimum required security controls that MUST be in place before BTCDecoded can undergo a proper security audit. These controls establish the baseline security posture required for audit readiness.
 
-**Current Status**: BTCDecoded consensus layer is **complete and ready for audit**. All consensus integrity controls (A-001 through A-005) are fully implemented. bllvm-commons has placeholder implementations (excluded from this review scope).
+**Current Status**: BTCDecoded consensus layer is **complete and ready for audit**. All consensus integrity controls (A-001 through A-005) are fully implemented. blvm-commons has placeholder implementations (excluded from this review scope).
 
-**Audit Readiness**: ✅ **CONSENSUS LAYER READY** - All consensus integrity controls are complete. bllvm-commons placeholders are separate concern.
+**Audit Readiness**: ✅ **CONSENSUS LAYER READY** - All consensus integrity controls are complete. blvm-commons placeholders are separate concern.
 
 ## Control Categories & Definitions
 
@@ -29,27 +29,27 @@ Controls that validate inputs and enforce security boundaries.
 
 | ID | Control | Component | State | Severity | Blocks Audit | Must Fix Before |
 |----|---------|-----------|-------|----------|--------------|-----------------|
-| **A-001** | Genesis Block Implementation | bllvm-protocol | ✅ Complete | - | No | - |
-| **A-002** | SegWit Witness Verification | bllvm-consensus | ✅ Complete | - | No | - |
-| **A-003** | Taproot Support | bllvm-consensus | ✅ Complete | - | No | - |
-| **A-004** | Script Execution Limits | bllvm-consensus | Implemented | P1 | No | Audit |
-| **A-005** | UTXO Set Validation | bllvm-consensus | Implemented | P1 | No | Audit |
-| **B-001** | Maintainer Key Management | bllvm-commons | Placeholder | P0 | Yes | Production |
-| **B-002** | Emergency Signature Verification | bllvm-commons | ✅ Complete | - | No | - |
-| **B-003** | Multisig Threshold Enforcement | bllvm-commons | Implemented | P1 | No | Audit |
-| **B-004** | Key Rotation Implementation | bllvm-commons | Implemented | P2 | No | Audit |
+| **A-001** | Genesis Block Implementation | blvm-protocol | ✅ Complete | - | No | - |
+| **A-002** | SegWit Witness Verification | blvm-consensus | ✅ Complete | - | No | - |
+| **A-003** | Taproot Support | blvm-consensus | ✅ Complete | - | No | - |
+| **A-004** | Script Execution Limits | blvm-consensus | Implemented | P1 | No | Audit |
+| **A-005** | UTXO Set Validation | blvm-consensus | Implemented | P1 | No | Audit |
+| **B-001** | Maintainer Key Management | blvm-commons | Placeholder | P0 | Yes | Production |
+| **B-002** | Emergency Signature Verification | blvm-commons | ✅ Complete | - | No | - |
+| **B-003** | Multisig Threshold Enforcement | blvm-commons | Implemented | P1 | No | Audit |
+| **B-004** | Key Rotation Implementation | blvm-commons | Implemented | P2 | No | Audit |
 | **B-005** | Cryptographic Library Pinning | All | Implemented | P1 | No | Audit |
-| **C-001** | Database Query Implementation | bllvm-commons | ✅ Complete | - | No | - |
-| **C-002** | Cross-layer File Verification | bllvm-commons | ✅ Complete | - | No | - |
-| **C-003** | Tier Classification Logic | bllvm-commons | Partial | P1 | No | Audit |
+| **C-001** | Database Query Implementation | blvm-commons | ✅ Complete | - | No | - |
+| **C-002** | Cross-layer File Verification | blvm-commons | ✅ Complete | - | No | - |
+| **C-003** | Tier Classification Logic | blvm-commons | Partial | P1 | No | Audit |
 | **C-004** | *Retired* (superseded; not applicable) | — | N/A | — | — | — |
-| **D-001** | Audit Log Hash Chain | bllvm-commons | Implemented | P1 | No | Audit |
-| **D-002** | OTS Timestamping | bllvm-commons | Placeholder | P1 | No | Audit |
-| **D-003** | Database Transaction Integrity | bllvm-commons | Implemented | P1 | No | Audit |
-| **E-001** | GitHub Webhook Signature Verification | bllvm-commons | Implemented | P1 | No | Audit |
-| **E-002** | Input Sanitization | bllvm-commons | Partial | P1 | No | Audit |
-| **E-003** | SQL Injection Prevention | bllvm-commons | Implemented | P1 | No | Audit |
-| **E-004** | API Rate Limiting | bllvm-commons | Missing | P2 | No | Audit |
+| **D-001** | Audit Log Hash Chain | blvm-commons | Implemented | P1 | No | Audit |
+| **D-002** | OTS Timestamping | blvm-commons | Placeholder | P1 | No | Audit |
+| **D-003** | Database Transaction Integrity | blvm-commons | Implemented | P1 | No | Audit |
+| **E-001** | GitHub Webhook Signature Verification | blvm-commons | Implemented | P1 | No | Audit |
+| **E-002** | Input Sanitization | blvm-commons | Partial | P1 | No | Audit |
+| **E-003** | SQL Injection Prevention | blvm-commons | Implemented | P1 | No | Audit |
+| **E-004** | API Rate Limiting | blvm-commons | Missing | P2 | No | Audit |
 
 ## Current State Assessment
 
@@ -79,11 +79,11 @@ Controls that validate inputs and enforce security boundaries.
 
 **Consensus Integrity**:
 - ✅ **A-002 SegWit Witness Verification**: **COMPLETE** - Full witness verification implemented
-  - Location: `bllvm-consensus/src/segwit.rs`, `bllvm-consensus/src/witness.rs`
+  - Location: `blvm-consensus/src/segwit.rs`, `blvm-consensus/src/witness.rs`
   - Status: `validate_segwit_block()`, `validate_segwit_witness_structure()`, witness commitment validation all implemented
   - Evidence: Verified 2025-01-XX - comprehensive SegWit implementation with tests and spec-lock verification
 - ✅ **A-003 Taproot Support**: **COMPLETE** - Full P2TR validation implemented
-  - Location: `bllvm-consensus/src/taproot.rs`, `bllvm-consensus/src/witness.rs`
+  - Location: `blvm-consensus/src/taproot.rs`, `blvm-consensus/src/witness.rs`
   - Status: `validate_taproot_transaction()`, `validate_taproot_script()`, key aggregation, script paths all implemented
   - Evidence: Verified 2025-01-XX - comprehensive Taproot implementation with tests and spec-lock verification
 
@@ -95,7 +95,7 @@ Controls that validate inputs and enforce security boundaries.
 
 **Consensus Integrity**:
 - ✅ **A-001 Genesis Block Implementation**: **COMPLETE** - All networks have proper genesis blocks
-  - Location: `bllvm-protocol/src/genesis.rs`
+  - Location: `blvm-protocol/src/genesis.rs`
   - Status: Mainnet, testnet, and regtest genesis blocks correctly implemented
   - Verification: Genesis block hashes match Bitcoin Core exactly
   - Evidence: Verified 2025-01-XX - all genesis blocks are correct
@@ -107,18 +107,18 @@ Controls that validate inputs and enforce security boundaries.
   - Evidence: `0x02[PLACEHOLDER_64_CHAR_HEX]` throughout config files
 
 - **B-002 Emergency Signature Verification**: ✅ **COMPLETE** (2025-11-18)
-  - Location: `bllvm-commons/src/validation/emergency.rs:321`
-  - Status: ✅ Implemented using `bllvm_sdk::governance::verify_signature()`
+  - Location: `blvm-commons/src/validation/emergency.rs:321`
+  - Status: ✅ Implemented using `blvm_sdk::governance::verify_signature()`
   - Note: Previously documented as TODO, but implementation is complete
 
 **Governance**:
 - **C-001 Database Query Implementation**: ✅ **COMPLETE** (2025-11-18)
-  - Location: `bllvm-commons/src/database/queries.rs`
+  - Location: `blvm-commons/src/database/queries.rs`
   - Status: ✅ All 7 functions implemented with proper SQL queries using sqlx
   - Note: Previously documented as placeholders, but implementation is complete
 
 - **C-002 Cross-layer File Verification**: ✅ **COMPLETE** (2025-11-18)
-  - Location: `bllvm-commons/src/validation/cross_layer.rs`
+  - Location: `blvm-commons/src/validation/cross_layer.rs`
   - Status: ✅ File correspondence and consensus modification verification complete
   - Implementation: File path pattern matching with GitHub PR files API integration
   - Note: Previously had placeholder warning, now fully implemented
@@ -130,7 +130,7 @@ Controls that validate inputs and enforce security boundaries.
 1. ✅ **Genesis Block Implementation** (A-001) - **COMPLETE**
    - **Status**: All networks have correct genesis blocks
    - **Verification**: Genesis blocks match Bitcoin Core hashes exactly
-   - **Location**: `bllvm-protocol/src/genesis.rs`
+   - **Location**: `blvm-protocol/src/genesis.rs`
    - **Note**: Previously listed as placeholder, but verified complete
 
 2. **Maintainer Key Management** (B-001)
@@ -140,18 +140,18 @@ Controls that validate inputs and enforce security boundaries.
    - **Effort**: High - requires key generation ceremony and secure distribution
 
 3. ✅ **Emergency Signature Verification** (B-002) - **COMPLETE** (2025-11-18)
-   - **Status**: ✅ Implemented using `bllvm_sdk::governance::verify_signature()`
-   - **Location**: `bllvm-commons/src/validation/emergency.rs:321`
+   - **Status**: ✅ Implemented using `blvm_sdk::governance::verify_signature()`
+   - **Location**: `blvm-commons/src/validation/emergency.rs:321`
    - **Note**: Previously documented as TODO, but implementation is complete
 
 4. ✅ **Database Query Implementation** (C-001) - **COMPLETE** (2025-11-18)
    - **Status**: ✅ All 7 functions implemented with proper SQL queries using sqlx
-   - **Location**: `bllvm-commons/src/database/queries.rs`
+   - **Location**: `blvm-commons/src/database/queries.rs`
    - **Note**: Previously documented as placeholders, but implementation is complete
 
 5. ✅ **Cross-layer File Verification** (C-002) - **COMPLETE** (2025-11-18)
    - **Status**: ✅ File correspondence and consensus modification verification complete
-   - **Location**: `bllvm-commons/src/validation/cross_layer.rs`
+   - **Location**: `blvm-commons/src/validation/cross_layer.rs`
    - **Implementation**: File path pattern matching with GitHub PR files API integration
    - **Note**: Previously had placeholder warning, now fully implemented
 
@@ -159,12 +159,12 @@ Controls that validate inputs and enforce security boundaries.
 
 6. ✅ **SegWit Witness Verification** (A-002) - **COMPLETE**
    - **Status**: Fully implemented with comprehensive validation
-   - **Location**: `bllvm-consensus/src/segwit.rs`, `bllvm-consensus/src/witness.rs`
+   - **Location**: `blvm-consensus/src/segwit.rs`, `blvm-consensus/src/witness.rs`
    - **Note**: Previously listed as incomplete, but verified complete
 
 7. ✅ **Taproot Support** (A-003) - **COMPLETE**
    - **Status**: Fully implemented with P2TR validation, key aggregation, script paths
-   - **Location**: `bllvm-consensus/src/taproot.rs`, `bllvm-consensus/src/witness.rs`
+   - **Location**: `blvm-consensus/src/taproot.rs`, `blvm-consensus/src/witness.rs`
    - **Note**: Previously listed as missing, but verified complete
 
 8. **OTS Timestamping** (D-002)
@@ -211,7 +211,7 @@ Controls that validate inputs and enforce security boundaries.
    - Implement secure key distribution
 
 3. **Complete Emergency Verification** (B-002)
-   - Integrate with bllvm-sdk signature verification
+   - Integrate with blvm-sdk signature verification
    - Remove placeholder validation logic
    - Add comprehensive tests
 
@@ -262,7 +262,7 @@ BTCDecoded will be **audit ready** when:
 **Description**: Proper genesis blocks for mainnet, testnet, and regtest networks
 
 **Current State**: ✅ **COMPLETE** - All networks have correct genesis blocks implemented
-**Location**: `bllvm-protocol/src/genesis.rs`
+**Location**: `blvm-protocol/src/genesis.rs`
 
 **Implementation Status**: ✅ **COMPLETE** (Verified 2025-01-XX)
 - [x] Extract exact genesis blocks from Bitcoin Core ✅
@@ -336,10 +336,10 @@ cargo test genesis_block_regtest
 **Description**: Cryptographic verification of emergency activation signatures
 
 **Current State**: Placeholder validation (line 266 in emergency.rs)
-**Location**: `bllvm-commons/src/validation/emergency.rs:266`
+**Location**: `blvm-commons/src/validation/emergency.rs:266`
 
 **Implementation Requirements**:
-- [ ] Integrate with bllvm-sdk signature verification
+- [ ] Integrate with blvm-sdk signature verification
 - [ ] Remove placeholder validation logic
 - [ ] Add comprehensive signature verification tests
 - [ ] Implement proper error handling for invalid signatures
@@ -350,7 +350,7 @@ cargo test genesis_block_regtest
 - Invalid signatures properly rejected
 - Signature format validation implemented
 - Comprehensive test coverage for verification logic
-- Integration with bllvm-sdk working
+- Integration with blvm-sdk working
 
 **Threat Model**:
 - **Signature Forgery**: Fake emergency signatures
@@ -396,19 +396,19 @@ cargo test genesis_block_regtest
 ## Security Boundary Map
 
 ### Consensus Layer (Highest Trust)
-- **bllvm-consensus**: Pure functions, no external dependencies
+- **blvm-consensus**: Pure functions, no external dependencies
 - **Trust Boundary**: Only mathematical validation
 - **Attack Surface**: Logic errors in consensus rules
 - **Controls**: A-001, A-002, A-003, A-004, A-005 - All complete ✅
 
 ### Protocol Layer (High Trust)  
-- **bllvm-protocol**: Network parameters, variant selection
+- **blvm-protocol**: Network parameters, variant selection
 - **Trust Boundary**: Configuration and genesis blocks
 - **Attack Surface**: Genesis block tampering
 - **Controls**: A-001
 
 ### Governance Layer (Medium Trust)
-- **bllvm-commons**: Cryptographic enforcement, database
+- **blvm-commons**: Cryptographic enforcement, database
 - **Trust Boundary**: Maintainer keys, database integrity
 - **Attack Surface**: Key compromise, database injection
 - **Controls**: B-001, B-002, B-003, C-001, C-002, D-001

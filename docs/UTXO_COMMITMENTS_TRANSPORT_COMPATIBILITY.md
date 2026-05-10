@@ -13,7 +13,7 @@
 ```
 ┌─────────────────────────────────────┐
 │  UTXO Commitments Module            │
-│  (bllvm-consensus)                  │
+│  (blvm-consensus)                  │
 │                                     │
 │  UtxoCommitmentsNetworkClient       │
 │  (trait - transport agnostic)       │
@@ -22,7 +22,7 @@
                ▼
 ┌─────────────────────────────────────┐
 │  Network Client Implementation       │
-│  (bllvm-node)                    │
+│  (blvm-node)                    │
 │                                     │
 │  UtxoCommitmentsClient               │
 │  - Detects transport per peer        │
@@ -96,9 +96,9 @@ Same UTXO commitment messages, different wire formats per transport.
 [features]
 iroh = ["dep:iroh-net", "dep:quinn"]
 
-# In bllvm-node, inherit from bllvm-consensus:
+# In blvm-node, inherit from blvm-consensus:
 [dependencies]
-bllvm-consensus = { path = "../bllvm-consensus", features = ["utxo-commitments"] }
+blvm-consensus = { path = "../blvm-consensus", features = ["utxo-commitments"] }
 ```
 
 ### Runtime Selection
@@ -180,11 +180,11 @@ Same commitment data, different serialization.
 
 ## Implementation Files
 
-- `bllvm-node/src/network/utxo_commitments_client.rs` - Client implementation
-- `bllvm-node/src/network/protocol_extensions.rs` - Message definitions
-- `bllvm-node/src/network/protocol_adapter.rs` - Serialization (TCP/Iroh)
-- `bllvm-node/src/network/transport.rs` - Transport abstraction
-- `bllvm-consensus/src/utxo_commitments/network_integration.rs` - Trait definition
+- `blvm-node/src/network/utxo_commitments_client.rs` - Client implementation
+- `blvm-node/src/network/protocol_extensions.rs` - Message definitions
+- `blvm-node/src/network/protocol_adapter.rs` - Serialization (TCP/Iroh)
+- `blvm-node/src/network/transport.rs` - Transport abstraction
+- `blvm-consensus/src/utxo_commitments/network_integration.rs` - Trait definition
 
 ## Testing
 
