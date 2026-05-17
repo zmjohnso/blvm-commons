@@ -406,22 +406,32 @@ sudo ./blvm.sh uninstall blvm
 
 **Location:** `/etc/blvm/blvm.toml`
 
-**Key Settings:**
+**Key Settings:** (`blvm-node` **`NodeConfig`** — not Bitcoin Core `bitcoin.conf`)
+
+- **Chain**: `blvm --network mainnet|testnet|regtest` (or `BLVM_NETWORK`).
+- **JSON-RPC bind**: `blvm --rpc-addr ...` (or `BLVM_RPC_ADDR`) — not a Table in `blvm.toml`.
+- **P2P**: `listen_addr` at the top level of `blvm.toml`.
 
 ```toml
-network = "mainnet"  # mainnet, testnet, regtest
-
-[server]
-listen_address = "0.0.0.0:8333"  # P2P
-rpc_listen_address = "127.0.0.1:8332"  # RPC
-
-[rpc]
-user = "btc"
-password = "your-secure-password"
+listen_addr = "0.0.0.0:8333"
+protocol_version = "BitcoinV1"
+transport_preference = "tcponly"
+max_peers = 125
+enable_self_advertisement = true
 
 [storage]
 data_dir = "/var/lib/blvm"
+database_backend = "auto"
+
+[rpc_auth]
+required = true
+tokens = ["your-secure-token"]
+
+[logging]
+level = "info"
 ```
+
+**Example (bind RPC to localhost only):** set `ExecStart` / container command to include `--rpc-addr 127.0.0.1:8332` (and keep `listen_addr` for P2P as needed).
 
 **View config:**
 
@@ -637,10 +647,11 @@ sudo ufw status
 sudo firewall-cmd --list-all
 ```
 
-**Check RPC address in config:**
+**Check RPC bind (unit file or config):**
 
 ```bash
-./blvm.sh config blvm | grep rpc_listen_address
+systemctl show blvm -p ExecStart --value
+grep -E 'rpc-addr|listen_addr' /etc/blvm/blvm.toml || true
 ```
 
 ---
@@ -716,15 +727,12 @@ sudo ./blvm.sh install experimental \
 
 ### Security
 
-1. **Use strong RPC passwords:**
+1. **Use strong RPC auth tokens** (`[rpc_auth].tokens` or `RPC_AUTH_TOKENS`):
    ```bash
    openssl rand -hex 32
    ```
 
-2. **Restrict RPC access:**
-   ```toml
-   rpc_listen_address = "127.0.0.1:8332"  # Localhost only
-   ```
+2. **Restrict RPC access:** run `blvm` with **`--rpc-addr 127.0.0.1:8332`** (localhost only) and firewall as needed.
 
 3. **Use firewall:**
    ```bash

@@ -13,14 +13,12 @@ SERVICE_NAME="blvm"
 BINARY_NAME="blvm"
 BINARY_URL="https://github.com/BTCDecoded/blvm/releases/latest/download/blvm-linux-x86_64.tar.gz"
 
-PUBLIC_IP=""
 RPC_PASSWORD=""
 RPC_PORT="8332"
 P2P_PORT="8333"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --public-ip) PUBLIC_IP="$2"; shift 2 ;;
         --rpc-password) RPC_PASSWORD="$2"; shift 2 ;;
         --version) BINARY_URL="https://github.com/BTCDecoded/blvm/releases/download/$2/blvm-linux-x86_64.tar.gz"; shift 2 ;;
         *) echo "Unknown: $1"; exit 1 ;;
@@ -28,10 +26,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ "$EUID" -ne 0 ]; then echo "Run as root"; exit 1; fi
-
-if [ -z "$PUBLIC_IP" ]; then
-    PUBLIC_IP=$(curl -s ifconfig.me || curl -s icanhazip.com || echo "0.0.0.0")
-fi
 
 if [ -z "$RPC_PASSWORD" ]; then
     RPC_PASSWORD=$(openssl rand -hex 32)
@@ -52,20 +46,23 @@ chmod +x "$INSTALL_DIR/$BINARY_NAME"
 chown root:root "$INSTALL_DIR/$BINARY_NAME"
 
 cat > "$CONFIG_FILE" << EOF
-[network]
-network = "mainnet"
-listen_address = "0.0.0.0:${P2P_PORT}"
-external_address = "${PUBLIC_IP}:${P2P_PORT}"
+# NodeConfig (blvm-node) — network is selected via \`blvm --network\`; RPC bind via \`--rpc-addr\`.
+listen_addr = "0.0.0.0:${P2P_PORT}"
+protocol_version = "BitcoinV1"
+max_peers = 125
+transport_preference = "tcponly"
+enable_self_advertisement = true
 
 [storage]
-mode = "archival"
 data_dir = "${DATA_DIR}"
+database_backend = "auto"
 
-[rpc]
-enabled = true
-listen_address = "0.0.0.0:${RPC_PORT}"
-rpc_user = "btc"
-rpc_password = "${RPC_PASSWORD}"
+[storage.pruning]
+mode = { type = "disabled" }
+
+[rpc_auth]
+required = true
+tokens = ["${RPC_PASSWORD}"]
 
 [logging]
 level = "info"
@@ -85,7 +82,7 @@ Type=notify
 User=${SERVICE_USER}
 Group=${SERVICE_USER}
 WorkingDirectory=${DATA_DIR}
-ExecStart=${INSTALL_DIR}/${BINARY_NAME} --config ${CONFIG_FILE}
+ExecStart=${INSTALL_DIR}/${BINARY_NAME} --config ${CONFIG_FILE} --rpc-addr 0.0.0.0:${RPC_PORT} --network mainnet
 Restart=always
 RestartSec=10
 # Watchdog configuration (60 seconds)
@@ -116,7 +113,7 @@ sleep 2
 
 if systemctl is-active --quiet ${SERVICE_NAME}; then
     echo "✅ Installed: ${SERVICE_NAME}"
-    echo "RPC: localhost:${RPC_PORT} (btc:${RPC_PASSWORD})"
+    echo "RPC: 127.0.0.1:${RPC_PORT} — Authorization: Bearer <token> (rpc_auth token in ${CONFIG_FILE})"
 else
     echo "❌ Failed. Check: journalctl -u ${SERVICE_NAME}"
     exit 1

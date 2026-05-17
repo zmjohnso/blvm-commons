@@ -192,27 +192,25 @@ cd ~/blvm-nodes/archival
 
 ### Create config.toml
 
+**Schema:** This must match **`NodeConfig`** in `blvm-node` (no `[network]` / `[rpc] enabled` shorthand). See [blvm-docs](https://docs.thebitcoincommons.org/) / `configuration.md`. RPC bind is **`blvm --rpc-addr`**, not `[rpc].listen_address`.
+
 ```toml
-[network]
-# Mainnet
-network = "mainnet"
-listen_address = "0.0.0.0:8333"
-external_address = "YOUR_PUBLIC_IP:8333"
+listen_addr = "0.0.0.0:8333"
+protocol_version = "BitcoinV1"
+max_peers = 100
+transport_preference = "tcponly"
+enable_self_advertisement = true
 
 [storage]
-# Archival mode - keep all blocks
-prune_mode = false
 data_dir = "/app/data"
+database_backend = "auto"
 
-[rpc]
-enabled = true
-listen_address = "0.0.0.0:8332"
-rpc_user = "btc"
-rpc_password = "CHANGE_THIS_PASSWORD"
+[storage.pruning]
+mode = { type = "disabled" }
 
-[features]
-# Base build - no experimental features
-production = true
+[rpc_auth]
+required = true
+tokens = []  # set via RPC_AUTH_TOKENS or token_file at runtime
 ```
 
 ### Deploy with Docker
@@ -229,7 +227,7 @@ production = true
       - RUST_LOG=info
     volumes:
       - ./archival-data:/app/data
-    command: ["blvm", "--config", "/app/config.toml"]
+    command: ["blvm", "--config", "/app/config.toml", "--rpc-addr", "0.0.0.0:8332"]
     restart: unless-stopped
 ```
 
@@ -277,30 +275,38 @@ cd ~/blvm-nodes/utxo-commitment-1
 
 ### Create config.toml
 
+Uses **`NodeConfig`** shapes; experimental image must match your build flags (`utxo-commitments`, etc.). Pruning uses **`[storage.pruning]`**, not `prune_mode`.
+
 ```toml
-[network]
-network = "mainnet"
-listen_address = "0.0.0.0:8334"  # Different port
-external_address = "YOUR_PUBLIC_IP:8334"
+listen_addr = "0.0.0.0:8334"
+protocol_version = "BitcoinV1"
+max_peers = 100
+transport_preference = "tcponly"
 
 [storage]
-# Pruned mode - save space
-prune_mode = true
-prune_height = 288  # Keep last 2 days
 data_dir = "/app/data"
+database_backend = "auto"
 
-[rpc]
-enabled = true
-listen_address = "0.0.0.0:8335"  # Different RPC port
-rpc_user = "btc"
-rpc_password = "CHANGE_THIS_PASSWORD"
+[storage.pruning]
+mode = { type = "normal", keep_from_height = 0, min_recent_blocks = 288 }
 
-[features]
-# Experimental build with UTXO commitments
-production = true
-utxo-commitments = true
-dandelion = true
+[rpc_auth]
+required = true
+tokens = []
 ```
+
+```bash
+blvm --config /app/config.toml --rpc-addr 0.0.0.0:8335 --network mainnet
+```
+
+### Nodes 2 and 3
+
+Use the same table as Node 1, but match **P2P** and **RPC** ports to your compose mapping:
+
+| Instance | `listen_addr` (P2P) | `--rpc-addr` |
+|----------|----------------------|--------------|
+| 2 | `0.0.0.0:8337` | `0.0.0.0:8336` |
+| 3 | `0.0.0.0:8339` | `0.0.0.0:8338` |
 
 ### Deploy with Docker
 
@@ -316,7 +322,7 @@ dandelion = true
       - RUST_LOG=info
     volumes:
       - ./utxo-1-data:/app/data
-    command: ["blvm", "--config", "/app/config.toml"]
+    command: ["blvm", "--config", "/app/config.toml", "--rpc-addr", "0.0.0.0:8335", "--network", "mainnet"]
     restart: unless-stopped
 
   utxo-commitment-node-2:
@@ -329,7 +335,7 @@ dandelion = true
       - RUST_LOG=info
     volumes:
       - ./utxo-2-data:/app/data
-    command: ["blvm", "--config", "/app/config.toml"]
+    command: ["blvm", "--config", "/app/config.toml", "--rpc-addr", "0.0.0.0:8336", "--network", "mainnet"]
     restart: unless-stopped
 
   utxo-commitment-node-3:
@@ -342,7 +348,7 @@ dandelion = true
       - RUST_LOG=info
     volumes:
       - ./utxo-3-data:/app/data
-    command: ["blvm", "--config", "/app/config.toml"]
+    command: ["blvm", "--config", "/app/config.toml", "--rpc-addr", "0.0.0.0:8338", "--network", "mainnet"]
     restart: unless-stopped
 ```
 

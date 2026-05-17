@@ -103,57 +103,60 @@ fi
 echo ""
 echo "Creating node configuration files..."
 
-# Archival node config
+# Archival node config (NodeConfig; RPC via blvm --rpc-addr in compose/command)
 cat > archival-config/config.toml << 'EOF'
-[network]
-network = "mainnet"
-listen_address = "0.0.0.0:8333"
-external_address = "0.0.0.0:8333"
+listen_addr = "0.0.0.0:8333"
+protocol_version = "BitcoinV1"
+max_peers = 125
+transport_preference = "tcponly"
+enable_self_advertisement = true
 
 [storage]
-# Archival mode - keep all blocks
-mode = "archival"
 data_dir = "/app/data"
+database_backend = "auto"
 
-[rpc]
-enabled = true
-listen_address = "0.0.0.0:8332"
-rpc_user = "btc"
-rpc_password = "CHANGE_THIS_PASSWORD"
+[storage.pruning]
+mode = { type = "disabled" }
+
+[rpc_auth]
+required = true
+tokens = ["CHANGE_THIS_PASSWORD"]
 
 [logging]
 level = "info"
 EOF
 
-# UTXO Commitment node configs (same for all 3)
+# UTXO commitment nodes — ports aligned with DEPLOYMENT_GUIDE (RPC / P2P)
 for i in 1 2 3; do
-    RPC_PORT=$((8334 + $i))
-    P2P_PORT=$((8333 + $i))
-    
+    case $i in
+        1) RPC_PORT=8335; P2P_PORT=8334 ;;
+        2) RPC_PORT=8336; P2P_PORT=8337 ;;
+        3) RPC_PORT=8338; P2P_PORT=8339 ;;
+    esac
+
     cat > "utxo-${i}-config/config.toml" << EOF
-[network]
-network = "mainnet"
-listen_address = "0.0.0.0:${P2P_PORT}"
-external_address = "0.0.0.0:${P2P_PORT}"
+listen_addr = "0.0.0.0:${P2P_PORT}"
+protocol_version = "BitcoinV1"
+max_peers = 100
+transport_preference = "tcponly"
+enable_self_advertisement = true
 
 [storage]
-# Pruned mode with UTXO commitments
-mode = "pruned"
-prune_mode = "normal"
-keep_from_height = 0
-min_blocks_to_keep = 288
 data_dir = "/app/data"
+database_backend = "auto"
 
-[rpc]
-enabled = true
-listen_address = "0.0.0.0:${RPC_PORT}"
-rpc_user = "btc"
-rpc_password = "CHANGE_THIS_PASSWORD"
+[storage.pruning]
+mode = { type = "aggressive", keep_from_height = 0, keep_commitments = true, keep_filtered_blocks = false, min_blocks = 288 }
+incremental_prune_during_ibd = true
+prune_window_size = 144
+min_blocks_for_incremental_prune = 288
+auto_prune = true
+auto_prune_interval = 144
+min_blocks_to_keep = 288
 
-[features]
-# Experimental features enabled
-utxo-commitments = true
-dandelion = true
+[rpc_auth]
+required = true
+tokens = ["CHANGE_THIS_PASSWORD"]
 
 [logging]
 level = "info"

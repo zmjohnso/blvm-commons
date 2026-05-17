@@ -13,7 +13,6 @@ SERVICE_NAME="blvm"
 BINARY_NAME="blvm-experimental"
 BINARY_URL="https://github.com/BTCDecoded/blvm/releases/latest/download/blvm-experimental-linux-x86_64.tar.gz"
 
-PUBLIC_IP=""
 RPC_PASSWORD=""
 RPC_PORT="8332"
 P2P_PORT="8333"
@@ -24,7 +23,6 @@ CUSTOM_BINARY=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --public-ip) PUBLIC_IP="$2"; shift 2 ;;
         --rpc-password) RPC_PASSWORD="$2"; shift 2 ;;
         --features) FEATURES="$2"; shift 2 ;;
         --build-from-source) BUILD_FROM_SOURCE=true; shift ;;
@@ -36,10 +34,6 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [ "$EUID" -ne 0 ]; then echo "Run as root"; exit 1; fi
-
-if [ -z "$PUBLIC_IP" ]; then
-    PUBLIC_IP=$(curl -s ifconfig.me || curl -s icanhazip.com || echo "0.0.0.0")
-fi
 
 if [ -z "$RPC_PASSWORD" ]; then
     RPC_PASSWORD=$(openssl rand -hex 32)
@@ -79,33 +73,29 @@ chmod +x "$INSTALL_DIR/$BINARY_NAME"
 chown root:root "$INSTALL_DIR/$BINARY_NAME"
 
 cat > "$CONFIG_FILE" << EOF
-[network]
-network = "mainnet"
-listen_address = "0.0.0.0:${P2P_PORT}"
-external_address = "${PUBLIC_IP}:${P2P_PORT}"
+# Experimental node: build must include \`utxo-commitments\` for aggressive pruning below.
+listen_addr = "0.0.0.0:${P2P_PORT}"
+protocol_version = "BitcoinV1"
+max_peers = 125
+transport_preference = "tcponly"
+enable_self_advertisement = true
 
 [storage]
-mode = "pruned"
-prune_mode = "normal"
-keep_from_height = 0
-min_blocks_to_keep = 288
 data_dir = "${DATA_DIR}"
+database_backend = "auto"
 
-[rpc]
-enabled = true
-listen_address = "0.0.0.0:${RPC_PORT}"
-rpc_user = "btc"
-rpc_password = "${RPC_PASSWORD}"
+[storage.pruning]
+mode = { type = "aggressive", keep_from_height = 0, keep_commitments = true, keep_filtered_blocks = false, min_blocks = 288 }
+incremental_prune_during_ibd = true
+prune_window_size = 288
+min_blocks_for_incremental_prune = 288
+auto_prune = true
+auto_prune_interval = 144
+min_blocks_to_keep = 288
 
-[features]
-EOF
-
-IFS=',' read -ra FEATURE_ARRAY <<< "$FEATURES"
-for feature in "${FEATURE_ARRAY[@]}"; do
-    echo "$(echo "$feature" | xargs) = true" >> "$CONFIG_FILE"
-done
-
-cat >> "$CONFIG_FILE" << EOF
+[rpc_auth]
+required = true
+tokens = ["${RPC_PASSWORD}"]
 
 [logging]
 level = "info"
@@ -124,7 +114,7 @@ Type=simple
 User=${SERVICE_USER}
 Group=${SERVICE_USER}
 WorkingDirectory=${DATA_DIR}
-ExecStart=${INSTALL_DIR}/${BINARY_NAME} --config ${CONFIG_FILE}
+ExecStart=${INSTALL_DIR}/${BINARY_NAME} --config ${CONFIG_FILE} --rpc-addr 0.0.0.0:${RPC_PORT} --network mainnet
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -146,7 +136,7 @@ sleep 2
 
 if systemctl is-active --quiet ${SERVICE_NAME}; then
     echo "✅ Installed: ${SERVICE_NAME} (Features: ${FEATURES})"
-    echo "RPC: localhost:${RPC_PORT} (btc:${RPC_PASSWORD})"
+    echo "RPC: 127.0.0.1:${RPC_PORT} — use Authorization: Bearer <rpc_auth token> (see ${CONFIG_FILE})"
 else
     echo "❌ Failed. Check: journalctl -u ${SERVICE_NAME}"
     exit 1

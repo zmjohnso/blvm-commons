@@ -21,14 +21,16 @@
 sudo nano /etc/blvm/blvm.toml
 ```
 
-**Change ports:**
+**Use real `blvm.toml` keys** (`listen_addr`, `protocol_version`, …) and set **JSON-RPC** bind via **`blvm --rpc-addr`** (or `BLVM_RPC_ADDR`). Example alternate ports:
 
 ```toml
-[network]
-listen_address = "0.0.0.0:8334"  # Different P2P port (Bitcoin Core uses 8333)
+listen_addr = "0.0.0.0:8334"
+protocol_version = "BitcoinV1"
+transport_preference = "tcponly"
+```
 
-[rpc]
-listen_address = "0.0.0.0:8335"  # Different RPC port (Bitcoin Core uses 8332)
+```bash
+blvm --config /etc/blvm/blvm.toml --rpc-addr 0.0.0.0:8335
 ```
 
 **Restart BLLVM:**
@@ -132,10 +134,10 @@ sudo systemctl restart blvm
 
 **Option B: Modify installer to support custom ports (future enhancement)**
 
-Currently, the installer doesn't support `--rpc-port` or `--p2p-port` flags. You would need to:
-1. Install normally
-2. Edit config manually
-3. Restart service
+Currently, the installer may not expose dedicated **`--rpc-port`** / P2P flags. To change ports after install:
+1. Set **`listen_addr`** in `blvm.toml` for P2P
+2. Set JSON-RPC bind via **`ExecStart=... --rpc-addr HOST:PORT`** (systemd) or **`BLVM_RPC_ADDR`**
+3. Restart the service
 
 ---
 

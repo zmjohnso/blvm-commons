@@ -195,7 +195,7 @@ After=network.target
 [Service]
 Type=simple
 User=blvm
-ExecStart=/usr/local/bin/blvm-node --config /etc/blvm/config.toml
+ExecStart=/usr/local/bin/blvm --config /etc/blvm/config.toml --rpc-addr 0.0.0.0:8332 --network mainnet
 Restart=always
 RestartSec=10
 StandardOutput=journal

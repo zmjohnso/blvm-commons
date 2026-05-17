@@ -121,21 +121,23 @@ chown root:root "$INSTALL_DIR/blvm"
 echo ""
 echo "Creating configuration..."
 cat > "$CONFIG_DIR/archival.toml" << EOF
-[network]
-network = "mainnet"
-listen_address = "0.0.0.0:8333"
-external_address = "${PUBLIC_IP}:8333"
+# NodeConfig — use \`blvm --rpc-addr\` for JSON-RPC bind; \`listen_addr\` is P2P.
+listen_addr = "0.0.0.0:8333"
+protocol_version = "BitcoinV1"
+max_peers = 125
+transport_preference = "tcponly"
+enable_self_advertisement = true
 
 [storage]
-# Archival mode - keep all blocks
-mode = "archival"
 data_dir = "${DATA_DIR}"
+database_backend = "auto"
 
-[rpc]
-enabled = true
-listen_address = "0.0.0.0:8332"
-rpc_user = "btc"
-rpc_password = "${RPC_PASSWORD}"
+[storage.pruning]
+mode = { type = "disabled" }
+
+[rpc_auth]
+required = true
+tokens = ["${RPC_PASSWORD}"]
 
 [logging]
 level = "info"
@@ -157,7 +159,7 @@ Type=simple
 User=${SERVICE_USER}
 Group=${SERVICE_USER}
 WorkingDirectory=${DATA_DIR}
-ExecStart=${INSTALL_DIR}/blvm --config ${CONFIG_DIR}/archival.toml
+ExecStart=${INSTALL_DIR}/blvm --config ${CONFIG_DIR}/archival.toml --rpc-addr 0.0.0.0:8332 --network mainnet
 Restart=always
 RestartSec=10
 StandardOutput=journal
@@ -202,12 +204,11 @@ echo "Service: blvm-archival"
 echo "Status: $(systemctl is-active blvm-archival)"
 echo "Config: ${CONFIG_DIR}/archival.toml"
 echo "Data: ${DATA_DIR}"
-echo "RPC: http://localhost:8332"
-echo "P2P: ${PUBLIC_IP}:8333"
+echo "RPC: http://127.0.0.1:8332 (JSON-RPC; set \`Authorization: Bearer <token>\` — token is in \`[rpc_auth].tokens\` in archival.toml)"
+echo "P2P: listen 0.0.0.0:8333 (advertise via \`enable_self_advertisement\` / peers; no \`external_address\` in NodeConfig)"
 echo ""
-echo "RPC Credentials:"
-echo "  User: btc"
-echo "  Password: ${RPC_PASSWORD}"
+echo "RPC authentication (rpc_auth):"
+echo "  Token: ${RPC_PASSWORD}"
 echo ""
 echo -e "${YELLOW}⚠️  Save the RPC password!${NC}"
 echo ""
