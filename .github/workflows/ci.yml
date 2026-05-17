@@ -216,10 +216,10 @@ jobs:
       
       - name: Run security audit
         run: |
-          # Suppress documented vulnerabilities (see SECURITY_SUPPRESSIONS.md for details)
-          # All suppressions are from transitive dependencies (opentimestamps, nostr-sdk, sqlx-mysql)
-          # and are not exploitable in our deployment
-          # Note: opentimestamps is behind a feature flag, so vulnerabilities only apply when feature is enabled
+          # Temporary ignores for transitive advisories — not a silent acceptance policy.
+          # Resolution: keep docs/SECURITY_SUPPRESSIONS.md in sync with this list; re-run `cargo audit`
+          # without ignores after dependency bumps and shrink this block as the lockfile clears.
+          # Suppress documented vulnerabilities (see docs/SECURITY_SUPPRESSIONS.md for process and table)
           cargo audit \
             --ignore RUSTSEC-2022-0011 \
             --ignore RUSTSEC-2022-0004 \
