@@ -36,8 +36,7 @@ pub async fn handle_block_notification(
 ) -> Json<BlockNotificationResponse> {
     Json(BlockNotificationResponse {
         success: true,
-        message: "Block notification acknowledged"
-            .to_string(),
+        message: "Block notification acknowledged".to_string(),
         contributions_found: 0,
     })
 }

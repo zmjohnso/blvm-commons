@@ -40,10 +40,7 @@ pub async fn handle_pull_request_event(
         repo if repo.contains("blvm-protocol") => 3,
         repo if repo.contains("blvm-sdk") => 5,
         repo if repo.contains("blvm-commons") || repo.contains("governance-app") => 6,
-        repo if repo.contains("blvm-node") || repo.contains("/blvm") =>
-        {
-            4
-        }
+        repo if repo.contains("blvm-node") || repo.contains("/blvm") => 4,
         _ => {
             warn!("Unknown repository: {}", repo_name);
             return Ok(axum::response::Json(
@@ -202,8 +199,7 @@ pub fn determine_layer(repo_name: &str) -> Option<i32> {
         Some(5)
     } else if repo_name.contains("blvm-commons") || repo_name.contains("governance-app") {
         Some(6)
-    } else if repo_name.contains("blvm-node") || repo_name.contains("/blvm")
-    {
+    } else if repo_name.contains("blvm-node") || repo_name.contains("/blvm") {
         Some(4)
     } else {
         None

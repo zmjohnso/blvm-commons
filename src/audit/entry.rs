@@ -109,10 +109,7 @@ pub fn create_rotation_entry(server_id: String, previous_log_hash: String) -> Au
     let mut metadata = HashMap::new();
     metadata.insert("description".to_string(), "Log rotation".to_string());
     metadata.insert("version".to_string(), "1.0".to_string());
-    metadata.insert(
-        "rotated_at".to_string(),
-        chrono::Utc::now().to_rfc3339(),
-    );
+    metadata.insert("rotated_at".to_string(), chrono::Utc::now().to_rfc3339());
 
     AuditLogEntry::new(
         format!("rotation-{}", chrono::Utc::now().timestamp_millis()),

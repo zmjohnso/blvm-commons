@@ -10,7 +10,8 @@ use tracing::info;
 
 use crate::nostr::client::NostrClient;
 use crate::nostr::events::{
-    CombinedRequirement, GovernanceActionEvent, KeyholderSignature, LayerRequirement, TierRequirement,
+    CombinedRequirement, GovernanceActionEvent, KeyholderSignature, LayerRequirement,
+    TierRequirement,
 };
 
 /// Publisher for governance action events

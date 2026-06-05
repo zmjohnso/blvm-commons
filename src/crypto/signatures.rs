@@ -90,15 +90,10 @@ impl SignatureManager {
         PublicKey::from_secret_key(&self.secp, secret_key)
     }
 
-    /// Generate a new keypair
+    /// Generate a new governance keypair (`blvm-sdk` raw scalar + compressed pubkey bytes).
     pub fn generate_keypair(&self) -> Result<GovernanceKeypair, GovernanceError> {
-        use secp256k1::rand::rngs::OsRng;
-        let mut rng = OsRng;
-        let secret_key = SecretKey::new(&mut rng);
-        let public_key = PublicKey::from_secret_key(&self.secp, &secret_key);
-        Ok(GovernanceKeypair {
-            secret_key,
-            public_key,
+        GovernanceKeypair::generate().map_err(|e| {
+            GovernanceError::CryptoError(format!("Governance key generation failed: {}", e))
         })
     }
 }
@@ -177,7 +172,7 @@ mod tests {
             .create_governance_signature(message, &keypair)
             .unwrap();
 
-        let public_key_str = hex::encode(keypair.public_key.serialize());
+        let public_key_str = hex::encode(keypair.public_key);
         let verified = manager
             .verify_governance_signature(message, &signature, &public_key_str)
             .unwrap();
@@ -195,7 +190,7 @@ mod tests {
             .create_governance_signature(message1, &keypair)
             .unwrap();
 
-        let public_key_str = hex::encode(keypair.public_key.serialize());
+        let public_key_str = hex::encode(keypair.public_key);
         let verified = manager
             .verify_governance_signature(message2, &signature, &public_key_str)
             .unwrap();
@@ -242,9 +237,11 @@ mod tests {
         );
 
         // But each keypair should be consistent
-        let public_key1 = manager.public_key_from_secret(&keypair1.secret_key);
+        let sec1 = SecretKey::from_slice(&keypair1.secret_key).expect("valid governance secret");
+        let public_key1 = manager.public_key_from_secret(&sec1);
         assert_eq!(
-            public_key1, keypair1.public_key,
+            public_key1.serialize(),
+            keypair1.public_key,
             "Public key should match secret key"
         );
     }

@@ -72,10 +72,13 @@ impl GitHubIntegration {
         ];
         if let Err(e) = self
             .github_client
-            .set_required_status_checks(owner, repo, base_ref, &contexts)
+            .set_required_status_checks(owner.as_str(), repo.as_str(), base_ref, &contexts)
             .await
         {
-            warn!("set_required_checks failed (branch protection may be configured manually): {}", e);
+            warn!(
+                "set_required_checks failed (branch protection may be configured manually): {}",
+                e
+            );
         }
 
         Ok(())

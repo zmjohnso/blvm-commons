@@ -272,7 +272,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 }
             }
         });
-        info!("Audit log rotation started (interval: {} days)", config.audit.rotation_interval_days);
+        info!(
+            "Audit log rotation started (interval: {} days)",
+            config.audit.rotation_interval_days
+        );
     }
 
     // Initialize governance services

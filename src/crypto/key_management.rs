@@ -191,7 +191,7 @@ impl KeyManager {
 
         // Generate key pair using signature manager
         let keypair = self.signature_manager.generate_keypair()?;
-        let public_key = keypair.public_key.to_string();
+        let public_key = hex::encode(keypair.public_key);
         let key_id = self.generate_key_id(&key_type, owner)?;
 
         // Calculate expiration date

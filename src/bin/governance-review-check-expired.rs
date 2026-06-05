@@ -2,12 +2,12 @@
 //!
 //! This binary is designed to be run by GitHub Actions workflows on a schedule
 
+use blvm_commons::github::client::GitHubClient;
 use blvm_commons::governance_review::{
     get_database_url, get_github_token, get_governance_repo, AppealManager,
     DeadlineNotificationManager, GovernanceReviewCaseManager, GovernanceReviewGitHubIntegration,
     MediationManager, TimeLimitManager,
 };
-use blvm_commons::github::client::GitHubClient;
 use sqlx::SqlitePool;
 use tracing::{error, info};
 

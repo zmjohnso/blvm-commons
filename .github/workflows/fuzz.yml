@@ -10,7 +10,7 @@ jobs:
     name: Fuzz Target
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
 
       - name: Strip [patch.crates-io] for crates.io-only CI
@@ -33,7 +33,7 @@ jobs:
       
       - name: Upload crashes
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v5
         with:
           name: fuzz-crashes
           path: fuzz/artifacts/

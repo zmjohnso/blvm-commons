@@ -25,7 +25,7 @@ env:
   CARGO_TERM_COLOR: always
   RUST_BACKTRACE: '1'
   CARGO_INCREMENTAL: '1'
-  DATABASE_URL: sqlite::memory:
+  DATABASE_URL: 'sqlite::memory:'
   SQLX_OFFLINE: true
 
 jobs:
@@ -43,7 +43,7 @@ jobs:
       - name: Disk check
         uses: BTCDecoded/rust-ci/runner-disk-guard@main
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
 
       - name: Strip [patch.crates-io] for crates.io-only CI
@@ -86,7 +86,7 @@ jobs:
         !contains(github.event.head_commit.message, '[no ci]'))) &&
       (github.event_name != 'workflow_dispatch' || github.event.inputs.skip_tests != 'true')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
 
       - name: Strip [patch.crates-io] for crates.io-only CI
@@ -135,7 +135,7 @@ jobs:
         !contains(github.event.head_commit.message, '[no ci]'))) &&
       (github.event_name != 'workflow_dispatch' || github.event.inputs.skip_tests != 'true')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
 
       - name: Strip [patch.crates-io] for crates.io-only CI
@@ -177,7 +177,7 @@ jobs:
         !contains(github.event.head_commit.message, '[no ci]'))) &&
       (github.event_name != 'workflow_dispatch' || github.event.inputs.skip_tests != 'true')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
 
       - name: Strip [patch.crates-io] for crates.io-only CI
@@ -200,7 +200,7 @@ jobs:
         !contains(github.event.head_commit.message, '[ci skip]') &&
         !contains(github.event.head_commit.message, '[no ci]')))
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
 
       - name: Strip [patch.crates-io] for crates.io-only CI
@@ -240,7 +240,7 @@ jobs:
         !contains(github.event.head_commit.message, '[no ci]'))) &&
       (github.event_name != 'workflow_dispatch' || github.event.inputs.skip_tests != 'true')
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       
 
       - name: Strip [patch.crates-io] for crates.io-only CI

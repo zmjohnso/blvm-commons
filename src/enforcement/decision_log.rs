@@ -258,7 +258,6 @@ impl DecisionLogger {
             );
         }
     }
-
 }
 
 impl Default for DecisionLogger {

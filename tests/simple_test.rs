@@ -149,18 +149,15 @@ async fn test_merge_blocking_logic() -> Result<(), Box<dyn std::error::Error>> {
     use common::create_test_decision_logger;
     let _blocker = MergeBlocker::new(None, create_test_decision_logger());
 
-    let should_block_all_met =
-        MergeBlocker::should_block_merge(true, true, false).unwrap();
+    let should_block_all_met = MergeBlocker::should_block_merge(true, true, false).unwrap();
     assert!(!should_block_all_met);
     println!("✅ Merge not blocked when all requirements met");
 
-    let should_block_review =
-        MergeBlocker::should_block_merge(false, true, false).unwrap();
+    let should_block_review = MergeBlocker::should_block_merge(false, true, false).unwrap();
     assert!(should_block_review);
     println!("✅ Merge blocked when review period not met");
 
-    let should_block_signatures =
-        MergeBlocker::should_block_merge(true, false, false).unwrap();
+    let should_block_signatures = MergeBlocker::should_block_merge(true, false, false).unwrap();
     assert!(should_block_signatures);
     println!("✅ Merge blocked when signatures not met");
 

@@ -255,7 +255,10 @@ impl GitHubClient {
                 GovernanceError::GitHubError(format!("Failed to post issue comment: {}", e))
             })?;
 
-        info!("Posted comment to {}/{} issue #{}", owner, repo, issue_number);
+        info!(
+            "Posted comment to {}/{} issue #{}",
+            owner, repo, issue_number
+        );
         Ok(())
     }
 
